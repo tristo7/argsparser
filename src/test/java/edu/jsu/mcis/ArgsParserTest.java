@@ -33,4 +33,31 @@ public class ArgsParserTest {
 		assertEquals("17", p.getArg("length"));
 	}
 	
+	@Before
+	public void setUpStream {
+		System.setOut(new PrintStream(outContent));
+	}
+	
+	@Test
+	public void testHelpMessagePrintsWhenCalled() {
+		String s = "-h";
+		ArgsParser p = new ArgsParser();
+		p.parse(s);
+		assertEquals("usage: java VolumeCalculator length width height" + "\n"
+							+ "Calculate the volume of a box." + "\n"
+							+ "positional arguments:" + "\n"
+							+ "\t" + "length the length of the box" + "\n"
+							+ "\t" + "width the width of the box" + "\n"
+							+ "\t" + "height the height of the box", outContent.toString());
+	}
+	
+	@After
+	public void cleanUpStream() {
+		System.setOut(null);
+	}
+	
+	@Test void testHelpMessagePrintsCorrectly() {
+		
+	}
+	
 }
