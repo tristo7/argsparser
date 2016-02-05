@@ -1,25 +1,26 @@
-package edu.jsu.mcis
+package edu.jsu.mcis;
 
 import java.util.*;
 
 public class ArgsParser {
-	private Hashtable<String, Arg> argMap;
-	private List<String> argPositionsByName;
+	private List<String> argNames;
+	private List<String> argValues;
+	private int numArgCounter;
 	
-	public ArgsPaser() {
-		argMap = new Hashtable<String, Arg>();
-		argPositionsByName = new ArrayList<String>();
-		numArgs = 0;
+	public ArgsParser() {
+		argNames = new ArrayList<String>();
+		argValues = new ArrayList<Integer>();
+		numArgCounter = 0;
 	}
 	
 	public int getNumArguments() {
-		return numArgs;
+		return numArgCounter;
 	}
 	
-	public void addArg(String name) {
-		argMap.put(name, new Arg(name));
-		argPositionsByName.add(name);
+	public void addArgName(String name) {
+		argNames.add(name);
 	}
+	
 	
 	public void parse(String cla) {
 		Scanner s = new Scanner(cla);
@@ -29,16 +30,17 @@ public class ArgsParser {
 				getHelpMessage();
 			}
 			else {
-				while(s.hasNext()) {
-					argMap.get(argPositionsByName.get(position)).setValue(s.next());
-				}
+				/*while(s.hasNext()) {
+					
+				}*/
 			}
 		}
 		s.close();
 	}
 	
-	public String getArg(String name) {
-		return "";
+	
+	public int getArg(String name) {
+		return ;
 	}
 	
 	public void getHelpMessage() {
