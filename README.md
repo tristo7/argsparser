@@ -4,5 +4,5 @@ Thomas Eyler
 Jake Hamby
 Trey Hilburn
 Amari Richardson
-Tristin Terry (Scrum Master)
+Tristin Terry
 
