@@ -5,11 +5,11 @@ import java.util.*;
 public class ArgsParser {
 
 	private List<String> argNames;
-	private List<Float> argValues;
+	private List<String> argValues;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
-		argValues = new ArrayList<Float>();
+		argValues = new ArrayList<String>();
 	}
 	
 	public int getNumArguments() {
@@ -22,8 +22,14 @@ public class ArgsParser {
 	}
 	
 	
-	public void parse(String cla) {
-		Scanner s = new Scanner(cla);
+	public void parse(String[] cla) {
+		
+		String args = "";
+		for(int i = 0; i < cla.length; i++) {
+			args += cla[i] + " ";
+		}
+		
+		Scanner s = new Scanner(args);
 		String temp = "";
 		float tempFloat = 0;
 		if(s.hasNext()) {
@@ -33,8 +39,7 @@ public class ArgsParser {
 			else {
 				while(s.hasNext()) {
 					temp = s.next();
-					tempFloat = Float.valueOf(temp);
-					argValues.add(tempFloat);
+					argValues.add(temp);
 				}
 			}
 		}
@@ -42,7 +47,7 @@ public class ArgsParser {
 	}
 	
 
-	public float getArg(String name) {
+	public String getArg(String name) {
 		return argValues.get(argNames.indexOf(name));
 	}
 	

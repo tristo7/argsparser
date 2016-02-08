@@ -18,22 +18,18 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testMultipleArgumentsParsedCorrectly() {
-		String testCommandLineArgs = "7 5 2 4";
-		float val1 = 7;
-		float val2 = 5;
-		float val3 = 2;
-		float val4 = 4;
+	public void testArgumentsParsedCorrectly() {
+		String[] testCommandLineArgs = {"7","5","2","4"};
 		p.addArg("arg1");
 		p.addArg("arg2");
 		p.addArg("arg3");
 		p.addArg("arg4");
 		p.parse(testCommandLineArgs);
 		assertEquals(4, p.getNumArguments());
-		assertEquals(val1, p.getArg("arg1"),0);
-		assertEquals(val2, p.getArg("arg2"),0);
-		assertEquals(val3, p.getArg("arg3"),0);
-		assertEquals(val4, p.getArg("arg4"),0);
+		assertEquals("7", p.getArg("arg1"));
+		assertEquals("5", p.getArg("arg2"));
+		assertEquals("2", p.getArg("arg3"));
+		assertEquals("4", p.getArg("arg4"));
 	}
 	
 	
@@ -44,15 +40,6 @@ public class ArgsParserTest {
 		assertEquals(2,p.getNumArguments());
 	}
 	
-
-	@Test
-	public void testArgumentValueIsParsedCorrectly() {
-		String s = "17";
-		p.addArg("length");
-		p.parse(s);
-		float val = 17;
-		assertEquals(val, p.getArg("length"),0);
-	}
 	
 	
 	/*

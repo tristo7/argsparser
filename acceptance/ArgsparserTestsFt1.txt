@@ -1,7 +1,7 @@
 *** Settings ***
-Library           Argparsertestsft1
+Library           ArgsparserTestsFt1Keywords
 
-| *Variable*  | *Value*                                                                                                   |
+| *Variable*  | *Value*                                                                                                    |
 | ${expected} | usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: 43 |
 
 | *Test Case*                            | *Action*                              | *Argument*         | *Argument*   | *Argument* | *Argument* |
