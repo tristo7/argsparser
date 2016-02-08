@@ -6,41 +6,33 @@ import java.io.*;
 
 public class ArgsParserTest {
 	private ArgsParser p;
-	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	
 	@Before
-	public void SetUp() {
-		
+	public void setup() {
+		p = new ArgsParser();
 	}
 	
 	@Test
 	public void testNewInstanceHasNoArguments() {
-		ArgsParser p = new ArgsParser();
 		assertEquals(0, p.getNumArguments());
 	}
 	
 	@Test
 	public void testArgumentIsAddedCorrectly() {
-		String test = "arg";
-		ArgsParser p = new ArgsParser();
-		p.addArg(test);
+		String testString = "arg";
+		int testVal = 7;
+		p.addArgName(test);
+		p.parse()
 		assertEquals(1, p.getNumArguments());
-		assertEquals("arg", p.getArg("arg"));
+		assertEquals(testVal, p.getArg("arg"));
 	}
 	
 	@Test
 	public void testArgumentValueIsParsedCorrectly() {
 		String s = "17";
-		ArgsParser p = new ArgsParser();
 		p.addArg("length");
 		p.parse(s);
 		assertEquals("17", p.getArg("length"));
-	}
-	
-	@Before
-	public void setUpStream()
-	{
-		System.setOut(new PrintStream(outContent));
 	}
 	
 	@Test
@@ -56,13 +48,10 @@ public class ArgsParserTest {
 							+ "\t" + "height the height of the box", outContent.toString());
 	}
 	
-	@After
-	public void cleanUpStream() {
-		System.setOut(null);
-	}
-	
-	@Test public void testHelpMessagePrintsCorrectly() {
+	/*
+	@Test 
+	public void testHelpMessagePrintsCorrectly() {
 		
 	}
-	
+	*/
 }

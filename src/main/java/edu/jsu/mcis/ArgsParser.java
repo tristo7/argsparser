@@ -3,22 +3,32 @@ package edu.jsu.mcis;
 import java.util.*;
 
 public class ArgsParser {
-	private List<String> argPositionsByName;
-	private List<Integer> argPosition;
+
+	private List<String> argNames;
+	private List<String> argValues;
+	private int numArgCounter;
 	
 	public ArgsParser() {
-		argPositionsByName = new ArrayList<String>();
-		argPosition = new ArrayList<Integer>();
+		argNames = new ArrayList<String>();
+		argValues = new ArrayList<Integer>();
+		numArgCounter = 0;
 	}
 	
 	public int getNumArguments() {
-		return argPositionsByName.size();
+		return numArgCounter;
 	}
+	
+	
 	
 	public void addArg(String name) {
 		argPositionsByName.add(name);
-		
+
 	}
+	
+	public void addArgName(String name) {
+		argNames.add(name);
+	}
+	
 	
 	public void parse(String cla) {
 		Scanner s = new Scanner(cla);
@@ -30,13 +40,12 @@ public class ArgsParser {
 			}
 			else {
 				while(s.hasNext()) {
-					//argMap.get(argPositionsByName.get(position)).setValue(s.next());
-				}
 			}
 		}
 		s.close();
 	}
 	
+
 	public int getArg(String name) {
 		return 0;
 	}
