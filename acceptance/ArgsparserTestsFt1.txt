@@ -1,8 +1,11 @@
+*** Settings ***
+Library           Argparsertestsft1
+
 | *Variable*  | *Value*                                                                                                   |
-| ${expected} | usage: java VolumeCalculator length width height\nVolumeCalcultor.java: error: unrecognized arguments: 43 |
+| ${expected} | usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: 43 |
 
 | *Test Case*                            | *Action*                              | *Argument*         | *Argument*   | *Argument* | *Argument* |
-| Test Volume Calculator Normal Function | Start Volume Cacluator With Arguments | 7                  | 5            | 2          |            |
+| Test Volume Calculator Normal Function | Start Volume Calculator With Arguments | 7                  | 5            | 2          |            |
 |                                        | ${length}=                            | Get Length         |              |            |            |
 |                                        | Should Be Equal                       | 7                  | ${length}    |            |            |
 |                                        | ${width}=                             | Get Width          |              |            |            |
@@ -11,7 +14,7 @@
 |                                        | Should Be Equal                       | 2                  | ${height}    |            |            |
 |                                        | ${output}=                            | Get Program Output |              |            |            |
 |                                        | Should Be Equal                       | ${output}          | 70           |            |            |
-| Test Unrecognized Argument             | Start Volume Cacluator With Arguments | 7                  | 5            | 2          | 43         |
+| Test Unrecognized Argument             | Start Volume Calculator With Arguments | 7                  | 5            | 2          | 43         |
 |                                        | ${output}=                            | Get Program Output |              |            |            |
 |                                        | Should Be Equal                       | ${output}          | 70           |            |            |
 | Test Absurd Program Normal Function    | Start Absurd Program With Arguments   | dog                | 2            | true       | 3.5        |
