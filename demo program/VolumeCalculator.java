@@ -1,23 +1,28 @@
+
+//Still need to find a way to properly run this from the command line.
+
 import java.util.*;
+import edu.jsu.mcis.*;
 
 public class VolumeCalculator {
 	public static void main(String[] args) {
-		/*
 		ArgsParser p = new ArgsParser();
 		p.addArg("length");
 		p.addArg("width");
 		p.addArg("height");
-		p.parse(args);
-		*/
 		
-		
-		//Convert the String array into 
-		String s = Arrays.toString(args);
-		s = s.replace("[","");
-		s = s.replace("]","");
-		s = s.replace(",","");
+		//Convert the String array into String for parsing
+		String s = "";
+		for(int i = 0; i < args.length; i++) {
+			s += args[i] + " ";
+		}
 	
-		System.out.println(s);
-		System.out.println(s.length());
+		p.parse(s);
+		
+		float l = p.getArg("length");
+		float h = p.getArg("height");
+		float w = p.getArg("width");
+		
+		System.out.println("Volume is "+l*w*h+".");
 	}
 }
