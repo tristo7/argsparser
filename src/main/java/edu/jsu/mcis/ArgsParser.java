@@ -5,49 +5,45 @@ import java.util.*;
 public class ArgsParser {
 
 	private List<String> argNames;
-	private List<String> argValues;
-	private int numArgCounter;
+	private List<Float> argValues;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
-		argValues = new ArrayList<Integer>();
-		numArgCounter = 0;
+		argValues = new ArrayList<Float>();
 	}
 	
 	public int getNumArguments() {
-		return numArgCounter;
+		return argNames.size();
 	}
-	
 	
 	
 	public void addArg(String name) {
-		argPositionsByName.add(name);
-
-	}
-	
-	public void addArgName(String name) {
 		argNames.add(name);
 	}
 	
 	
 	public void parse(String cla) {
 		Scanner s = new Scanner(cla);
-		int position = 0;
+		String temp = "";
+		float tempFloat = 0;
 		if(s.hasNext()) {
 			if(s.findInLine("-h") == "-h") {
 				getHelpMessage();
-				
 			}
 			else {
 				while(s.hasNext()) {
+					temp = s.next();
+					tempFloat = Float.valueOf(temp);
+					argValues.add(tempFloat);
+				}
 			}
 		}
 		s.close();
 	}
 	
 
-	public int getArg(String name) {
-		return 0;
+	public float getArg(String name) {
+		return argValues.get(argNames.indexOf(name));
 	}
 	
 	public void getHelpMessage() {
