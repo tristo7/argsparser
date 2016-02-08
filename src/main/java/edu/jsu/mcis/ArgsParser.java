@@ -7,17 +7,17 @@ public class ArgsParser {
 	private List<Integer> argPosition;
 	
 	public ArgsParser() {
-		argMap = new Hashtable<String, Arg>();
 		argPositionsByName = new ArrayList<String>();
+		argPosition = new ArrayList<Integer>();
 	}
 	
 	public int getNumArguments() {
-		return argPositionsByName.length;
+		return argPositionsByName.size();
 	}
 	
 	public void addArg(String name) {
-		argMap.put(name, new Arg(name));
 		argPositionsByName.add(name);
+		
 	}
 	
 	public void parse(String cla) {
@@ -30,7 +30,7 @@ public class ArgsParser {
 			}
 			else {
 				while(s.hasNext()) {
-					argMap.get(argPositionsByName.get(position)).setValue(s.next());
+					//argMap.get(argPositionsByName.get(position)).setValue(s.next());
 				}
 			}
 		}
@@ -38,7 +38,7 @@ public class ArgsParser {
 	}
 	
 	public int getArg(String name) {
-		return ;
+		return 0;
 	}
 	
 	public void getHelpMessage() {

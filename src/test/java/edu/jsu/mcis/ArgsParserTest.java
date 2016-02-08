@@ -2,8 +2,12 @@ package edu.jsu.mcis;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import java.io.*;
 
 public class ArgsParserTest {
+	private ArgsParser p;
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	
 	@Before
 	public void SetUp() {
 		
@@ -17,7 +21,7 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testArgumentIsAddedCorrectly() {
-		String test = "arg"
+		String test = "arg";
 		ArgsParser p = new ArgsParser();
 		p.addArg(test);
 		assertEquals(1, p.getNumArguments());
@@ -34,7 +38,8 @@ public class ArgsParserTest {
 	}
 	
 	@Before
-	public void setUpStream {
+	public void setUpStream()
+	{
 		System.setOut(new PrintStream(outContent));
 	}
 	
@@ -56,7 +61,7 @@ public class ArgsParserTest {
 		System.setOut(null);
 	}
 	
-	@Test void testHelpMessagePrintsCorrectly() {
+	@Test public void testHelpMessagePrintsCorrectly() {
 		
 	}
 	
