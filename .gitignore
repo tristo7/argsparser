@@ -2,6 +2,9 @@
 
 /build
 /.gradle
+/acceptance/log.html
+/acceptance/output.xml
+/acceptance/report.html
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
