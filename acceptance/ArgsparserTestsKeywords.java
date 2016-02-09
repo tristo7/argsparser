@@ -6,7 +6,6 @@ public class ArgsparserTestsKeywords {
 	
 	
 	public void startVolumeCalculatorWithArguments(String[] cla){
-		
 		p.addArg("length");
 		p.addArg("width");
 		p.addArg("height");
@@ -35,5 +34,31 @@ public class ArgsparserTestsKeywords {
 		
 	}
 	
+	public void startAbsurdProgramWithArguments(String[] cla){
+		p.addArg("pet");
+		p.addArg("number");
+		p.addArg("rainy");
+		p.addArg("bathrooms");
+		p.parse(cla);
+	}
 	
+	public String getPet(){
+		return p.getArg("pet");
+	}
+	
+	public String getNumber(){
+		return p.getArg("number");
+	}
+	
+	public String getRainy(){
+		return p.getArg("rainy");
+	}
+	
+	public String getBathrooms(){
+		return p.getArg("bathrooms");
+	}
+	
+	public void startProgramWithArguments(String[] cla){
+		p.parse(cla);
+	}
 }
