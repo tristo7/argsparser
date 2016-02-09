@@ -1,6 +1,6 @@
 import edu.jsu.mcis.*;
 
-public class ArgsparserTestsFt1Keywords {
+public class ArgsparserTestsKeywords {
 	
 	private ArgsParser p = new ArgsParser();
 	
