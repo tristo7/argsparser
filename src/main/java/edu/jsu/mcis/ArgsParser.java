@@ -10,7 +10,6 @@ public class ArgsParser {
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
 		argValues = new ArrayList<String>();
-		printHelp = false;
 	}
 	
 	public int getNumArguments() {
@@ -33,25 +32,33 @@ public class ArgsParser {
 		String temp = "";
 		int currentArg = 0;
 		String extraArgs = "";
-		if(s.hasNext()) {
-			if(s.findInLine("-h") == "-h") {
-				System.out.println(getHelpMessage());
-				System.exit(0);
-			}
-			else if(getNumArguments() < currentArg + 1){
-				do{
-					extraArgs=extraArgs+" "+s.next();
-				}while(s.hasNext());
-				throw new TooManyArgumentsException(extraArgs);
-			}
-			else {
-				while(s.hasNext()) {
-					temp = s.next();
-					argValues.add(temp);
+		boolean looping = true;
+		
+		while(looping){
+			if(s.hasNext()) {
+				temp = s.next();
+				if(temp.equals("-h")) {
+					looping = false;
+					throw new HelpMessageException();
 				}
+				else if(getNumArguments() < currentArg + 1){
+					looping = false;
+					extraArgs = temp;
+					while(s.hasNext()){
+						extraArgs+=" "+s.next();
+					}
+					throw new TooManyArgumentsException(extraArgs);
+				}
+				else {
+					argValues.add(temp);
+					currentArg++;
+				}
+			}else{
+				s.close();
+				looping = false;
 			}
 		}
-		s.close();
+		
 	}
 
 

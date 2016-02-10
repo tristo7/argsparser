@@ -2,8 +2,8 @@
 Library           ArgsparserTestsKeywords
 
 | *Variable*   | *Value*                                                                                                    																													   |
-| ${expected1} | usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: 43 																												   |
-| ${expected2} | usage: java VolumeCalculator length width height\nCalcuate the volume of a box.\npositional arguments:\n   length the length of the box (float)\n   width the width of the box(float)\n   height the height of the box(float) |
+| ${expected1} | usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: 43 																												       |
+| ${expected2} | usage: java VolumeCalculator length width height\nCalcuate the volume of a box.\npositional arguments:\n   length the length of the box (float)\n   width the width of the box(float)\n   height the height of the box(float)     |
 
 
 | *Test Case*                            | *Action*                               | *Argument*         | *Argument*   | *Argument* | *Argument* |

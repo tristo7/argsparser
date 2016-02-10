@@ -3,13 +3,22 @@ import edu.jsu.mcis.*;
 public class ArgsparserTestsKeywords {
 	
 	private ArgsParser p = new ArgsParser();
-	
+	private String output;
 	
 	public void startVolumeCalculatorWithArguments(String[] cla){
 		p.addArg("length");
 		p.addArg("width");
 		p.addArg("height");
+		try{
 		p.parse(cla);
+		float l = Integer.valueOf(getLength());
+		float w = Integer.valueOf(getWidth());
+		float h = Integer.valueOf(getHeight());
+		int vol = Math.round(l*w*h);
+		output = String.valueOf(vol);
+		}catch(TooManyArgumentsException t){
+			output = t.getMessage();
+		}
 	}
 	
 	public String getLength(){
@@ -25,14 +34,7 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getProgramOutput(){
-		float l = Integer.valueOf(getLength());
-		float w = Integer.valueOf(getWidth());
-		float h = Integer.valueOf(getHeight());
-		
-		
-		int vol = Math.round(l*w*h);
-		return String.valueOf(vol);
-		
+		return output;
 	}
 	
 	public void startAbsurdProgramWithArguments(String[] cla){
@@ -60,6 +62,11 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public void startProgramWithArguments(String[] cla){
-		p.parse(cla);
+		try{
+			p.parse(cla);
+		} catch(HelpMessageException h){
+			System.out.println("caught the exception.");
+			output = h.getMessage();
+		}
 	}
 }
