@@ -36,8 +36,8 @@ public class ArgsParser {
 		if(s.hasNext()) {
 			if(getNumArguments() < currentArg + 1){
 				do{
-					extraArgs=extraArgs+" "+scan.next();
-				}while(scan.hasNext())
+					extraArgs=extraArgs+" "+s.next();
+				}while(s.hasNext());
 				throw new TooManyArgumentsException(extraArgs);
 			}
 			else {
