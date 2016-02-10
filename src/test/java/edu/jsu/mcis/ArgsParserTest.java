@@ -39,27 +39,4 @@ public class ArgsParserTest {
 		p.addArg("test2");
 		assertEquals(2,p.getNumArguments());
 	}
-	
-	
-	
-	/*
-	@Test
-	public void testHelpMessagePrintsWhenCalled() {
-		String s = "-h";
-		ArgsParser p = new ArgsParser();
-		p.parse(s);
-		assertEquals("usage: java VolumeCalculator length width height" + "\n"
-							+ "Calculate the volume of a box." + "\n"
-							+ "positional arguments:" + "\n"
-							+ "\t" + "length the length of the box" + "\n"
-							+ "\t" + "width the width of the box" + "\n"
-							+ "\t" + "height the height of the box", outContent.toString());
-	}
-	*/
-	/*
-	@Test 
-	public void testHelpMessagePrintsCorrectly() {
-		
-	}
-	*/
 }
