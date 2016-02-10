@@ -11,18 +11,12 @@ public class VolumeCalculator {
 		p.addArg("width");
 		p.addArg("height");
 		
-		//Convert the String array into String for parsing
-		String s = "";
-		for(int i = 0; i < args.length; i++) {
-			s += args[i] + " ";
-		}
-	
-		p.parse(s);
+		p.parse(args);
 		
-		float l = p.getArg("length");
-		float h = p.getArg("height");
-		float w = p.getArg("width");
+		float l = Integer.parseInt(p.getArg("length"));
+		float h = Integer.parseInt(p.getArg("height"));
+		float w = Integer.parseInt(p.getArg("width"));
 		
-		System.out.println("Volume is "+l*w*h+".");
+		System.out.println("Volume is "+Math.round(l*w*h)+".");
 	}
 }
