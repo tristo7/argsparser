@@ -6,6 +6,7 @@ public class ArgsParser {
 
 	private List<String> argNames;
 	private List<String> argValues;
+	private boolean printHelp;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
@@ -23,7 +24,6 @@ public class ArgsParser {
 	
 	
 	public void parse(String[] cla) {
-		
 		String args = "";
 		for(int i = 0; i < cla.length; i++) {
 			args += cla[i] + " ";
@@ -31,10 +31,14 @@ public class ArgsParser {
 		
 		Scanner s = new Scanner(args);
 		String temp = "";
-		float tempFloat = 0;
+		int currentArg = 0;
+		String extraArgs = "";
 		if(s.hasNext()) {
-			if(s.findInLine("-h") == "-h") {
-				getHelpMessage();
+			if(getNumArguments() < currentArg + 1){
+				do{
+					extraArgs=extraArgs+" "+scan.next();
+				}while(scan.hasNext())
+				throw new TooManyArgumentsException(extraArgs);
 			}
 			else {
 				while(s.hasNext()) {
@@ -58,5 +62,9 @@ public class ArgsParser {
 							+ "\t" + "length the length of the box" + "\n"
 							+ "\t" + "width the width of the box" + "\n"
 							+ "\t" + "height the height of the box";
+	}
+	
+	public String getOutOfBoundValues() {
+		return "usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: ";
 	}
 }
