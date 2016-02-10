@@ -11,6 +11,7 @@ public class HelpMessageException extends RuntimeException{
 					"length the length of the box (float)\n"+
 					"width the width of the box(float)\n"+
 					"height the height of the box(float)";
+		System.out.println(message);
 	}
 	
 	public String getMessage(){
