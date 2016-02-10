@@ -25,11 +25,12 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getProgramOutput(){
-		int l = Integer.valueOf(getLength());
-		int w = Integer.valueOf(getWidth());
-		int h = Integer.valueOf(getHeight());
+		float l = Integer.valueOf(getLength());
+		float w = Integer.valueOf(getWidth());
+		float h = Integer.valueOf(getHeight());
 		
-		int vol = l*w*h;
+		
+		int vol = Math.round(l*w*h);
 		return String.valueOf(vol);
 		
 	}

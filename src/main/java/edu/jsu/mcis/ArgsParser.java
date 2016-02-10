@@ -6,11 +6,11 @@ public class ArgsParser {
 
 	private List<String> argNames;
 	private List<String> argValues;
-	private boolean printHelp;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
 		argValues = new ArrayList<String>();
+		printHelp = false;
 	}
 	
 	public int getNumArguments() {
@@ -34,10 +34,14 @@ public class ArgsParser {
 		int currentArg = 0;
 		String extraArgs = "";
 		if(s.hasNext()) {
-			if(getNumArguments() < currentArg + 1){
+			if(s.findInLine("-h") == "-h") {
+				System.out.println(getHelpMessage());
+				System.exit(0);
+			}
+			else if(getNumArguments() < currentArg + 1){
 				do{
-					extraArgs=extraArgs+" "+scan.next();
-				}while(scan.hasNext())
+					extraArgs=extraArgs+" "+s.next();
+				}while(s.hasNext());
 				throw new TooManyArgumentsException(extraArgs);
 			}
 			else {
@@ -49,7 +53,7 @@ public class ArgsParser {
 		}
 		s.close();
 	}
-	
+
 
 	public String getArg(String name) {
 		return argValues.get(argNames.indexOf(name));
