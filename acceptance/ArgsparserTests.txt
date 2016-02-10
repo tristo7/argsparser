@@ -30,4 +30,4 @@ Library           ArgsparserTestsKeywords
 |                                        | Should Be Equal                        | 3.5                | ${bathrooms} |            |            |
 | Test Usage Message 	(Feature 2)  	 | Start Program With Arguments 		  | -h                 |              |
 |                    					 | ${output}=                   		  | Get Program Output |              |
-|                   					 | Should Be Equal              		  | ${expected2}       | ${output}    |
+|                   					 | Should Be Equal              		  | ${output}          | ${expected2} |
