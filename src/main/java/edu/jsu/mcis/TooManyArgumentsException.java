@@ -5,6 +5,5 @@ public class TooManyArgumentsException extends RuntimeException {
 	
 	
 	public TooManyArgumentsException(String extraArguments) {
-		
-	}
+	}	
 }
