@@ -66,16 +66,4 @@ public class ArgsParser {
 		return argValues.get(argNames.indexOf(name));
 	}
 	
-	public String getHelpMessage() {
-		return "usage: java VolumeCalculator length width height" + "\n"
-							+ "Calculate the volume of a box." + "\n"
-							+ "positional arguments:" + "\n"
-							+ "\t" + "length the length of the box" + "\n"
-							+ "\t" + "width the width of the box" + "\n"
-							+ "\t" + "height the height of the box";
-	}
-	
-	public String getOutOfBoundValues() {
-		return "usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: ";
-	}
 }
