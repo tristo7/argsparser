@@ -23,20 +23,14 @@ public class ArgsParser {
 	
 	
 	public void parse(String[] cla) {
-		String args = "";
-		for(int i = 0; i < cla.length; i++) {
-			args += cla[i] + " ";
-		}
-		
-		Scanner s = new Scanner(args);
 		String temp = "";
 		int currentArg = 0;
 		String extraArgs = "";
 		boolean looping = true;
 		
 		while(looping){
-			if(s.hasNext()) {
-				temp = s.next();
+			if(currentArg < cla.length) {
+				temp = cla[currentArg];
 				if(temp.equals("-h")) {
 					looping = false;
 					throw new HelpMessageException();
@@ -44,8 +38,10 @@ public class ArgsParser {
 				else if(getNumArguments() < currentArg + 1){
 					looping = false;
 					extraArgs = temp;
-					while(s.hasNext()){
-						extraArgs+=" "+s.next();
+					currentArg++;
+					while(currentArg < cla.length){
+						extraArgs+=" "+cla[currentArg];
+						currentArg++;
 					}
 					throw new TooManyArgumentsException(extraArgs);
 				}
@@ -54,7 +50,6 @@ public class ArgsParser {
 					currentArg++;
 				}
 			}else{
-				s.close();
 				looping = false;
 			}
 		}
