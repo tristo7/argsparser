@@ -22,15 +22,15 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getLength(){
-		return p.getArg("length");
+		return p.getArgValue("length");
 	}
 	
 	public String getWidth(){
-		return p.getArg("width");
+		return p.getArgValue("width");
 	}
 	
 	public String getHeight(){
-		return p.getArg("height");
+		return p.getArgValue("height");
 	}
 	
 	public String getProgramOutput(){
@@ -46,19 +46,19 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getPet(){
-		return p.getArg("pet");
+		return p.getArgValue("pet");
 	}
 	
 	public String getNumber(){
-		return p.getArg("number");
+		return p.getArgValue("number");
 	}
 	
 	public String getRainy(){
-		return p.getArg("rainy");
+		return p.getArgValue("rainy");
 	}
 	
 	public String getBathrooms(){
-		return p.getArg("bathrooms");
+		return p.getArgValue("bathrooms");
 	}
 	
 	public void startProgramWithArguments(String[] cla){

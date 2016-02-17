@@ -5,11 +5,13 @@ import java.util.*;
 public class ArgsParser {
 
 	private List<String> argNames;
-	private List<String> argValues;
+	//private List<String> argValues;
+	private Map<String, Arg> argMap;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
-		argValues = new ArrayList<String>();
+		//argValues = new ArrayList<String>();
+		argMap = new HashMap<String, Arg>();
 	}
 	
 	public int getNumArguments() {
@@ -19,6 +21,12 @@ public class ArgsParser {
 	
 	public void addArg(String name) {
 		argNames.add(name);
+		argMap.put(name, new Arg(name));
+	}
+	
+	public void addArg(String name, Arg.DataType myType) {
+		argNames.add(name);
+		argMap.put(name, new Arg(name, myType));
 	}
 	
 	
@@ -46,7 +54,8 @@ public class ArgsParser {
 					throw new TooManyArgumentsException(extraArgs);
 				}
 				else {
-					argValues.add(temp);
+					//argValues.add(temp);
+					argMap.get(argNames.get(currentArg)).setVal(temp);
 					currentArg++;
 				}
 			}else{
@@ -57,8 +66,8 @@ public class ArgsParser {
 	}
 
 
-	public String getArg(String name) {
-		return argValues.get(argNames.indexOf(name));
+	public Object getArgValue(String name) {
+		return argMap.get(name).getVal();
 	}
 	
 }

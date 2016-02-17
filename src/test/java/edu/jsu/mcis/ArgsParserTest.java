@@ -26,10 +26,10 @@ public class ArgsParserTest {
 		p.addArg("arg4");
 		p.parse(testCommandLineArgs);
 		assertEquals(4, p.getNumArguments());
-		assertEquals("7", p.getArg("arg1"));
-		assertEquals("5", p.getArg("arg2"));
-		assertEquals("2", p.getArg("arg3"));
-		assertEquals("4", p.getArg("arg4"));
+		assertEquals("7", p.getArgValue("arg1"));
+		assertEquals("5", p.getArgValue("arg2"));
+		assertEquals("2", p.getArgValue("arg3"));
+		assertEquals("4", p.getArgValue("arg4"));
 	}
 	
 	
@@ -78,4 +78,7 @@ public class ArgsParserTest {
 		assertEquals("72 43",extraArg);
 		assertEquals("usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: 72 43", extraArgMessage);
 	}
+	
+	//@Test
+	//public void 
 }
