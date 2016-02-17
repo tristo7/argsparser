@@ -9,9 +9,10 @@ public class InvalidArgumentException {
     }
 
     private String getMessage() {
-        String dataType = argument.getDataType;
+        String dataType = argument.getDataType();
         message = "usage: java VolumeCalculator length width height\n" +
                   "error: argument: " + argument.argumentName; // add rest of message
+		return message;
     }
 
 }
