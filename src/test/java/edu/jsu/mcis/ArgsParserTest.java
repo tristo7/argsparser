@@ -18,18 +18,18 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testArgumentsParsedCorrectly() {
+	public void testFloatArgumentsParsedCorrectly() {
 		String[] testCommandLineArgs = {"7","5","2","4"};
-		p.addArg("arg1");
-		p.addArg("arg2");
-		p.addArg("arg3");
-		p.addArg("arg4");
+		p.addArg("arg1", Arg.DataType.FLOAT);
+		p.addArg("arg2", Arg.DataType.FLOAT);
+		p.addArg("arg3", Arg.DataType.FLOAT);
+		p.addArg("arg4", Arg.DataType.FLOAT);
 		p.parse(testCommandLineArgs);
 		assertEquals(4, p.getNumArguments());
-		assertEquals("7", p.getArgValue("arg1"));
-		assertEquals("5", p.getArgValue("arg2"));
-		assertEquals("2", p.getArgValue("arg3"));
-		assertEquals("4", p.getArgValue("arg4"));
+		assertEquals(Float.valueOf(7), p.getArgValue("arg1"));
+		assertEquals(Float.valueOf(5), p.getArgValue("arg2"));
+		assertEquals(Float.valueOf(2), p.getArgValue("arg3"));
+		assertEquals(Float.valueOf(4), p.getArgValue("arg4"));
 	}
 	
 	

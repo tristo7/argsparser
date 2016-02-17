@@ -66,8 +66,8 @@ public class ArgsParser {
 	}
 
 
-	public Object getArgValue(String name) {
-		return argMap.get(name).getVal();
+	public <T> T getArgValue(String name) {
+		return (T) argMap.get(name).getVal();
 	}
 	
 }

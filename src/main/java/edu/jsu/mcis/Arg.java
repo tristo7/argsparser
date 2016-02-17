@@ -13,37 +13,27 @@ public class Arg {
 
     public Arg(String name, DataType type) {
         argumentName = name;
-        if(type == DataType.INTEGER) {
-            dType = DataType.INTEGER;
-        }
-        else if(type == DataType.FLOAT) {
-            dType = DataType.FLOAT;
-        }
-        else if(type == DataType.BOOLEAN) {
-            dType = DataType.BOOLEAN;
-        }
-        else if(type == DataType.STRING) {
-            dType = DataType.STRING;
-        }
+		dType = type;
     }
 
-    public void setVal(String value) {
+    protected void setVal(String value) {
         // TODO 
-        if(dType == DataType.INTEGER) {
-            val = Integer.valueOf(value);
-        }
-        else if(dType == DataType.FLOAT) {
-            val = Float.valueOf(value);
-        }
-        else if(dType == DataType.BOOLEAN) {
-            val = Boolean.valueOf(value);
-        }
-        else if(dType == DataType.STRING) {
-            val = String.valueOf(value);
+		switch(dType){
+			case INTEGER:
+				val = Integer.valueOf(value);
+				break;
+			case FLOAT:
+				val = Float.valueOf(value);
+				break;
+			case BOOLEAN:
+				val = Boolean.valueOf(value);
+				break;
+			default:
+				val = value;
         }
     }
 
-    public Object getVal() {
-        return val;
+    public <T> T getVal() {
+        return (T) val;
     }
 }
