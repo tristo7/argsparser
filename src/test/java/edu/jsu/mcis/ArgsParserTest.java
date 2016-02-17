@@ -32,6 +32,36 @@ public class ArgsParserTest {
 		assertEquals(Float.valueOf(4), p.getArgValue("arg4"));
 	}
 	
+	@Test
+	public void testIntArgumentIsParsedCorrectly() {
+		String[] testCommandLineArgs = {"7"};
+		p.addArg("arg1", Arg.DataType.INTEGER);
+		p.parse(testCommandLineArgs);
+		int argVal = p.getArgValue("arg1");
+		assertEquals(1, p.getNumArguments());
+		assertEquals(7, argVal);
+	}
+	
+	@Test
+	public void testBoolArgumentIsParsedCorrectly() {
+		String[] testCommandLineArgs = {"true"};
+		p.addArg("arg1", Arg.DataType.BOOLEAN);
+		p.parse(testCommandLineArgs);
+		boolean argVal = p.getArgValue("arg1");
+		assertEquals(1, p.getNumArguments());
+		assertEquals(true, argVal);
+	}
+	
+	@Test
+	public void testStringArgumentIsParsedCorrectly() {
+		String[] testCommandLineArgs = {"joe"};
+		p.addArg("arg1", Arg.DataType.STRING);
+		p.parse(testCommandLineArgs);
+		String argVal = p.getArgValue("arg1");
+		assertEquals(1, p.getNumArguments());
+		assertEquals("joe", argVal);
+	}
+
 	
 	@Test
 	public void testCorrectNumOfArgumentsCalculated(){
@@ -78,7 +108,5 @@ public class ArgsParserTest {
 		assertEquals("72 43",extraArg);
 		assertEquals("usage: java VolumeCalculator length width height\nVolumeCalculator.java: error: unrecognized arguments: 72 43", extraArgMessage);
 	}
-	
-	//@Test
-	//public void 
+
 }
