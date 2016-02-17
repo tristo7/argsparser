@@ -1,7 +1,7 @@
 package edu.jsu.mcis;
 
 public class Arg {
-    private enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};
+    public enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};
     private String argumentName;
     private Object val;
     private DataType dType;
@@ -29,7 +29,7 @@ public class Arg {
 
     public void setVal(String value) {
         // TODO 
-        if(dTtype == DataType.INTEGER) {
+        if(dType == DataType.INTEGER) {
             val = Integer.valueOf(value);
         }
         else if(dType == DataType.FLOAT) {
