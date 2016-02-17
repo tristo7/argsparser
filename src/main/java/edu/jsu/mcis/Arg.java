@@ -2,7 +2,7 @@ package edu.jsu.mcis;
 
 public class Arg {
     public enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};
-    private String argumentName;
+    String argumentName;
     private Object val;
     private DataType dType;
 
@@ -15,7 +15,20 @@ public class Arg {
         argumentName = name;
 		dType = type;
     }
-
+	
+	public String getDataType(){
+		switch(dType){
+			case INTEGER:
+				return "integer";
+			case FLOAT:
+				return "float";
+			case BOOLEAN:
+				return "boolean";
+			default:
+				return "string";
+        }
+	}
+	
     protected void setVal(String value) {
         // TODO 
 		switch(dType){
