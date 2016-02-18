@@ -9,6 +9,8 @@ public class ArgsparserTestsKeywords {
 		p.addArg("length");
 		p.addArg("width");
 		p.addArg("height");
+		p.addOptionalArg("type", Arg.DataType.STRING, "box");
+		p.addOptionalArg("digits", Arg.DataType.STRING, "4");
 		try{
 		p.parse(cla);
 		float l = Integer.valueOf(getLength());
