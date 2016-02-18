@@ -33,7 +33,7 @@ public class ArgsParserTest {
 		p.addArg("w", Arg.DataType.FLOAT);
 		p.addArg("h", Arg.DataType.FLOAT);
 		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
-		String[] testCommandLineArgs = {"7","5","2"};
+		String[] testCommandLineArgs = {"7","5","2", "--type", "pyramid"};
 		p.parse(testCommandLineArgs);
 		assertEquals("pyramid", p.getArgValue("type"));
 		assertEquals(4,p.getNumArguments());
