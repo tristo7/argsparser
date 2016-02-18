@@ -18,6 +18,28 @@ public class ArgsParserTest {
 	}
 	
 	@Test
+	public void testOptionalArgumentDefaultValueAndNumArguments(){
+		p.addArg("l", Arg.DataType.FLOAT);
+		p.addArg("w", Arg.DataType.FLOAT);
+		p.addArg("h", Arg.DataType.FLOAT);
+		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
+		assertEquals("cube", p.getArgValue("type"));
+		assertEquals(4,p.getNumArguments());
+	}
+	
+	@Test
+	public void testOptionalArgumentParsesCorrectly(){
+		p.addArg("l", Arg.DataType.FLOAT);
+		p.addArg("w", Arg.DataType.FLOAT);
+		p.addArg("h", Arg.DataType.FLOAT);
+		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
+		String[] testCommandLineArgs = {"7","5","2"};
+		p.parse(testCommandLineArgs);
+		assertEquals("pyramid", p.getArgValue("type"));
+		assertEquals(4,p.getNumArguments());
+	}
+	
+	@Test
 	public void testFloatArgumentsParsedCorrectly() {
 		String[] testCommandLineArgs = {"7","5","2","4"};
 		p.addArg("arg1", Arg.DataType.FLOAT);

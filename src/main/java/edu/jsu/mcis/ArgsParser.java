@@ -5,15 +5,17 @@ import java.util.*;
 public class ArgsParser {
 
 	private List<String> argNames;
+	private List<String> optionalArgNames;
 	private Map<String, Arg> argMap;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
+		optionalArgNames = new ArrayList<String>();
 		argMap = new HashMap<String, Arg>();
 	}
 	
 	public int getNumArguments() {
-		return argNames.size();
+		return argNames.size()+optionalArgNames.size();
 	}
 	
 	
@@ -27,32 +29,47 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name, myType));
 	}
 	
+	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
+		optionalArgNames.add(name);
+		argMap.put(name, new Arg(name, type));
+		getArg(name).setVal(defaultValue);
+	}
+	
 	
 	public void parse(String[] cla) {
 		String temp = "";
 		int currentArg = 0;
+		int currentPositionInCLA = 0;
+		String optionalArgName = "";
 		String extraArgs = "";
 		boolean looping = true;
 		
 		while(looping){
-			if(currentArg < cla.length) {
-				temp = cla[currentArg];
+			if(currentPositionInCLA < cla.length) {
+				temp = cla[currentPositionInCLA];
+				String optionalArgCheck = temp.substring(0,1);
 				if(temp.equals("-h")) {
 					looping = false;
 					throw new HelpMessageException();
-				}
-				else if(getNumArguments() < currentArg + 1){
+					
+				}else if(getNumArguments() < currentArg + 1){
 					looping = false;
 					extraArgs = temp;
-					currentArg++;
-					while(currentArg < cla.length){
-						extraArgs+=" "+cla[currentArg];
-						currentArg++;
+					currentPositionInCLA++;
+					while(currentPositionInCLA < cla.length){
+						extraArgs+=" "+cla[currentPositionInCLA];
+						currentPositionInCLA++;
 					}
 					throw new TooManyArgumentsException(extraArgs);
-				}
-				else {
+					
+				}else if(optionalArgCheck.equals("--")){
+					optionalArgName = temp.substring(2);
+					argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
+					currentPositionInCLA+=2;
+					
+				}else{
 					argMap.get(argNames.get(currentArg)).setVal(temp);
+					currentPositionInCLA++;
 					currentArg++;
 				}
 			}else{
