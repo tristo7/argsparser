@@ -1,6 +1,6 @@
 package edu.jsu.mcis;
 
-public class InvalidArgumentException {
+public class InvalidArgumentException extends RuntimeException {
     private Arg argument;
     private String message;
 
@@ -8,10 +8,10 @@ public class InvalidArgumentException {
         argument = arg;
     }
 
-    private String getMessage() {
+    public String getMessage() {
         String dataType = argument.getDataType();
         message = "usage: java VolumeCalculator length width height\n" +
-                  "error: argument: " + argument.argumentName; // add rest of message
+                  "VolumeCalculator.java: error: argument " + argument.argumentName + ": invalid "+dataType+" value: "+argument.getVal(); // add rest of message
 		return message;
     }
 

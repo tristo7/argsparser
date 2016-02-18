@@ -71,7 +71,55 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testHelpMessageFormattedCorrectly(){
+	public void testInvalidArgumentExceptionWithBoolean(){
+		p.addArg("a", Arg.DataType.BOOLEAN);
+		p.addArg("b", Arg.DataType.BOOLEAN);
+		String[] testCommandLineArgs = {"true","randomtext"};
+		String message = "usage: java VolumeCalculator length width height\n" +
+                  "VolumeCalculator.java: error: argument b: invalid boolean value: randomtext";
+		String messageTest = "initialvalue";
+		try{
+			p.parse(testCommandLineArgs);
+		} catch (InvalidArgumentException i){
+			messageTest = i.getMessage();
+		}
+		assertEquals(message,messageTest);
+	}
+	
+	@Test
+	public void testInvalidArgumentExceptionWithFloat(){
+		p.addArg("a", Arg.DataType.FLOAT);
+		p.addArg("b", Arg.DataType.FLOAT);
+		String[] testCommandLineArgs = {"5.5","randomtext"};
+		String message = "usage: java VolumeCalculator length width height\n" +
+                  "VolumeCalculator.java: error: argument b: invalid float value: randomtext";
+		String messageTest = "initialvalue";
+		try{
+			p.parse(testCommandLineArgs);
+		} catch (InvalidArgumentException i){
+			messageTest = i.getMessage();
+		}
+		assertEquals(message,messageTest);
+	}
+	
+	@Test
+	public void testInvalidArgumentExceptionWithInteger(){
+		p.addArg("a", Arg.DataType.INTEGER);
+		p.addArg("b", Arg.DataType.INTEGER);
+		String[] testCommandLineArgs = {"5","randomtext"};
+		String message = "usage: java VolumeCalculator length width height\n" +
+                  "VolumeCalculator.java: error: argument b: invalid integer value: randomtext";
+		String messageTest = "initialvalue";
+		try{
+			p.parse(testCommandLineArgs);
+		} catch (InvalidArgumentException i){
+			messageTest = i.getMessage();
+		}
+		assertEquals(message,messageTest);
+	}
+	
+	@Test
+	public void testHelpMessageExceptionFormattedCorrectly(){
 		String[] testCommandLineArgs = {"-h"};
 		String messageTest = "";
 		String message = "usage: java VolumeCalculator length width height\n"+
@@ -90,9 +138,9 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testExtraArgumentsAssignedCorrectly() {
+	public void testTooManyArgumentsException() {
 		ArgsParser p = new ArgsParser();
-		String [] testArgs = {"4", "6", "14", "72", "43"};
+		String[] testCommandLineArgs = {"4", "6", "14", "72", "43"};
 		String extraArg = "initialvalue";
 		String extraArgMessage = "initialvalue";
 		
@@ -100,7 +148,7 @@ public class ArgsParserTest {
 		p.addArg("two");
 		p.addArg("three");
 		try{
-		p.parse(testArgs);
+		p.parse(testCommandLineArgs);
 		}catch(TooManyArgumentsException t){
 			extraArg = t.getExtraArgs();
 			extraArgMessage = t.getMessage();

@@ -30,20 +30,31 @@ public class Arg {
 	}
 	
     protected void setVal(String value) {
-        // TODO 
+		try{
 		switch(dType){
 			case INTEGER:
-				val = Integer.valueOf(value);
+				val = Integer.parseInt(value);
 				break;
 			case FLOAT:
-				val = Float.valueOf(value);
+				val = Float.parseFloat(value);
 				break;
 			case BOOLEAN:
-				val = Boolean.valueOf(value);
+				if(value.equals("true")||value.equals("True")){
+					val = true;
+				} else if (value.equals("false")||value.equals("False")){
+					val = false;
+				} else {
+					val = value;
+					throw new InvalidArgumentException(this);
+				}
 				break;
 			default:
 				val = value;
         }
+		}catch(NumberFormatException n){
+			val = value;
+			throw new InvalidArgumentException(this);
+		}
     }
 
     public <T> T getVal() {

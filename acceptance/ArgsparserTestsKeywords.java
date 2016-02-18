@@ -62,11 +62,16 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public void startProgramWithArguments(String[] cla){
+		p.addArg("length", Arg.DataType.FLOAT);
+		p.addArg("width", Arg.DataType.FLOAT);
+		p.addArg("height", Arg.DataType.FLOAT);
+		
 		try{
 			p.parse(cla);
 		} catch(HelpMessageException h){
-			System.out.println("caught the exception.");
 			output = h.getMessage();
+		} catch(InvalidArgumentException i){
+			output = i.getMessage();
 		}
 	}
 }
