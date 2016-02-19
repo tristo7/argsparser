@@ -53,8 +53,19 @@ public class ArgsParser {
 					looping = false;
 					throw new HelpMessageException();
 					
-					//condition for too many arguments... difficult to figure out due to optional arguments being a thing. Not working properly.
-				}else if(currentPositionInCLA >= maxArgs){
+				}else if(temp.contains("--")){
+					System.out.println("optional arg!");
+					optionalArgName = temp.substring(2);
+					argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
+					currentPositionInCLA+=2;
+					
+				}else if(currentArg < argNames.size()){
+					System.out.println("arg: "+argNames.get(currentArg));
+					argMap.get(argNames.get(currentArg)).setVal(temp);
+					currentPositionInCLA++;
+					currentArg++;
+					
+				}else{
 					looping = false;
 					extraArgs = temp;
 					currentPositionInCLA++;
@@ -64,17 +75,7 @@ public class ArgsParser {
 					}
 					throw new TooManyArgumentsException(extraArgs);
 					
-				}else if(temp.contains("--")){
-					System.out.println("optional arg!");
-					optionalArgName = temp.substring(2);
-					argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
-					currentPositionInCLA+=2;
-					
-				}else{
-					System.out.println("arg: "+argNames.get(currentArg));
-					argMap.get(argNames.get(currentArg)).setVal(temp);
-					currentPositionInCLA++;
-					currentArg++;
+
 				}
 			}else{
 				looping = false;
