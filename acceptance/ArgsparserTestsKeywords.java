@@ -6,33 +6,37 @@ public class ArgsparserTestsKeywords {
 	private String output;
 	
 	public void startVolumeCalculatorWithArguments(String[] cla){
-		p.addArg("length");
-		p.addArg("width");
-		p.addArg("height");
+		p.addArg("length", Arg.DataType.FLOAT);
+		p.addArg("width", Arg.DataType.FLOAT);
+		p.addArg("height", Arg.DataType.FLOAT);
 		p.addOptionalArg("type", Arg.DataType.STRING, "box");
 		p.addOptionalArg("digits", Arg.DataType.STRING, "4");
 		try{
 		p.parse(cla);
-		float l = Integer.valueOf(getLength());
-		float w = Integer.valueOf(getWidth());
-		float h = Integer.valueOf(getHeight());
-		int vol = Math.round(l*w*h);
-		output = String.valueOf(vol);
+		float l = p.getArgValue("length");
+		float w = p.getArgValue("width");
+		float h = p.getArgValue("height");
+		float vol = l*w*h;
+		
+		output = String.format("%.0f", vol);
 		}catch(TooManyArgumentsException t){
 			output = t.getMessage();
 		}
 	}
 	
 	public String getLength(){
-		return p.getArgValue("length");
+		float temp = p.getArgValue("length");
+		return String.format("%.0f", temp);
 	}
 	
 	public String getWidth(){
-		return p.getArgValue("width");
+		float temp = p.getArgValue("width");
+		return String.format("%.0f", temp);
 	}
 	
 	public String getHeight(){
-		return p.getArgValue("height");
+		float temp = p.getArgValue("height");
+		return String.format("%.0f", temp);
 	}
 	
 	public String getProgramOutput(){
@@ -49,9 +53,9 @@ public class ArgsparserTestsKeywords {
 	
 	public void startAbsurdProgramWithArguments(String[] cla){
 		p.addArg("pet");
-		p.addArg("number");
-		p.addArg("rainy");
-		p.addArg("bathrooms");
+		p.addArg("number", Arg.DataType.INTEGER);
+		p.addArg("rainy", Arg.DataType.BOOLEAN);
+		p.addArg("bathrooms", Arg.DataType.FLOAT);
 		p.parse(cla);
 	}
 	
@@ -60,15 +64,18 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getNumber(){
-		return p.getArgValue("number");
+		int temp = p.getArgValue("number");
+		return String.valueOf(temp);
 	}
 	
 	public String getRainy(){
-		return p.getArgValue("rainy");
+		boolean temp = p.getArgValue("rainy");
+		return String.valueOf(temp);
 	}
 	
 	public String getBathrooms(){
-		return p.getArgValue("bathrooms");
+		float temp = p.getArgValue("bathrooms");
+		return String.format("%.1f", temp);
 	}
 	
 	public void startProgramWithArguments(String[] cla){
