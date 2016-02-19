@@ -28,7 +28,6 @@ public class ArgTest {
 		p.parse(testCommandLineArgs);
 		String argVal = p.getArgValue("arg1");
 		assertEquals("bob", argVal);
-	}
-	
-	
+		assertEquals("string", p.getArg("arg1").getDataType());
+	}	
 }
