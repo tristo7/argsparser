@@ -39,6 +39,14 @@ public class ArgsparserTestsKeywords {
 		return output;
 	}
 	
+	public String getType(){
+		return p.getArgValue("type");
+	}
+	
+	public String getDigits(){
+		return p.getArgValue("digits");
+	}
+	
 	public void startAbsurdProgramWithArguments(String[] cla){
 		p.addArg("pet");
 		p.addArg("number");
