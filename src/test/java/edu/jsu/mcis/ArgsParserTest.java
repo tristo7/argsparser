@@ -66,12 +66,15 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testBoolArgumentIsParsedCorrectly() {
-		String[] testCommandLineArgs = {"true"};
+		String[] testCommandLineArgs = {"true", "false"};
 		p.addArg("arg1", Arg.DataType.BOOLEAN);
+		p.addArg("arg2", Arg.DataType.BOOLEAN);
 		p.parse(testCommandLineArgs);
 		boolean argVal = p.getArgValue("arg1");
-		assertEquals(1, p.getNumArguments());
+		boolean argVal2 = p.getArgValue("arg2");
+		assertEquals(2, p.getNumArguments());
 		assertEquals(true, argVal);
+		assertEquals(false, argVal2);
 	}
 	
 	@Test
