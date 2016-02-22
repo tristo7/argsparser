@@ -3,6 +3,7 @@ import edu.jsu.mcis.*;
 public class VolumeCalculator {
 	public static void main(String[] args) {
 		ArgsParser p = new ArgsParser();
+		p.setProgramName("VolumeCalculator");
 		p.addArg("length", Arg.DataType.FLOAT);
 		p.addArg("width", Arg.DataType.FLOAT);
 		p.addArg("height", Arg.DataType.FLOAT);
