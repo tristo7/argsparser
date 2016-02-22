@@ -44,9 +44,7 @@ public class ArgsParser {
 		String optionalArgName = "";
 		String extraArgs = "";
 		boolean looping = true;
-		System.out.println("cla.length: " + cla.length);
 		while(looping){
-			System.out.println("current pos in cla: " + currentPositionInCLA);
 			if(currentPositionInCLA < cla.length) {
 				temp = cla[currentPositionInCLA];
 				if(temp.equals("-h")) {
@@ -54,13 +52,11 @@ public class ArgsParser {
 					throw new HelpMessageException();
 					
 				}else if(temp.contains("--")){
-					System.out.println("optional arg!");
 					optionalArgName = temp.substring(2);
 					argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
 					currentPositionInCLA+=2;
 					
 				}else if(currentArg < argNames.size()){
-					System.out.println("arg: "+argNames.get(currentArg));
 					argMap.get(argNames.get(currentArg)).setVal(temp);
 					currentPositionInCLA++;
 					currentArg++;
