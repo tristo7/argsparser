@@ -7,6 +7,7 @@ public class ArgsParser {
 	private List<String> argNames;
 	private List<String> optionalArgNames;
 	private Map<String, Arg> argMap;
+	private String programName = "";
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
@@ -69,7 +70,7 @@ public class ArgsParser {
 						extraArgs+=" "+cla[currentPositionInCLA];
 						currentPositionInCLA++;
 					}
-					throw new TooManyArgumentsException(extraArgs);
+					throw new TooManyArgumentsException(extraArgs, programName, argNames);
 					
 
 				}
@@ -86,6 +87,14 @@ public class ArgsParser {
 	
 	public <T> T getArgValue(String name) {
 		return (T) argMap.get(name).getVal();
+	}
+	
+	public void setProgramName(String name) {
+		programName = name;
+	}
+	
+	public String getProgramName() {
+		return programName;
 	}
 	
 }
