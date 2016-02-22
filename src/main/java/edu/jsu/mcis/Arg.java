@@ -16,6 +16,7 @@ public class Arg {
 		dType = type;
     }
 	
+
 	public String getDataType(){
 		switch(dType){
 			case INTEGER:
@@ -29,8 +30,11 @@ public class Arg {
         }
 	}
 	
+	protected void setValAsString(String value){
+		val = value;
+	}
+	
     protected void setVal(String value) {
-		try{
 		switch(dType){
 			case INTEGER:
 				val = Integer.parseInt(value);
@@ -44,17 +48,12 @@ public class Arg {
 				} else if (value.equals("false")||value.equals("False")){
 					val = false;
 				} else {
-					val = value;
-					throw new InvalidArgumentException(this);
+					throw new NumberFormatException();
 				}
 				break;
 			default:
 				val = value;
         }
-		}catch(NumberFormatException n){
-			val = value;
-			throw new InvalidArgumentException(this);
-		}
     }
 
     public <T> T getVal() {

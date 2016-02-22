@@ -10,6 +10,7 @@ public class ArgsParserTest {
 	@Before
 	public void setup() {
 		p = new ArgsParser();
+		p.setProgramName("TestProgram");
 	}
 	
 	@Test
@@ -97,11 +98,12 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testInvalidArgumentExceptionWithBoolean(){
+		
 		p.addArg("a", Arg.DataType.BOOLEAN);
 		p.addArg("b", Arg.DataType.BOOLEAN);
 		String[] testCommandLineArgs = {"true","randomtext"};
-		String message = "usage: java VolumeCalculator length width height\n" +
-                  "VolumeCalculator.java: error: argument b: invalid boolean value: randomtext";
+		String message = "usage: java TestProgram a b \n" +
+                  "TestProgram.java: error: argument b: invalid boolean value: randomtext";
 		String messageTest = "initialvalue";
 		try{
 			p.parse(testCommandLineArgs);
@@ -116,8 +118,25 @@ public class ArgsParserTest {
 		p.addArg("a", Arg.DataType.FLOAT);
 		p.addArg("b", Arg.DataType.FLOAT);
 		String[] testCommandLineArgs = {"5.5","randomtext"};
-		String message = "usage: java VolumeCalculator length width height\n" +
-                  "VolumeCalculator.java: error: argument b: invalid float value: randomtext";
+		String message = "usage: java TestProgram a b \n" +
+                  "TestProgram.java: error: argument b: invalid float value: randomtext";
+		String messageTest = "initialvalue";
+		try{
+			p.parse(testCommandLineArgs);
+		} catch (InvalidArgumentException i){
+			messageTest = i.getMessage();
+		}
+		assertEquals(message,messageTest);
+	}
+	
+		@Test
+	public void testInvalidArgumentExceptionWithOptionalArg(){
+		p.addArg("a", Arg.DataType.FLOAT);
+		p.addArg("b", Arg.DataType.FLOAT);
+		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
+		String[] testCommandLineArgs = {"5.5","5.6", "--digits", "three"};
+		String message = "usage: java TestProgram a b \n" +
+                  "TestProgram.java: error: argument digits: invalid integer value: three";
 		String messageTest = "initialvalue";
 		try{
 			p.parse(testCommandLineArgs);
@@ -132,8 +151,8 @@ public class ArgsParserTest {
 		p.addArg("a", Arg.DataType.INTEGER);
 		p.addArg("b", Arg.DataType.INTEGER);
 		String[] testCommandLineArgs = {"5","randomtext"};
-		String message = "usage: java VolumeCalculator length width height\n" +
-                  "VolumeCalculator.java: error: argument b: invalid integer value: randomtext";
+		String message = "usage: java TestProgram a b \n" +
+                  "TestProgram.java: error: argument b: invalid integer value: randomtext";
 		String messageTest = "initialvalue";
 		try{
 			p.parse(testCommandLineArgs);
@@ -145,9 +164,14 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testHelpMessageExceptionFormattedCorrectly(){
+		p.setProgramName("VolumeCalculator");
+		p.addArg("length");
+		p.addArg("width");
+		p.addArg("height");
+		
 		String[] testCommandLineArgs = {"-h"};
 		String messageTest = "";
-		String message = "usage: java VolumeCalculator length width height\n"+
+		String message = "usage: java VolumeCalculator length width height \n"+
 					"Calcuate the volume of a box.\n"+
 					"positional arguments:\n"+
 					"length the length of the box (float)\n"+
@@ -167,7 +191,6 @@ public class ArgsParserTest {
 		String[] testCommandLineArgs = {"4", "6", "14", "72", "43"};
 		String extraArg = "initialvalue";
 		String extraArgMessage = "initialvalue";
-		p.setProgramName("TestProgram");
 		
 		p.addArg("one");
 		p.addArg("two");

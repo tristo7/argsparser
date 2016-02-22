@@ -6,12 +6,10 @@ public class TooManyArgumentsException extends RuntimeException {
 	private String extraArgs;
 	private String message;
 	private String programName;
-	private List<String> argNames;
 	private String formattedArgNames = "";
 	
-	public TooManyArgumentsException(String s, String name, List<String> aNames) {
+	public TooManyArgumentsException(String s, String name, List<String> argNames) {
 		extraArgs = s;
-		argNames = aNames;
 		programName = name;
 		
 		for(int i = 0; i < argNames.size(); i++){

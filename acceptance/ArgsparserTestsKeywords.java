@@ -6,6 +6,7 @@ public class ArgsparserTestsKeywords {
 	private String output;
 	
 	public void startVolumeCalculatorWithArguments(String[] cla){
+		p.setProgramName("VolumeCalculator");
 		p.addArg("length", Arg.DataType.FLOAT);
 		p.addArg("width", Arg.DataType.FLOAT);
 		p.addArg("height", Arg.DataType.FLOAT);
@@ -79,6 +80,7 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public void startProgramWithArguments(String[] cla){
+		p.setProgramName("VolumeCalculator");
 		p.addArg("length", Arg.DataType.FLOAT);
 		p.addArg("width", Arg.DataType.FLOAT);
 		p.addArg("height", Arg.DataType.FLOAT);
