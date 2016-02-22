@@ -52,17 +52,27 @@ public class ArgsParser {
 				temp = cla[currentPositionInCLA];
 				if(temp.equals("-h")) {
 					looping = false;
-					throw new HelpMessageException();
+					throw new HelpMessageException(programName, argNames);
 					
 				}else if(temp.contains("--")){
 					System.out.println("optional arg!");
 					optionalArgName = temp.substring(2);
+					try{
 					argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
+					}catch(NumberFormatException n){
+						argMap.get(optionalArgName).setValAsString(cla[currentPositionInCLA+1]);
+						throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
+					}
 					currentPositionInCLA+=2;
 					
 				}else if(currentArg < argNames.size()){
 					System.out.println("arg: "+argNames.get(currentArg));
-					argMap.get(argNames.get(currentArg)).setVal(temp);
+					try{
+						argMap.get(argNames.get(currentArg)).setVal(temp);
+					}catch(NumberFormatException n){
+						argMap.get(argNames.get(currentArg)).setValAsString(temp);
+						throw new InvalidArgumentException(argMap.get(argNames.get(currentArg)), programName, argNames);
+					}
 					currentPositionInCLA++;
 					currentArg++;
 					
