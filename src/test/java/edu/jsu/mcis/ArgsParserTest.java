@@ -202,7 +202,7 @@ public class ArgsParserTest {
 			extraArgMessage = t.getMessage();
 		}
 		assertEquals("72 43",extraArg);
-		assertEquals("usage: java TestProgram one two three \nVolumeCalculator.java: error: unrecognized arguments: 72 43", extraArgMessage);
+		assertEquals("usage: java TestProgram one two three \nTestProgram.java: error: unrecognized arguments: 72 43", extraArgMessage);
 	}
 	
 	@Test

@@ -22,6 +22,6 @@ public class TooManyArgumentsException extends RuntimeException {
 	}
 	
 	public String getMessage(){
-		return "usage: java " + programName + " " + formattedArgNames + "\nVolumeCalculator.java: error: unrecognized arguments: "+extraArgs;
+		return "usage: java " + programName + " " + formattedArgNames + "\n"+ programName +".java: error: unrecognized arguments: "+extraArgs;
 	}
 }
