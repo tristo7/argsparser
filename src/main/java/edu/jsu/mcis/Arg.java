@@ -5,6 +5,7 @@ public class Arg {
     String argumentName;
     private Object val;
     private DataType dType;
+	private String argumentDescription = "";
 
     public Arg(String name) {
         argumentName = name;
@@ -16,6 +17,19 @@ public class Arg {
 		dType = type;
     }
 	
+	public Arg(String name, DataType type, String desc) {
+        argumentName = name;
+		dType = type;
+		argumentDescription = desc;
+    }
+	
+	public void setDescription(String s){
+		argumentDescription = s;
+	}
+	
+	public String getDescription(){
+		return argumentDescription;
+	}
 
 	public String getDataType(){
 		switch(dType){

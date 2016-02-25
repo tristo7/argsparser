@@ -13,6 +13,14 @@ public class ArgTest {
 	}
 	
 	@Test
+	public void testDescription(){
+		p.addArg("arg1", Arg.DataType.FLOAT, "This is an argument. (float)");
+		assertEquals("This is an argument. (float)", p.getArg("arg1").getDescription());
+		p.getArg("arg1").setDescription("This is a test.");
+		assertEquals("This is a test.", p.getArg("arg1").getDescription());
+	}
+	
+	@Test
 	public void testArgValueAndDataTypeIsStoredCorrectly() {
 		String[] testCommandLineArgs = {"7"};
 		p.addArg("arg1", Arg.DataType.INTEGER);

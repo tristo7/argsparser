@@ -8,6 +8,7 @@ public class ArgsParser {
 	private List<String> optionalArgNames;
 	private Map<String, Arg> argMap;
 	private String programName = "";
+	private String programDescription = "";
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
@@ -15,8 +16,27 @@ public class ArgsParser {
 		argMap = new HashMap<String, Arg>();
 	}
 	
+	
 	public int getNumArguments() {
 		return argNames.size()+optionalArgNames.size();
+	}
+	
+	
+	public void setProgramName(String name) {
+		programName = name;
+	}
+	
+	public String getProgramName() {
+		return programName;
+	}
+	
+	
+	public void setProgramDescription(String s) {
+		programDescription = s;
+	}
+	
+	public String getProgramDescription() {
+		return programDescription;
 	}
 	
 	
@@ -25,18 +45,28 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name));
 	}
 	
+	public void addArg(String name, String description) {
+		argNames.add(name);
+		argMap.put(name, new Arg(name, Arg.DataType.STRING, description));
+	}
+	
 	public void addArg(String name, Arg.DataType myType) {
 		argNames.add(name);
 		argMap.put(name, new Arg(name, myType));
 	}
+	
+	public void addArg(String name, Arg.DataType myType, String description) {
+		argNames.add(name);
+		argMap.put(name, new Arg(name, myType, description));
+	}
+	
 	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
 		optionalArgNames.add(name);
 		argMap.put(name, new Arg(name, type));
 		getArg(name).setVal(defaultValue);
 	}
-	
-	
+
 	public void parse(String[] cla) {
 		String temp = "";
 		int currentArg = 0;
@@ -50,7 +80,7 @@ public class ArgsParser {
 				temp = cla[currentPositionInCLA];
 				if(temp.equals("-h")) {
 					looping = false;
-					throw new HelpMessageException(programName, argNames);
+					throw new HelpMessageException(programName, programDescription, argNames, argMap);
 					
 				}else if(temp.contains("--")){
 					optionalArgName = temp.substring(2);
@@ -98,13 +128,4 @@ public class ArgsParser {
 	public <T> T getArgValue(String name) {
 		return (T) argMap.get(name).getVal();
 	}
-	
-	public void setProgramName(String name) {
-		programName = name;
-	}
-	
-	public String getProgramName() {
-		return programName;
-	}
-	
 }

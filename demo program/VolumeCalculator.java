@@ -4,9 +4,10 @@ public class VolumeCalculator {
 	public static void main(String[] args) {
 		ArgsParser p = new ArgsParser();
 		p.setProgramName("VolumeCalculator");
-		p.addArg("length", Arg.DataType.FLOAT);
-		p.addArg("width", Arg.DataType.FLOAT);
-		p.addArg("height", Arg.DataType.FLOAT);
+		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
+		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
+		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
+		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
 		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
 		
@@ -19,7 +20,6 @@ public class VolumeCalculator {
 		float l = 0;
 		float w = 0;
 		float r = 0;
-		//float pi = 3.14f;
 		
 		switch(option1) {
 			case "cube":
@@ -38,19 +38,12 @@ public class VolumeCalculator {
 				vol = (4.0 / 3.0)*Math.PI*Math.pow(r, 3);
 				break;
 			default:
-				l = p.getArgValue("length");
-				h = p.getArgValue("height");
-				w = p.getArgValue("width");
-				vol = l*w*h;
+				System.err.println("Invalid object type.");
+				System.exit(1);
+				break;
 		}
 		
 		System.out.println("Volume is "+ String.format("%." + Integer.toString(option2) + "f", vol) + ".");
 		
-		//float l = p.getArgValue("length"));
-		//float h = p.getArgValue("height"));
-		//float w = p.getArgValue("width"));
-		
-		
-		//System.out.println("Volume is "+Math.round(l*w*h)+".");
 	}
 }
