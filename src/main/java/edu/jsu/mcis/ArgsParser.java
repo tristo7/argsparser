@@ -60,11 +60,20 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name, myType, description));
 	}
 	
-	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
-		optionalArgNames.add(name);
-		argMap.put(name, new Arg(name, type));
-		getArg(name).setVal(defaultValue);
+		if(type == Arg.DataType.BOOLEAN){
+			if(defaultValue.contains("false") || defaultValue.contains("False")){
+				optionalArgNames.add(name);
+				argMap.put(name, new Arg(name, type));
+				getArg(name).setVal(defaultValue);
+			} else {
+				throw new FlagDefaultNotFalseException(name, defaultValue);
+			}
+		} else {
+			optionalArgNames.add(name);
+			argMap.put(name, new Arg(name, type));
+			getArg(name).setVal(defaultValue);
+		}
 	}
 
 	public void parse(String[] cla) {
@@ -78,19 +87,23 @@ public class ArgsParser {
 		while(looping){
 			if(currentPositionInCLA < cla.length) {
 				temp = cla[currentPositionInCLA];
-				if(temp.equals("-h")) {
-					looping = false;
+				if(temp.equals("-h") || temp.equals("--help")) {
 					throw new HelpMessageException(programName, programDescription, argNames, argMap);
 					
 				}else if(temp.contains("--")){
 					optionalArgName = temp.substring(2);
-					try{
-					argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
-					}catch(NumberFormatException n){
-						argMap.get(optionalArgName).setValAsString(cla[currentPositionInCLA+1]);
-						throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
+					if(argMap.get(optionalArgName).getDataType().equals("boolean")){
+						argMap.get(optionalArgName).setVal("true");
+						currentPositionInCLA+=1;
+					} else {
+						try{
+						argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
+						}catch(NumberFormatException n){
+							argMap.get(optionalArgName).setValAsString(cla[currentPositionInCLA+1]);
+							throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
+						}
+						currentPositionInCLA+=2;
 					}
-					currentPositionInCLA+=2;
 					
 				}else if(currentArg < argNames.size()){
 					try{

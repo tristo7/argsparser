@@ -20,6 +20,21 @@ public class ArgsParserTest {
 	}
 	
 	@Test
+	public void testFlagArguments(){
+		p.addOptionalArg("arg1", Arg.DataType.BOOLEAN, "false");
+		assertFalse((boolean) p.getArgValue("arg1"));
+		boolean exception = false;
+		try{
+			p.addOptionalArg("arg2", Arg.DataType.BOOLEAN, "true");
+		} catch (FlagDefaultNotFalseException f){
+			exception = true;
+			assertEquals("Argument arg2 has an invalid default value of true.\n Change the default value to false.", f.getMessage());
+			assertTrue(exception);
+		}
+		
+	}
+	
+	@Test
 	public void testOptionalArgumentDefaultValueAndNumArguments(){
 		p.addArg("l", Arg.DataType.FLOAT);
 		p.addArg("w", Arg.DataType.FLOAT);
