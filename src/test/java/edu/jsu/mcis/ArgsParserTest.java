@@ -20,7 +20,29 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testFlagArguments(){
+	public void testFlagArgumentFromCLA(){
+		p.addArg("TestArg");
+		p.addOptionalArg("arg1", Arg.DataType.BOOLEAN, "False");
+		assertFalse((boolean) p.getArgValue("arg1"));
+		p.parse(new String[]{"--arg1"});
+		assertTrue((boolean) p.getArgValue("arg1"));
+		
+		String messageTest = "";
+		String message = "usage: java VolumeCalculator TestArg \n"+
+					"Calcuate the volume of a box.\n"+
+					"positional arguments:\n"+
+					"TestArg \n";
+		try{
+		p.parse(new String[] {"--help"});
+		} catch(HelpMessageException h){
+			messageTest = h.getMessage();
+			}
+		
+		assertEquals(message,messageTest);
+	}
+	
+	@Test
+	public void testFlagArgumentDefaults(){
 		p.addOptionalArg("arg1", Arg.DataType.BOOLEAN, "false");
 		assertFalse((boolean) p.getArgValue("arg1"));
 		boolean exception = false;
@@ -83,7 +105,7 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testBoolArgumentIsParsedCorrectly() {
-		String[] testCommandLineArgs = {"true", "false"};
+		String[] testCommandLineArgs = {"True", "false"};
 		p.addArg("arg1", Arg.DataType.BOOLEAN);
 		p.addArg("arg2", Arg.DataType.BOOLEAN);
 		p.parse(testCommandLineArgs);
