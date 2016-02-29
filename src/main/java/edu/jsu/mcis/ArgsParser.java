@@ -79,14 +79,17 @@ public class ArgsParser {
 	public void parse(String[] cla) {
 		String temp = "";
 		int currentArg = 0;
-		int currentPositionInCLA = 0;
-		int maxArgs = argNames.size() + (2*optionalArgNames.size());
 		String optionalArgName = "";
 		String extraArgs = "";
 		boolean looping = true;
+		Queue<String> arguments = new LinkedList<String>();
+		for(int i = 0;i<cla.length;i++){
+			arguments.add(cla[i]);
+		}
+		
 		while(looping){
-			if(currentPositionInCLA < cla.length) {
-				temp = cla[currentPositionInCLA];
+			if(!arguments.isEmpty()) {
+				temp = arguments.remove();
 				if(temp.equals("-h") || temp.equals("--help")) {
 					throw new HelpMessageException(programName, programDescription, argNames, argMap);
 					
@@ -94,15 +97,15 @@ public class ArgsParser {
 					optionalArgName = temp.substring(2);
 					if(argMap.get(optionalArgName).getDataType().equals("boolean")){
 						argMap.get(optionalArgName).setVal("true");
-						currentPositionInCLA+=1;
 					} else {
+						
 						try{
-						argMap.get(optionalArgName).setVal(cla[currentPositionInCLA+1]);
+						argMap.get(optionalArgName).setVal(arguments.element());
+						arguments.remove();
 						}catch(NumberFormatException n){
-							argMap.get(optionalArgName).setValAsString(cla[currentPositionInCLA+1]);
+							argMap.get(optionalArgName).setValAsString(arguments.remove());
 							throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
 						}
-						currentPositionInCLA+=2;
 					}
 					
 				}else if(currentArg < argNames.size()){
@@ -112,16 +115,14 @@ public class ArgsParser {
 						argMap.get(argNames.get(currentArg)).setValAsString(temp);
 						throw new InvalidArgumentException(argMap.get(argNames.get(currentArg)), programName, argNames);
 					}
-					currentPositionInCLA++;
 					currentArg++;
 					
 				}else{
 					looping = false;
 					extraArgs = temp;
-					currentPositionInCLA++;
-					while(currentPositionInCLA < cla.length){
-						extraArgs+=" "+cla[currentPositionInCLA];
-						currentPositionInCLA++;
+					
+					while(!arguments.isEmpty()){
+						extraArgs+=" "+arguments.remove();
 					}
 					throw new TooManyArgumentsException(extraArgs, programName, argNames);
 					
