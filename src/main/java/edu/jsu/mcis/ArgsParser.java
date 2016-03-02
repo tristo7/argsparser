@@ -79,7 +79,6 @@ public class ArgsParser {
 	public void parse(String[] cla) {
 		String temp = "";
 		int currentArg = 0;
-		String optionalArgName = "";
 		String extraArgs = "";
 		boolean looping = true;
 		Queue<String> arguments = new LinkedList<String>();
@@ -91,23 +90,10 @@ public class ArgsParser {
 			if(!arguments.isEmpty()) {
 				temp = arguments.remove();
 				if(temp.equals("-h") || temp.equals("--help")) {
-					String s = createExceptionMessage("HelpMessageException");
-					throw new HelpMessageException(s);
+					throw new HelpMessageException(createExceptionMessage("HelpMessageException"));
 					
 				}else if(temp.contains("--")){
-					optionalArgName = temp.substring(2);
-					if(argMap.get(optionalArgName).getDataType().equals("boolean")){
-						argMap.get(optionalArgName).setVal("true");
-					} else {
-						
-						try{
-						argMap.get(optionalArgName).setVal(arguments.element());
-						arguments.remove();
-						}catch(NumberFormatException n){
-							throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(optionalArgName), arguments.remove());
-						}
-					}
-					
+					dashedArgumentHandler(temp, arguments);					
 				}else if(currentArg < argNames.size()){
 					try{
 						argMap.get(argNames.get(currentArg)).setVal(temp);
@@ -131,6 +117,22 @@ public class ArgsParser {
 			}
 		}
 		
+	}
+	
+	private void dashedArgumentHandler(String t, Queue<String> q) {
+		String optionalArgName = t.substring(2);
+		if(!optionalArgNames.contains(optionalArgName)){
+			throw new InvalidOptionalArgumentNameException(createExceptionMessage("InvalidOptionalArgumentNameException"), optionalArgName);
+		}else if(argMap.get(optionalArgName).getDataType().equals("boolean")){
+			argMap.get(optionalArgName).setVal("true");
+		} else {		
+				try{
+					argMap.get(optionalArgName).setVal(q.element());
+					q.remove();
+				}catch(NumberFormatException n){
+					throw new InvalidArgumentException(createExceptionMessage("InvalidOptionalArgumentException"), argMap.get(optionalArgName), q.remove());
+				}
+		}
 	}
 	
 	public Arg getArg(String name) {
@@ -160,9 +162,11 @@ public class ArgsParser {
 			case "InvalidArgumentException":
 				msg += "argument ";
 				break;
-			case "TooManyArgumentsException":
+			case "InvalidOptionalArgumentException":
+				msg += "optional argument ";
 				break;
-			case "FlagDefaultNotFalseException":
+			case "InvalidOptionalArgumentNameException":
+				msg += "optional argument name: ";
 				break;
 		}
 		

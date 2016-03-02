@@ -36,9 +36,9 @@ public class ArgsParserTest {
 		p.parse(new String[] {"--help"});
 		} catch(HelpMessageException h){
 			messageTest = h.getMessage();
-			}
-		
-		assertEquals(message,messageTest);
+		}finally{
+			assertEquals(message,messageTest);
+		}
 	}
 	
 	@Test
@@ -46,12 +46,16 @@ public class ArgsParserTest {
 		p.addOptionalArg("arg1", Arg.DataType.BOOLEAN, "false");
 		assertFalse((boolean) p.getArgValue("arg1"));
 		boolean exception = false;
+		String actualMessage = "initialvalue";
 		try{
 			p.addOptionalArg("arg2", Arg.DataType.BOOLEAN, "true");
 		} catch (FlagDefaultNotFalseException f){
 			exception = true;
-			assertEquals("Argument arg2 has an invalid default value of true.\n Change the default value to false.", f.getMessage());
+			actualMessage = f.getMessage();
+			
+		}finally{
 			assertTrue(exception);
+			assertEquals("Argument arg2 has an invalid default value of true.\n Change the default value to false.", actualMessage);
 		}
 		
 	}
@@ -146,8 +150,10 @@ public class ArgsParserTest {
 			p.parse(testCommandLineArgs);
 		} catch (InvalidArgumentException i){
 			messageTest = i.getMessage();
+		}finally{
+			assertEquals(message,messageTest);
 		}
-		assertEquals(message,messageTest);
+
 	}
 	
 	@Test
@@ -162,26 +168,13 @@ public class ArgsParserTest {
 			p.parse(testCommandLineArgs);
 		} catch (InvalidArgumentException i){
 			messageTest = i.getMessage();
+		}finally{
+			assertEquals(message,messageTest);
 		}
-		assertEquals(message,messageTest);
+
 	}
 	
-		@Test
-	public void testInvalidArgumentExceptionWithOptionalArg(){
-		p.addArg("a", Arg.DataType.FLOAT);
-		p.addArg("b", Arg.DataType.FLOAT);
-		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
-		String[] testCommandLineArgs = {"5.5","5.6", "--digits", "three"};
-		String message = "usage: java VolumeCalculator a b \n" +
-                  "VolumeCalculator.java: error: argument digits: invalid integer value: three";
-		String messageTest = "initialvalue";
-		try{
-			p.parse(testCommandLineArgs);
-		} catch (InvalidArgumentException i){
-			messageTest = i.getMessage();
-		}
-		assertEquals(message,messageTest);
-	}
+		
 	
 	@Test
 	public void testInvalidArgumentExceptionWithInteger(){
@@ -195,8 +188,9 @@ public class ArgsParserTest {
 			p.parse(testCommandLineArgs);
 		} catch (InvalidArgumentException i){
 			messageTest = i.getMessage();
+		}finally{
+			assertEquals(message,messageTest);
 		}
-		assertEquals(message,messageTest);
 	}
 	
 	@Test
@@ -217,9 +211,9 @@ public class ArgsParserTest {
 		p.parse(testCommandLineArgs);
 		} catch(HelpMessageException h){
 			messageTest = h.getMessage();
-			}
-		
-		assertEquals(message,messageTest);
+		}finally{
+			assertEquals(message,messageTest);
+		}
 	}
 	
 	@Test
@@ -236,15 +230,63 @@ public class ArgsParserTest {
 		}catch(TooManyArgumentsException t){
 			extraArg = t.getExtraArgs();
 			extraArgMessage = t.getMessage();
+		}finally{
+			assertEquals("72 43",extraArg);
+			assertEquals("usage: java VolumeCalculator one two three \nVolumeCalculator.java: error: unrecognized arguments: 72 43", extraArgMessage);
 		}
-		assertEquals("72 43",extraArg);
-		assertEquals("usage: java VolumeCalculator one two three \nVolumeCalculator.java: error: unrecognized arguments: 72 43", extraArgMessage);
+
 	}
 	
 	@Test
 	public void VolumeCalculatorNameAndDescription() {
 		assertEquals("VolumeCalculator", p.getProgramName());
 		assertEquals("Calcuate the volume of a box.", p.getProgramDescription());
+	}
+	
+	@Test
+	public void testInvalidOptionalArgName() {
+		p.addArg("one");
+		p.addOptionalArg("digits", Arg.DataType.STRING, "2");
+		String incorrectArgName = "initialvalue";
+		String incorrectArgMessage = "initialvalue";
+		String[] testBadOptionalArg = {"1", "--potato", "2"};
+		
+		try{
+			p.parse(testBadOptionalArg);
+ 		}catch(InvalidOptionalArgumentNameException i) {
+ 			incorrectArgName = i.getArgName();
+ 			incorrectArgMessage = i.getMessage();
+			
+ 		}finally{
+			assertEquals("potato", incorrectArgName);
+			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: optional argument name: potato", incorrectArgMessage);
+		}
+ 			
+
+	}
+	
+	@Test
+	public void testInvalidOptionalArgumentValue() {
+		p.addArg("one");
+		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
+		String argName = "initialvalue";
+		String argDataType = "initialvalue";
+		String actualMessage = "intialvalue";
+		String expectedMessage = "usage: java VolumeCalculator one \n" +
+                  "VolumeCalculator.java: error: optional argument digits: invalid integer value: potato";
+		String[] testBadOptionalArg = {"1","--digits", "potato"};
+		
+		try{
+			p.parse(testBadOptionalArg);
+		}catch(InvalidArgumentException i) {
+			argName = i.getArgument().getArgName();
+			argDataType = i.getArgument().getDataType();
+			actualMessage = i.getMessage();
+		}finally{
+			assertEquals("digits",argName);
+			assertEquals(expectedMessage,actualMessage);
+			assertEquals("integer",argDataType);
+		}
 	}
 
 }
