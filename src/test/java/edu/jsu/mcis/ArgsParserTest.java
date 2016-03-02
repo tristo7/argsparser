@@ -246,5 +246,23 @@ public class ArgsParserTest {
 		assertEquals("VolumeCalculator", p.getProgramName());
 		assertEquals("Calcuate the volume of a box.", p.getProgramDescription());
 	}
+	
+	@Test
+	public void testValidOptionalArgName() {
+		p.addArg("one");
+		p.addOptionalArg("digits", Arg.DataType.STRING, "2");
+		String incorrectArg = "initialvalue";
+		String incorrectArgMessage = "initialvalue";
+		String[] testBadOptionalArg = {"1", "potato"};
+		
+		try {
+			p.parse(testBadOptionalArg);
+		}catch(InvalidOptionalArgumentException i) {
+			incorrectArg = i.getIncorrectArgs();
+			incorrectArgMessage = i.getMessage();
+		}
+			
+		assertEquals("potato", incorrectArg);
+	}
 
 }
