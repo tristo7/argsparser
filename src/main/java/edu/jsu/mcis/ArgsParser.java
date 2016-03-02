@@ -79,7 +79,6 @@ public class ArgsParser {
 	public void parse(String[] cla) {
 		String temp = "";
 		int currentArg = 0;
-		String optionalArgName = "";
 		String extraArgs = "";
 		boolean looping = true;
 		Queue<String> arguments = new LinkedList<String>();
@@ -94,19 +93,7 @@ public class ArgsParser {
 					throw new HelpMessageException(programName, programDescription, argNames, argMap);
 					
 				}else if(temp.contains("--")){
-					optionalArgName = temp.substring(2);
-					if(argMap.get(optionalArgName).getDataType().equals("boolean")){
-						argMap.get(optionalArgName).setVal("true");
-					} else {
-						
-						try{
-						argMap.get(optionalArgName).setVal(arguments.element());
-						arguments.remove();
-						}catch(NumberFormatException n){
-							argMap.get(optionalArgName).setValAsString(arguments.remove());
-							throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
-						}
-					}
+					dashedArgumentHandler(temp, arguments);
 					
 				}else if(currentArg < argNames.size()){
 					try{
@@ -133,6 +120,21 @@ public class ArgsParser {
 			}
 		}
 		
+	}
+	
+	private void dashedArgumentHandler(String t, Queue<String> q) {
+		String optionalArgName = t.substring(2);
+		if(argMap.get(optionalArgName).getDataType().equals("boolean")){
+			argMap.get(optionalArgName).setVal("true");
+		} else {		
+				try{
+					argMap.get(optionalArgName).setVal(q.element());
+					q.remove();
+				}catch(NumberFormatException n){
+					argMap.get(optionalArgName).setValAsString(q.remove());
+					throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
+				}
+		}
 	}
 	
 	public Arg getArg(String name) {
