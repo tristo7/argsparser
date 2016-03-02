@@ -5,22 +5,20 @@ import java.util.*;
 public class InvalidArgumentException extends RuntimeException {
     private Arg argument;
     private String message;
-	private String programName;
-	private String formattedArgNames = "";
 
-    public InvalidArgumentException(Arg arg, String name, List<String> argNames) {
+    public InvalidArgumentException(String msg, Arg arg, String value) {
         argument = arg;
-		programName = name;
-		for(int i = 0; i < argNames.size(); i++){
-			formattedArgNames += argNames.get(i) + " ";
-		}
+		message = msg;
+		message += argument.getArgName() + ": invalid " + argument.getDataType() +
+			" value: " + value;
     }
 
-    public String getMessage() {
-        String dataType = argument.getDataType();
-        message = "usage: java "+programName+" "+formattedArgNames+"\n" +
-                  programName+".java: error: argument " + argument.argumentName + ": invalid "+dataType+" value: "+argument.getVal(); // add rest of message
-		return message;
+    public Arg getArgument(){
+		return argument;
     }
+	
+	public String getMessage(){
+		return message;
+	}
 
 }

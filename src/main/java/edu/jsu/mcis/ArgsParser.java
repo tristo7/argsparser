@@ -91,7 +91,8 @@ public class ArgsParser {
 			if(!arguments.isEmpty()) {
 				temp = arguments.remove();
 				if(temp.equals("-h") || temp.equals("--help")) {
-					throw new HelpMessageException(programName, programDescription, argNames, argMap);
+					String s = createExceptionMessage("HelpMessageException");
+					throw new HelpMessageException(s);
 					
 				}else if(temp.contains("--")){
 					optionalArgName = temp.substring(2);
@@ -103,8 +104,7 @@ public class ArgsParser {
 						argMap.get(optionalArgName).setVal(arguments.element());
 						arguments.remove();
 						}catch(NumberFormatException n){
-							argMap.get(optionalArgName).setValAsString(arguments.remove());
-							throw new InvalidArgumentException(argMap.get(optionalArgName), programName, argNames);
+							throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(optionalArgName), arguments.remove());
 						}
 					}
 					
@@ -112,8 +112,7 @@ public class ArgsParser {
 					try{
 						argMap.get(argNames.get(currentArg)).setVal(temp);
 					}catch(NumberFormatException n){
-						argMap.get(argNames.get(currentArg)).setValAsString(temp);
-						throw new InvalidArgumentException(argMap.get(argNames.get(currentArg)), programName, argNames);
+						throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentArg)), temp);
 					}
 					currentArg++;
 					
@@ -126,7 +125,6 @@ public class ArgsParser {
 					}
 					throw new TooManyArgumentsException(extraArgs, programName, argNames);
 					
-
 				}
 			}else{
 				looping = false;
@@ -141,5 +139,34 @@ public class ArgsParser {
 	
 	public <T> T getArgValue(String name) {
 		return (T) argMap.get(name).getVal();
+	}
+	
+	private String createExceptionMessage(String messageType){
+		String msg = "usage: java "+programName+" ";
+		for(int i = 0; i<argNames.size();i++){
+			msg += argNames.get(i) + " ";
+		}
+		
+		msg +="\n"+programName+".java: error: ";
+		
+		switch(messageType){
+			case "HelpMessageException":
+				msg = msg.substring(0, msg.length()-7);
+				msg += programDescription + "\npositional arguments:\n";
+				for(int i = 0; i < argNames.size(); i++){
+					msg += argNames.get(i) + " " + argMap.get(argNames.get(i)).getDescription() + "\n";
+				}
+				break;
+			case "InvalidArgumentException":
+				msg += "argument ";
+				break;
+			case "TooManyArgumentsException":
+				break;
+			case "FlagDefaultNotFalseException":
+				break;
+		}
+		
+		
+		return msg;
 	}
 }

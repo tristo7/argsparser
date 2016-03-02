@@ -30,6 +30,10 @@ public class Arg {
 	public String getDescription(){
 		return argumentDescription;
 	}
+	
+	public String getArgName(){
+		return argumentName;
+	}
 
 	public String getDataType(){
 		switch(dType){
@@ -42,10 +46,6 @@ public class Arg {
 			default:
 				return "string";
         }
-	}
-	
-	protected void setValAsString(String value){
-		val = value;
 	}
 	
     protected void setVal(String value) {

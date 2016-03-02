@@ -29,7 +29,7 @@ public class ArgsParserTest {
 		
 		String messageTest = "";
 		String message = "usage: java VolumeCalculator TestArg \n"+
-					"Calcuate the volume of a box.\n"+
+					"VolumeCalculator.java: Calcuate the volume of a box.\n"+
 					"positional arguments:\n"+
 					"TestArg \n";
 		try{
@@ -208,7 +208,7 @@ public class ArgsParserTest {
 		String[] testCommandLineArgs = {"-h"};
 		String messageTest = "";
 		String message = "usage: java VolumeCalculator length width height \n"+
-					"Calcuate the volume of a box.\n"+
+					"VolumeCalculator.java: Calcuate the volume of a box.\n"+
 					"positional arguments:\n"+
 					"length the length of the box (float)\n"+
 					"width the width of the box(float)\n"+
