@@ -61,18 +61,17 @@ public class ArgsParser {
 	}
 	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
-		if(type == Arg.DataType.BOOLEAN){
-			if(defaultValue.contains("false") || defaultValue.contains("False")){
+		switch(type){
+			case BOOLEAN:
+				if(!defaultValue.toLowerCase().equals("false"))
+					throw new FlagDefaultNotFalseException(createExceptionMessage("FlagDefaultNotFalseException"),name, defaultValue);
+			case INTEGER:
+			case STRING:
+			case FLOAT:
 				optionalArgNames.add(name);
 				argMap.put(name, new Arg(name, type));
 				getArg(name).setVal(defaultValue);
-			} else {
-				throw new FlagDefaultNotFalseException(name, defaultValue);
-			}
-		} else {
-			optionalArgNames.add(name);
-			argMap.put(name, new Arg(name, type));
-			getArg(name).setVal(defaultValue);
+				break;
 		}
 	}
 
@@ -80,40 +79,32 @@ public class ArgsParser {
 		String temp = "";
 		int currentArg = 0;
 		String extraArgs = "";
-		boolean looping = true;
 		Queue<String> arguments = new LinkedList<String>();
 		for(int i = 0;i<cla.length;i++){
 			arguments.add(cla[i]);
 		}
 		
-		while(looping){
-			if(!arguments.isEmpty()) {
-				temp = arguments.remove();
-				if(temp.equals("-h") || temp.equals("--help")) {
-					throw new HelpMessageException(createExceptionMessage("HelpMessageException"));
-					
-				}else if(temp.contains("--")){
-					dashedArgumentHandler(temp, arguments);					
-				}else if(currentArg < argNames.size()){
-					try{
-						argMap.get(argNames.get(currentArg)).setVal(temp);
-					}catch(NumberFormatException n){
-						throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentArg)), temp);
-					}
-					currentArg++;
-					
-				}else{
-					looping = false;
-					extraArgs = temp;
-					
-					while(!arguments.isEmpty()){
-						extraArgs+=" "+arguments.remove();
-					}
-					throw new TooManyArgumentsException(extraArgs, programName, argNames);
-					
+		while(!arguments.isEmpty()){
+			temp = arguments.remove();
+			if(temp.equals("-h") || temp.equals("--help")) {
+				throw new HelpMessageException(createExceptionMessage("HelpMessageException"));
+				
+			}else if(temp.contains("--")){
+				dashedArgumentHandler(temp, arguments);					
+			}else if(currentArg < argNames.size()){
+				try{
+					argMap.get(argNames.get(currentArg)).setVal(temp);
+				}catch(NumberFormatException n){
+					throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentArg)), temp);
 				}
+				currentArg++;
+				
 			}else{
-				looping = false;
+				extraArgs = temp;
+				while(!arguments.isEmpty()){
+					extraArgs+=" "+arguments.remove();
+				}
+				throw new TooManyArgumentsException(createExceptionMessage("TooManyArgumentsException"), extraArgs);
 			}
 		}
 		
@@ -148,7 +139,6 @@ public class ArgsParser {
 		for(int i = 0; i<argNames.size();i++){
 			msg += argNames.get(i) + " ";
 		}
-		
 		msg +="\n"+programName+".java: error: ";
 		
 		switch(messageType){
@@ -162,15 +152,16 @@ public class ArgsParser {
 			case "InvalidArgumentException":
 				msg += "argument ";
 				break;
+			case "FlagDefaultNotFalseException":
 			case "InvalidOptionalArgumentException":
 				msg += "optional argument ";
 				break;
 			case "InvalidOptionalArgumentNameException":
 				msg += "optional argument name: ";
 				break;
+			case "TooManyArgumentsException":
+				msg += "unrecognized arguments: ";
 		}
-		
-		
 		return msg;
 	}
 }

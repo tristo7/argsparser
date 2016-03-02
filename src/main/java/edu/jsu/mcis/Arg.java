@@ -2,24 +2,22 @@ package edu.jsu.mcis;
 
 public class Arg {
     public enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};
-    String argumentName;
+    private String argumentName;
     private Object val;
-    private DataType dType;
+    private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
 
     public Arg(String name) {
         argumentName = name;
-        dType = DataType.STRING;
     }
 
     public Arg(String name, DataType type) {
-        argumentName = name;
+		this(name);
 		dType = type;
     }
 	
 	public Arg(String name, DataType type, String desc) {
-        argumentName = name;
-		dType = type;
+        this(name, type);
 		argumentDescription = desc;
     }
 	
@@ -36,33 +34,25 @@ public class Arg {
 	}
 
 	public String getDataType(){
-		switch(dType){
-			case INTEGER:
-				return "integer";
-			case FLOAT:
-				return "float";
-			case BOOLEAN:
-				return "boolean";
-			default:
-				return "string";
-        }
+		return dType.toString().toLowerCase();
 	}
 	
     protected void setVal(String value) {
 		switch(dType){
 			case INTEGER:
-				val = Integer.parseInt(value);
+				val = Integer.valueOf(value);
 				break;
 			case FLOAT:
-				val = Float.parseFloat(value);
+				val = Float.valueOf(value);
 				break;
 			case BOOLEAN:
-				if(value.equals("true")||value.equals("True")){
-					val = true;
-				} else if (value.equals("false")||value.equals("False")){
-					val = false;
-				} else {
-					throw new NumberFormatException();
+				switch(value.toLowerCase()){
+					case "true":
+					case "false":
+						val = Boolean.valueOf(value);
+						break;
+					default:
+						throw new NumberFormatException();
 				}
 				break;
 			default:

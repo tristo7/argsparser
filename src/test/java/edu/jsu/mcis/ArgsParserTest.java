@@ -52,10 +52,15 @@ public class ArgsParserTest {
 		} catch (FlagDefaultNotFalseException f){
 			exception = true;
 			actualMessage = f.getMessage();
+			assertEquals("arg2",f.getArgName());
+			assertEquals("true",f.getArgValue());
+			
 			
 		}finally{
 			assertTrue(exception);
-			assertEquals("Argument arg2 has an invalid default value of true.\n Change the default value to false.", actualMessage);
+			assertEquals("usage: java VolumeCalculator \n"+
+					"VolumeCalculator.java: error: optional argument arg2: invalid default value: true", actualMessage);
+			
 		}
 		
 	}
@@ -219,7 +224,7 @@ public class ArgsParserTest {
 	@Test
 	public void testTooManyArgumentsException() {
 		String[] testCommandLineArgs = {"4", "6", "14", "72", "43"};
-		String extraArg = "initialvalue";
+		String extraArgs = "initialvalue";
 		String extraArgMessage = "initialvalue";
 		
 		p.addArg("one");
@@ -228,10 +233,10 @@ public class ArgsParserTest {
 		try{
 		p.parse(testCommandLineArgs);
 		}catch(TooManyArgumentsException t){
-			extraArg = t.getExtraArgs();
+			extraArgs = t.getExtraArgs();
 			extraArgMessage = t.getMessage();
 		}finally{
-			assertEquals("72 43",extraArg);
+			assertEquals("72 43",extraArgs);
 			assertEquals("usage: java VolumeCalculator one two three \nVolumeCalculator.java: error: unrecognized arguments: 72 43", extraArgMessage);
 		}
 
