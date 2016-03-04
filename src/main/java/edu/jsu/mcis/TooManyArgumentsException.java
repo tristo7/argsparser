@@ -3,18 +3,14 @@ package edu.jsu.mcis;
 import java.util.*;
 
 public class TooManyArgumentsException extends RuntimeException {
-	private String extraArgs, message;
+	private String extraArgs;
 	
 	public TooManyArgumentsException(String msg, String args) {
+		super(msg + args);
 		extraArgs = args;
-		message = msg + extraArgs;
 	}	
 	
 	public String getExtraArgs(){
 		return extraArgs;
-	}
-	
-	public String getMessage(){
-		return message;
 	}
 }
