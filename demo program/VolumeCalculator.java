@@ -8,7 +8,7 @@ public class VolumeCalculator {
 		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
 		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
 		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
-		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
+		p.addOptionalArg("type", Arg.DataType.STRING, "box");
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
 		
 		p.parse(args);
@@ -22,7 +22,7 @@ public class VolumeCalculator {
 		float r = 0;
 		
 		switch(option1) {
-			case "cube":
+			case "box":
 				l = p.getArgValue("length");
 				h = p.getArgValue("height");
 				w = p.getArgValue("width");
