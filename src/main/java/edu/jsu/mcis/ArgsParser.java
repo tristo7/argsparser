@@ -76,8 +76,8 @@ public class ArgsParser {
 	}
 
 	public void parse(String[] cla) {
-		String temp = "";
-		int currentArg = 0;
+		String currentArg = "";
+		int currentPosArg = 0;
 		String extraArgs = "";
 		Queue<String> arguments = new LinkedList<String>();
 		for(int i = 0;i<cla.length;i++){
@@ -85,22 +85,22 @@ public class ArgsParser {
 		}
 		
 		while(!arguments.isEmpty()){
-			temp = arguments.remove();
-			if(temp.equals("-h") || temp.equals("--help")) {
+			currentArg = arguments.remove();
+			if(currentArg.equals("-h") || currentArg.equals("--help")) {
 				throw new HelpMessageException(createExceptionMessage("HelpMessageException"));
 				
-			}else if(temp.contains("--")){
-				dashedArgumentHandler(temp, arguments);					
-			}else if(currentArg < argNames.size()){
+			}else if(currentArg.contains("--")){
+				dashedArgumentHandler(currentArg, arguments);					
+			}else if(currentPosArg < argNames.size()){
 				try{
-					argMap.get(argNames.get(currentArg)).setVal(temp);
+					argMap.get(argNames.get(currentPosArg)).setVal(currentArg);
 				}catch(NumberFormatException n){
-					throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentArg)), temp);
+					throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentPosArg)), currentArg);
 				}
-				currentArg++;
+				currentPosArg++;
 				
 			}else{
-				extraArgs = temp;
+				extraArgs = currentArg;
 				while(!arguments.isEmpty()){
 					extraArgs+=" "+arguments.remove();
 				}
