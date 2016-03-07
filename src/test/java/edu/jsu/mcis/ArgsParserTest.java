@@ -271,7 +271,7 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testInvalidOptionalArgumentValue() {
+	public void testInvalidOptionalArgValue() {
 		p.addArg("one");
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
 		String argName = "initialvalue";
@@ -291,6 +291,45 @@ public class ArgsParserTest {
 			assertEquals("digits",argName);
 			assertEquals(expectedMessage,actualMessage);
 			assertEquals("integer",argDataType);
+		}
+	}
+	
+	@Test
+	public void testShortNameMapsToLongName(){
+		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
+		p.parse(new String[] {"-d", "4"});
+		assertEquals((int) p.getArgValue("digits"), 4);
+	}
+	
+	@Test
+	public void testMultipleShortNameFlags(){
+		p.addOptionalArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
+		p.addOptionalArg("beta", Arg.DataType.BOOLEAN, "false", 'b');
+		p.addOptionalArg("charlie", Arg.DataType.BOOLEAN, "false", 'c');
+		p.addOptionalArg("delta", Arg.DataType.BOOLEAN, "false", 'd');
+		
+		
+		p.parse(new String[] {"-cab"});
+		assertTrue((boolean) p.getArgValue("alpha"));
+		assertTrue((boolean) p.getArgValue("beta"));
+		assertTrue((boolean) p.getArgValue("charlie"));
+		assertFalse((boolean) p.getArgValue("delta"));
+	}
+	@Test
+	public void testInvalidShortName(){
+		p.addArg("one");
+		p.addOptionalArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
+		String incorrectArgName = "";
+		String incorrectArgMessage = "";
+		try{
+			p.parse(new String[] {"-b"});
+ 		}catch(InvalidOptionalArgumentNameException i) {
+ 			incorrectArgName = i.getArgName();
+ 			incorrectArgMessage = i.getMessage();
+			
+ 		}finally{
+			assertEquals("b", incorrectArgName);
+			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: optional argument name: b", incorrectArgMessage);
 		}
 	}
 

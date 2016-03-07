@@ -9,11 +9,13 @@ public class ArgsParser {
 	private Map<String, Arg> argMap;
 	private String programName = "";
 	private String programDescription = "";
+	private Map<Character, String> shortNameMap;
 	
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
 		optionalArgNames = new ArrayList<String>();
 		argMap = new HashMap<String, Arg>();
+		shortNameMap = new HashMap<Character, String>();
 	}
 	
 	
@@ -60,6 +62,7 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name, myType, description));
 	}
 	
+	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
 		switch(type){
 			case BOOLEAN:
@@ -74,6 +77,11 @@ public class ArgsParser {
 				break;
 		}
 	}
+	
+	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName){
+		shortNameMap.put(shortName, name);
+		addOptionalArg(name, type, defaultValue);
+	}
 
 	public void parse(String[] cla) {
 		String currentArg = "";
@@ -86,11 +94,9 @@ public class ArgsParser {
 		
 		while(!arguments.isEmpty()){
 			currentArg = arguments.remove();
-			if(currentArg.equals("-h") || currentArg.equals("--help")) {
-				throw new HelpMessageException(createExceptionMessage("HelpMessageException"));
-				
-			}else if(currentArg.contains("--")){
-				dashedArgumentHandler(currentArg, arguments);					
+			
+			if(currentArg.contains("-")){
+				dashedArgumentClassifier(currentArg, arguments);					
 			}else if(currentPosArg < argNames.size()){
 				try{
 					argMap.get(argNames.get(currentPosArg)).setVal(currentArg);
@@ -110,8 +116,24 @@ public class ArgsParser {
 		
 	}
 	
-	private void dashedArgumentHandler(String t, Queue<String> q) {
-		String optionalArgName = t.substring(2);
+	private void dashedArgumentClassifier(String t, Queue<String> q) {
+		if(t.equals("-h") || t.equals("--help")){
+				throw new HelpMessageException(createExceptionMessage("HelpMessageException"));
+		}else if(t.contains("--")){
+			dashedArgumentHandler(t.substring(2), q);
+		} else {
+			for(int i = 1;i<t.length();i++){
+				char currentShortArg = t.charAt(i);
+				if(shortNameMap.containsKey(currentShortArg)){
+					dashedArgumentHandler(shortNameMap.get(t.charAt(i)), q);
+				}else{
+					throw new InvalidOptionalArgumentNameException(createExceptionMessage("InvalidOptionalArgumentNameException"), String.valueOf(currentShortArg));
+				}
+			}
+		}
+	}
+	
+	private void dashedArgumentHandler(String optionalArgName, Queue<String> q){
 		if(!optionalArgNames.contains(optionalArgName)){
 			throw new InvalidOptionalArgumentNameException(createExceptionMessage("InvalidOptionalArgumentNameException"), optionalArgName);
 		}else if(argMap.get(optionalArgName).getDataType().equals("boolean")){
