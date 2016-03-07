@@ -169,10 +169,15 @@ public class ArgsParser {
 	}
 	
 	public void loadFromXml(String fileLocation){
-		File xmlFile = new File(fileLocation);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(xmlFile);
+		try {
+			File xmlFile = new File(fileLocation);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xmlFile);
+		}
+		catch(Exception e){
+			
+		}
 		
 	}
 }
