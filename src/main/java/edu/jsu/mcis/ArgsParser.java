@@ -1,6 +1,9 @@
 package edu.jsu.mcis;
 
 import java.util.*;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.File;
 
 public class ArgsParser {
 
@@ -185,5 +188,18 @@ public class ArgsParser {
 				msg += "unrecognized arguments: ";
 		}
 		return msg;
+	}
+	
+	public void loadFromXml(String fileLocation){
+		try {
+			File xmlFile = new File(fileLocation);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xmlFile);
+		}
+		catch(Exception e){
+			
+		}
+		
 	}
 }
