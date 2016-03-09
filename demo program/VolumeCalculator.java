@@ -10,7 +10,7 @@ public class VolumeCalculator {
 		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
 		p.addOptionalArg("type", Arg.DataType.STRING, "box");
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
-		
+		p.saveToXML("test.xml");
 		p.parse(args);
 		
 		String option1 = p.getArgValue("type");

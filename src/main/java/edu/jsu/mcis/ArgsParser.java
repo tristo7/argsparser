@@ -3,6 +3,9 @@ package edu.jsu.mcis;
 import java.util.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
 public class ArgsParser {
@@ -202,4 +205,81 @@ public class ArgsParser {
 		}
 		
 	}
+	
+	public void saveToXML(String fileLocation){
+		try{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.newDocument();
+			
+			Element arguments = doc.createElement("arguments");
+			//build XML file 
+			doc.appendChild(arguments);
+			String currentArgName = "";
+			for(int i = 0;i<argNames.size();i++){
+				currentArgName = argNames.get(i);
+				Element positional = doc.createElement("positional");
+				arguments.appendChild(positional);
+				
+				Element name = doc.createElement("name");
+				positional.appendChild(name);
+				name.appendChild(doc.createTextNode(currentArgName));
+				
+				Element type = doc.createElement("type");
+				positional.appendChild(type);
+				type.appendChild(doc.createTextNode(argMap.get(currentArgName).getDataType()));
+				
+				Element position = doc.createElement("position");
+				positional.appendChild(position);
+				position.appendChild(doc.createTextNode(Integer.toString(i)));
+			}
+			
+			
+			for(int i = 0; i<optionalArgNames.size();i++){
+				currentArgName = optionalArgNames.get(i);
+				Element named = doc.createElement("named");
+				arguments.appendChild(named);
+				
+				Element name = doc.createElement("name");
+				named.appendChild(name);
+				name.appendChild(doc.createTextNode(currentArgName));
+				//shortname currently broken.
+				Element shortName = doc.createElement("shortname");
+				named.appendChild(shortName);
+				shortName.appendChild(doc.createTextNode("broken"));
+				
+				Element type = doc.createElement("type");
+				named.appendChild(type);
+				type.appendChild(doc.createTextNode(argMap.get(currentArgName).getDataType()));
+				
+				Element defaultValue = doc.createElement("default");
+				named.appendChild(defaultValue);
+				switch(argMap.get(currentArgName).getDataType()){
+					case "string":
+						defaultValue.appendChild(doc.createTextNode((String) argMap.get(currentArgName).getVal()));
+						break;
+					case "boolean":
+						defaultValue.appendChild(doc.createTextNode(Boolean.toString(argMap.get(currentArgName).getVal())));
+						break;
+					case "float":
+						defaultValue.appendChild(doc.createTextNode(Float.toString(argMap.get(currentArgName).getVal())));
+						break;
+					case "integer":
+						defaultValue.appendChild(doc.createTextNode(Integer.toString(argMap.get(currentArgName).getVal())));
+						break;
+				}
+			}
+			
+			//save the xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(fileLocation));
+			
+			transformer.transform(source, result);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	} 
 }
