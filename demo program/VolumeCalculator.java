@@ -8,9 +8,13 @@ public class VolumeCalculator {
 		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
 		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
 		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
-		p.addOptionalArg("type", Arg.DataType.STRING, "box", 't');
+		p.addOptionalArg("type", Arg.DataType.STRING, "box");
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
-		p.saveToXML("test.xml");
+		//p.saveToXML("test.xml");
+		System.out.println(p.getArg("length").toXML());
+		System.out.println(p.getArg("width").toXML());
+		System.out.println(p.getArg("type").toXML());
+		System.out.println(p.getArg("digits").toXML());
 		p.parse(args);
 		
 		String option1 = p.getArgValue("type");

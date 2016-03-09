@@ -3,9 +3,11 @@ package edu.jsu.mcis;
 public class Arg {
     public enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};
     private String argumentName;
+	private char argumentShortName;
     private Object val;
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
+	private boolean isOptionalArgument = false;
 
     public Arg(String name) {
         argumentName = name;
@@ -21,8 +23,18 @@ public class Arg {
 		argumentDescription = desc;
     }
 	
+	public Arg(String name, DataType type, String desc, String defaultValue){
+		this(name, type, desc);
+		isOptionalArgument = true;
+		setVal(defaultValue);
+	}
+	
 	public void setDescription(String s){
 		argumentDescription = s;
+	}
+	
+	public void setArgShortName(char c){
+		argumentShortName = c;
 	}
 	
 	public String getDescription(){
@@ -31,6 +43,13 @@ public class Arg {
 	
 	public String getArgName(){
 		return argumentName;
+	}
+	
+	public char getArgShortName(){
+		if(isOptionalArgument)
+			return argumentShortName;
+		else
+			throw new RuntimeException("This is not a named argument.");
 	}
 
 	public String getDataType(){
@@ -63,4 +82,32 @@ public class Arg {
     public <T> T getVal() {
         return (T) val;
     }
+	
+	public String toXML(){
+		String statement = "";
+		if(isOptionalArgument){
+			statement += "<named>\n";
+			
+		} else {
+			statement += "<positional>\n";
+		}
+		
+		statement += "    <name>" + argumentName + "<name>\n" +
+					 "    <type>" + dType.toString().toLowerCase() + "</type>\n";
+		if(!argumentDescription.equals(""))
+			statement += "    <description>" + argumentDescription + "</description>\n";
+		
+		if(isOptionalArgument){
+			if(argumentShortName != '\u0000'){
+				statement += "    <shortname>" + argumentShortName + "</shortname>\n";
+			}
+			statement += "    <default>" + String.valueOf(val) + "</default>\n</named>";
+			
+		} else {
+			statement += "</positional>";
+		}
+		
+		
+		return statement;
+	}
 }

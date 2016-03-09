@@ -12,7 +12,6 @@ public class ArgsParser {
 
 	private List<String> argNames;
 	private List<String> optionalArgNames;
-	private List<Character> optionalArgShortNames;
 	private Map<String, Arg> argMap;
 	private String programName = "";
 	private String programDescription = "";
@@ -21,7 +20,6 @@ public class ArgsParser {
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
 		optionalArgNames = new ArrayList<String>();
-		optionalArgShortNames = new ArrayList<Character>();
 		argMap = new HashMap<String, Arg>();
 		shortNameMap = new HashMap<Character, String>();
 	}
@@ -80,16 +78,15 @@ public class ArgsParser {
 			case STRING:
 			case FLOAT:
 				optionalArgNames.add(name);
-				argMap.put(name, new Arg(name, type));
-				getArg(name).setVal(defaultValue);
+				argMap.put(name, new Arg(name, type, "", defaultValue));
 				break;
 		}
 	}
 	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName){
 		shortNameMap.put(shortName, name);
-		optionalArgShortNames.add(shortName);
 		addOptionalArg(name, type, defaultValue);
+		getArg(name).setArgShortName(shortName);
 	}
 
 	public void parse(String[] cla) {
@@ -208,7 +205,7 @@ public class ArgsParser {
 				return Arg.DataType.STRING;
 		}
 	}
-	
+	//to be moved to XMLTools.java
 	public void loadFromXml(String fileLocation){
 		try {
 			if(fileLocation.contains(".xml")) {
@@ -239,6 +236,7 @@ public class ArgsParser {
 		
 	}
 	
+	//to be moved to XMLTools.java
 	public void saveToXML(String fileLocation){
 		try{
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -264,7 +262,7 @@ public class ArgsParser {
 				
 				Element position = doc.createElement("position");
 				positional.appendChild(position);
-				position.appendChild(doc.createTextNode(Integer.toString(i)));
+				position.appendChild(doc.createTextNode(Integer.toString(i+1)));
 			}
 			
 			
@@ -276,10 +274,12 @@ public class ArgsParser {
 				Element name = doc.createElement("name");
 				named.appendChild(name);
 				name.appendChild(doc.createTextNode(currentArgName));
-				//shortname currently broken.
-				Element shortName = doc.createElement("shortname");
-				named.appendChild(shortName);
-				shortName.appendChild(doc.createTextNode(Character.toString(optionalArgShortNames.get(i))));
+				
+				if(shortNameMap.containsValue(currentArgName)){
+					Element shortName = doc.createElement("shortname");
+					named.appendChild(shortName);
+					shortName.appendChild(doc.createTextNode(Character.toString(getArg(currentArgName).getArgShortName())));
+				}
 				
 				Element type = doc.createElement("type");
 				named.appendChild(type);
@@ -287,20 +287,22 @@ public class ArgsParser {
 				
 				Element defaultValue = doc.createElement("default");
 				named.appendChild(defaultValue);
+				String value = "";
 				switch(argMap.get(currentArgName).getDataType()){
 					case "string":
-						defaultValue.appendChild(doc.createTextNode((String) argMap.get(currentArgName).getVal()));
+						value = argMap.get(currentArgName).getVal();
 						break;
 					case "boolean":
-						defaultValue.appendChild(doc.createTextNode(Boolean.toString(argMap.get(currentArgName).getVal())));
+						value = Boolean.toString(argMap.get(currentArgName).getVal());
 						break;
 					case "float":
-						defaultValue.appendChild(doc.createTextNode(Float.toString(argMap.get(currentArgName).getVal())));
+						value = Float.toString(argMap.get(currentArgName).getVal());
 						break;
 					case "integer":
-						defaultValue.appendChild(doc.createTextNode(Integer.toString(argMap.get(currentArgName).getVal())));
-						break;
+						value = Integer.toString(argMap.get(currentArgName).getVal());
+						break; 
 				}
+				defaultValue.appendChild(doc.createTextNode(value));
 			}
 			
 			//save the xml file
