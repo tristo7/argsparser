@@ -195,13 +195,27 @@ public class ArgsParser {
 	
 	public void loadFromXml(String fileLocation){
 		try {
-			File xmlFile = new File(fileLocation);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(xmlFile);
+			if(fileLocation.contains(".xml")) {
+				File xmlFile = new File(fileLocation);
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document doc = dBuilder.parse(xmlFile);
+				doc.getDocumentElement().normalize();
+				NodeList nList = doc.getElementsByTagName("positional");
+				for (int temp = 0; temp < nList.getLength(); temp++) {
+					Node nNode = nList.item(temp);
+					System.out.println("\nCurrent Element :" + nNode.getNodeName());
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element eElement = (Element) nNode;
+					}
+				}
+			}
+			else {
+				throw new Exception();
+			}
 		}
 		catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		
 	}
