@@ -8,8 +8,8 @@ public class VolumeCalculator {
 		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
 		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
 		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
-		p.addOptionalArg("type", Arg.DataType.STRING, "box");
-		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
+		p.addOptionalArg("type", Arg.DataType.STRING, "box", 't');
+		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
 		p.saveToXML("test.xml");
 		p.parse(args);
 		

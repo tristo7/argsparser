@@ -12,6 +12,7 @@ public class ArgsParser {
 
 	private List<String> argNames;
 	private List<String> optionalArgNames;
+	private List<Character> optionalArgShortNames;
 	private Map<String, Arg> argMap;
 	private String programName = "";
 	private String programDescription = "";
@@ -20,6 +21,7 @@ public class ArgsParser {
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
 		optionalArgNames = new ArrayList<String>();
+		optionalArgShortNames = new ArrayList<Character>();
 		argMap = new HashMap<String, Arg>();
 		shortNameMap = new HashMap<Character, String>();
 	}
@@ -86,6 +88,7 @@ public class ArgsParser {
 	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName){
 		shortNameMap.put(shortName, name);
+		optionalArgShortNames.add(shortName);
 		addOptionalArg(name, type, defaultValue);
 	}
 
@@ -260,7 +263,7 @@ public class ArgsParser {
 				//shortname currently broken.
 				Element shortName = doc.createElement("shortname");
 				named.appendChild(shortName);
-				shortName.appendChild(doc.createTextNode("broken"));
+				shortName.appendChild(doc.createTextNode(Character.toString(optionalArgShortNames.get(i))));
 				
 				Element type = doc.createElement("type");
 				named.appendChild(type);
