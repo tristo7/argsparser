@@ -196,6 +196,19 @@ public class ArgsParser {
 		return msg;
 	}
 	
+	private Arg.DataType typeConversion(String t) {
+		switch(t) {
+			case "integer":
+				return Arg.DataType.INTEGER;
+			case "float":
+				return Arg.DataType.FLOAT;
+			case "boolean":
+				return Arg.DataType.BOOLEAN;
+			default:
+				return Arg.DataType.STRING;
+		}
+	}
+	
 	public void loadFromXml(String fileLocation){
 		try {
 			if(fileLocation.contains(".xml")) {
@@ -210,6 +223,9 @@ public class ArgsParser {
 					System.out.println("\nCurrent Element :" + nNode.getNodeName());
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
+						String type = eElement.getElementsByTagName("type").item(0).getTextContent();
+						Arg.DataType dType = typeConversion(type);
+						addArg(eElement.getElementsByTagName("name").item(0).getTextContent(), dType);
 					}
 				}
 			}
