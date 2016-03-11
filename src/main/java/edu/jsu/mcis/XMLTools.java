@@ -56,9 +56,6 @@ public class XMLTools{
 				DefaultHandler defaultH = new DefaultHandler();
 				saxParse.parse(xmlFile, defaultH);
 			}
-			else {
-				//throw new Exception();
-			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
