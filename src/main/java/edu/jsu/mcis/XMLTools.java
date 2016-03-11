@@ -74,35 +74,37 @@ public class XMLTools{
 				return Arg.DataType.STRING;
 		}
 	}
-}
+	
+	private class UserHandler extends DefaultHandler {
 
-class UserHandler extends DefaultHandler {
+	   boolean isPositional = false;
+	   
 
-   boolean isPositional = false;
+	   @Override
+	   public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
+		  if (qName.equalsIgnoreCase("positional")) {
+			isPositional = true;
+		  } 
+		  else if(qName.equalsIgnoreCase("named")){
+			isPositional = false;
+		  }
+		  else {
+			//throw new Exception();
+		  }
+	   }
+
+
+	   @Override
+	   public void characters(char ch[], 
+		  int start, int length) throws SAXException {
+		  if (isPositional) {
+			 
+		  } 
+		  else {
+			
+		  }
+	   }
    
-
-   @Override
-   public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
-      if (qName.equalsIgnoreCase("positional")) {
-        isPositional = true;
-      } 
-	  else if(qName.equalsIgnoreCase("named")){
-		isPositional = false;
-	  }
-	  else {
-		//throw new Exception();
-	  }
-   }
-
-
-   @Override
-   public void characters(char ch[], 
-      int start, int length) throws SAXException {
-      if (isPositional) {
-         
-      } 
-	  else {
-		
-	  }
-   }
+	}
 }
+
