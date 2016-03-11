@@ -3,7 +3,6 @@ package edu.jsu.mcis;
 
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
-import javax.xml.parse.*;
 import java.io.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
@@ -58,7 +57,7 @@ public class XMLTools{
 				saxParse.parse(xmlFile, defaultH);
 			}
 			else {
-				throw new Exception();
+				//throw new Exception();
 			}
 		}
 		catch(Exception e){
@@ -91,11 +90,11 @@ class UserHandler extends DefaultHandler {
       if (qName.equalsIgnoreCase("positional")) {
         isPositional = true;
       } 
-	  else if(qName.equalsIgnoreCase("named"){
-		isPostional = false;
+	  else if(qName.equalsIgnoreCase("named")){
+		isPositional = false;
 	  }
 	  else {
-		throw new Exception();
+		//throw new Exception();
 	  }
    }
 
