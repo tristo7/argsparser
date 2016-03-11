@@ -24,11 +24,16 @@ public class ArgsParser {
 		shortNameMap = new HashMap<Character, String>();
 	}
 	
+	public List<String> getPositionalArgumentNames(){
+		return argNames;
+	}
+	public List<String> getOptionalArgumentNames(){
+		return optionalArgNames;
+	}
 	
 	public int getNumArguments() {
 		return argNames.size()+optionalArgNames.size();
 	}
-	
 	
 	public void setProgramName(String name) {
 		programName = name;
@@ -37,7 +42,6 @@ public class ArgsParser {
 	public String getProgramName() {
 		return programName;
 	}
-	
 	
 	public void setProgramDescription(String s) {
 		programDescription = s;
@@ -236,85 +240,5 @@ public class ArgsParser {
 		
 	}
 	
-	//to be moved to XMLTools.java
-	public void saveToXML(String fileLocation){
-		try{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
-			
-			Element arguments = doc.createElement("arguments");
-			//build XML file 
-			doc.appendChild(arguments);
-			String currentArgName = "";
-			for(int i = 0;i<argNames.size();i++){
-				currentArgName = argNames.get(i);
-				Element positional = doc.createElement("positional");
-				arguments.appendChild(positional);
-				
-				Element name = doc.createElement("name");
-				positional.appendChild(name);
-				name.appendChild(doc.createTextNode(currentArgName));
-				
-				Element type = doc.createElement("type");
-				positional.appendChild(type);
-				type.appendChild(doc.createTextNode(argMap.get(currentArgName).getDataType()));
-				
-				Element position = doc.createElement("position");
-				positional.appendChild(position);
-				position.appendChild(doc.createTextNode(Integer.toString(i+1)));
-			}
-			
-			
-			for(int i = 0; i<optionalArgNames.size();i++){
-				currentArgName = optionalArgNames.get(i);
-				Element named = doc.createElement("named");
-				arguments.appendChild(named);
-				
-				Element name = doc.createElement("name");
-				named.appendChild(name);
-				name.appendChild(doc.createTextNode(currentArgName));
-				
-				if(shortNameMap.containsValue(currentArgName)){
-					Element shortName = doc.createElement("shortname");
-					named.appendChild(shortName);
-					shortName.appendChild(doc.createTextNode(Character.toString(getArg(currentArgName).getArgShortName())));
-				}
-				
-				Element type = doc.createElement("type");
-				named.appendChild(type);
-				type.appendChild(doc.createTextNode(argMap.get(currentArgName).getDataType()));
-				
-				Element defaultValue = doc.createElement("default");
-				named.appendChild(defaultValue);
-				String value = "";
-				switch(argMap.get(currentArgName).getDataType()){
-					case "string":
-						value = argMap.get(currentArgName).getVal();
-						break;
-					case "boolean":
-						value = Boolean.toString(argMap.get(currentArgName).getVal());
-						break;
-					case "float":
-						value = Float.toString(argMap.get(currentArgName).getVal());
-						break;
-					case "integer":
-						value = Integer.toString(argMap.get(currentArgName).getVal());
-						break; 
-				}
-				defaultValue.appendChild(doc.createTextNode(value));
-			}
-			
-			//save the xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(fileLocation));
-			
-			transformer.transform(source, result);
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	} 
+	
 }

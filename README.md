@@ -15,9 +15,9 @@ A Java library to parse command line arguments for easier use.
 - [x] **Allow datatype information to be added to arguments so that non-string arguments can be used.**
 - [x] **Allow named arguments with single values, which may have help and datatype information, after all positional arguments.**
 - [x] **Allow named arguments to be mixed with positional arguments in any order.**
-- [ ] **Allow named arguments to serve as flags (true if present).**
-- [ ] **Allow short-form names for named arguments, in addition to long-form names.**
-- [ ] **Throw exceptions if a specified argument does not exist or has the wrong datatype.**
+- [x] **Allow named arguments to serve as flags (true if present).**
+- [x] **Allow short-form names for named arguments, in addition to long-form names.**
+- [x] **Throw exceptions if a specified argument does not exist or has the wrong datatype.**
 - [ ] **Allow argument information to be loaded from an XML file.**
 - [ ] **Allow argument information to be saved to an XML file.**
 - [ ] **Provide comprehensive documentation on library features, including examples of use.**
