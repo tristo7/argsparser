@@ -193,49 +193,6 @@ public class ArgsParser {
 		return msg;
 	}
 	
-	private Arg.DataType typeConversion(String t) {
-		switch(t) {
-			case "integer":
-				return Arg.DataType.INTEGER;
-			case "float":
-				return Arg.DataType.FLOAT;
-			case "boolean":
-				return Arg.DataType.BOOLEAN;
-			default:
-				return Arg.DataType.STRING;
-		}
-	}
-	//to be moved to XMLTools.java
-	public void loadFromXml(String fileLocation){
-		try {
-			if(fileLocation.contains(".xml")) {
-				File xmlFile = new File(fileLocation);
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.parse(xmlFile);
-				doc.getDocumentElement().normalize();
-				NodeList nList = doc.getElementsByTagName("positional");
-				for (int temp = 0; temp < nList.getLength(); temp++) {
-					Node nNode = nList.item(temp);
-					System.out.println("\nCurrent Element :" + nNode.getNodeName());
-					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-						Element eElement = (Element) nNode;
-						String type = eElement.getElementsByTagName("type").item(0).getTextContent();
-						Arg.DataType dType = typeConversion(type);
-						addArg(eElement.getElementsByTagName("name").item(0).getTextContent(), dType);
-					}
-				}
-			}
-			else {
-				throw new Exception();
-			}
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		
-	}
-	
 	//to be moved to XMLTools.java
 	public void saveToXML(String fileLocation){
 		try{
