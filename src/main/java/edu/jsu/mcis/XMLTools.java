@@ -1,20 +1,16 @@
 package edu.jsu.mcis;
 
-<<<<<<< HEAD
+
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
-import java.io.File;
 import javax.xml.parse.*;
-=======
 import java.io.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.xml.sax.InputSource;
 import javax.xml.parsers.*;
->>>>>>> 81e1a33cefc558335a34e0a9e2584caa63dfda3d
 
 public class XMLTools{
 	
