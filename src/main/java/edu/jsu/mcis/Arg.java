@@ -92,7 +92,7 @@ public class Arg {
 			statement += "<positional>\n";
 		}
 		
-		statement += "    <name>" + argumentName + "<name>\n" +
+		statement += "    <name>" + argumentName + "</name>\n" +
 					 "    <type>" + dType.toString().toLowerCase() + "</type>\n";
 		if(!argumentDescription.equals(""))
 			statement += "    <description>" + argumentDescription + "</description>\n";

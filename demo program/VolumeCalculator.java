@@ -3,6 +3,7 @@ import edu.jsu.mcis.*;
 public class VolumeCalculator {
 	public static void main(String[] args) {
 		ArgsParser p = new ArgsParser();
+		XMLTools x = new XMLTools();
 		p.setProgramName("VolumeCalculator");
 		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
 		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
@@ -11,6 +12,7 @@ public class VolumeCalculator {
 		p.addOptionalArg("type", Arg.DataType.STRING, "box");
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
 		//p.saveToXML("test.xml");
+		x.save(p, "testing.xml");
 		System.out.println(p.getArg("length").toXML());
 		System.out.println(p.getArg("width").toXML());
 		System.out.println(p.getArg("type").toXML());

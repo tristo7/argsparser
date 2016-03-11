@@ -1,16 +1,52 @@
 package edu.jsu.mcis;
 
+<<<<<<< HEAD
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.io.File;
 import javax.xml.parse.*;
+=======
+import java.io.*;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.xml.sax.InputSource;
+import javax.xml.parsers.*;
+>>>>>>> 81e1a33cefc558335a34e0a9e2584caa63dfda3d
 
 public class XMLTools{
 	
 	public static void save(ArgsParser p, String fileLocation){
-		//convert string returned by Arg's toXML method to an XML doc.
-		//use a loop on all existing arguments calling the method.
-		//position is not functional as of yet.
+		String xml = 	"<arguments>\n";
+		if (!p.getProgramName().equals(""))
+			xml += "    <programname>" + p.getProgramName() + "</programname>\n";
+		if (!p.getProgramDescription().equals(""))
+			xml += "    <programdescription>" + p.getProgramDescription() + "</programdescription>\n";
+		for(String s : p.getPositionalArgumentNames()){
+			xml += "    " + p.getArg(s).toXML();
+		}
+		for(String s : p.getOptionalArgumentNames()){
+			xml += "    " + p.getArg(s).toXML();
+		}
+		xml += "</arguments>";
+		
+		try{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			InputSource input = new InputSource();
+			input.setCharacterStream(new StringReader(xml));
+			Document doc = docBuilder.parse(input);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(fileLocation));
+			transformer.transform(source, result);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static ArgsParser load(String fileLocation){
