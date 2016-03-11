@@ -9,12 +9,11 @@ import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.parsers.*;
 
 public class XMLTools{
 	
 	public static void save(ArgsParser p, String fileLocation){
-		String xml = 	"<arguments>\n";
+		String xml = "<arguments>\n";
 		if (!p.getProgramName().equals(""))
 			xml += "    <programname>" + p.getProgramName() + "</programname>\n";
 		if (!p.getProgramDescription().equals(""))

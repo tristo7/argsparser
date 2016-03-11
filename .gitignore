@@ -5,6 +5,7 @@
 /acceptance/log.html
 /acceptance/output.xml
 /acceptance/report.html
+/src/test/java/edu/jsu/mcis/testSave.XML
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
