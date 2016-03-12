@@ -11,6 +11,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class XMLTools{
+	private static UserHandler userH = new UserHandler();
 	
 	public static void save(ArgsParser p, String fileLocation){
 		String xml = "<arguments>\n";
@@ -57,7 +58,6 @@ public class XMLTools{
 				File xmlFile = new File(fileLocation);
 				SAXParserFactory spFactory = SAXParserFactory.newInstance();
 				SAXParser saxParse = spFactory.newSAXParser();
-				UserHandler userH = new UserHandler();
 				saxParse.parse(xmlFile, userH);
 			}
 		}
@@ -81,17 +81,19 @@ public class XMLTools{
 	}
 	
 	private class UserHandler extends DefaultHandler {
-		Map<String, Boolean> flagMap;
+		private Map<String, Boolean> flagMap;
 		boolean isPositional = false;
-		private Arg.DataType myType;
-		private String name;
-		private ArgsParser a;
-		private String programName;
+		private List<Arg> tempArgs;
 		private String programDescription;
-		private int position;
+		private String programName;
+		private String name;
+		private String defaultVal;
 		private char shortName;
+		private Arg.DataType myType;
+		private ArgsParser p;
 		
 		public UserHandler(){
+			p = new ArgsParser();
 			flagMap = new HashMap<String, Boolean>();
 			flagMap.put("arguments", false);
 			flagMap.put("programname", false);
@@ -105,19 +107,6 @@ public class XMLTools{
 			flagMap.put("default", false);
 			flagMap.put("position", false);
 		}
-	   
-	   @Override
-	   public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
-		  if (qName.equalsIgnoreCase("positional")) {
-			isPositional = true;
-		  } 
-		  else if(qName.equalsIgnoreCase("named")){
-			isPositional = false;
-		  }
-		  else {
-			//throw new Exception();
-		  }
-	   }
 	   
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
@@ -140,11 +129,14 @@ public class XMLTools{
 		  int start, int length) throws SAXException {
 			try {
 				if (flagMap.get("arguments") == true) {
+					Arg tempArg;
 					if(flagMap.get("programname") == true) {
 						programName = new String(ch);
+						p.setProgramName(programName);
 					}
 					else if(flagMap.get("programdescription") == true) {
 						programDescription = new String(ch);
+						p.setProgramDescription(programDescription);
 					}
 					else if (flagMap.get("positional") == true) {
 						if(flagMap.get("name") == true) {
@@ -153,13 +145,28 @@ public class XMLTools{
 						else if(flagMap.get("type") == true) {
 							String s = new String(ch);
 							myType = typeConversion(s);
+							tempArg = new Arg(name, myType, "");
 						}
 						else if(flagMap.get("position") == true) {
-							
+							int myPosition = Integer.parseInt(new String(ch));
+							tempArg.setPosition(myPosition);
+							tempArgs.add(tempArg);
 						}
 					}
 					else if(flagMap.get("named") == true) {
-						
+						if(flagMap.get("name") == true) {
+							name = new String(ch);
+						}
+						else if(flagMap.get("shortname") == true) {
+							shortName = ch[0];
+						}
+						else if(flagMap.get("type") == true) {
+							String p = new String(ch);
+							myType = typeConversion(p);
+						}
+						else if(flagMap.get("default") == true) {
+							
+						}
 					}
 				} 
 			}
@@ -167,5 +174,6 @@ public class XMLTools{
 				e.printStackTrace();
 			}
 	   }
+	}
 }
 

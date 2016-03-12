@@ -8,6 +8,7 @@ public class Arg {
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
 	private boolean isOptionalArgument = false;
+	private int position;
 
     public Arg(String name) {
         argumentName = name;
@@ -54,6 +55,10 @@ public class Arg {
 
 	public String getDataType(){
 		return dType.toString().toLowerCase();
+	}
+	
+	public void setPosition(int pos) {
+		pos = position;
 	}
 	
     protected void setVal(String value) {
