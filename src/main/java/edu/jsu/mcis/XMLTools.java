@@ -11,6 +11,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class XMLTools{
+	private static UserHandler userH = new UserHandler();
+	
+	public XMLTools (){
+		
+	}
 	
 	public static void save(ArgsParser p, String fileLocation){
 		String xml = "<arguments>\n";
@@ -57,7 +62,7 @@ public class XMLTools{
 				File xmlFile = new File(fileLocation);
 				SAXParserFactory spFactory = SAXParserFactory.newInstance();
 				SAXParser saxParse = spFactory.newSAXParser();
-				UserHandler userH = new UserHandler();
+				
 				saxParse.parse(xmlFile, userH);
 			}
 		}
@@ -67,7 +72,7 @@ public class XMLTools{
 		return a;
 	}
 	
-	private Arg.DataType typeConversion(String t) {
+	private static Arg.DataType typeConversion(String t) {
 		switch(t) {
 			case "integer":
 				return Arg.DataType.INTEGER;
@@ -80,7 +85,7 @@ public class XMLTools{
 		}
 	}
 	
-	private class UserHandler extends DefaultHandler {
+	private static class UserHandler extends DefaultHandler {
 		Map<String, Boolean> flagMap;
 		boolean isPositional = false;
 		private Arg.DataType myType;
@@ -106,23 +111,10 @@ public class XMLTools{
 			flagMap.put("position", false);
 		}
 	   
-	   @Override
-	   public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
-		  if (qName.equalsIgnoreCase("positional")) {
-			isPositional = true;
-		  } 
-		  else if(qName.equalsIgnoreCase("named")){
-			isPositional = false;
-		  }
-		  else {
-			//throw new Exception();
-		  }
-	   }
-	   
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
 			String currentTag = qName.toLowerCase();
-			if(flagMap.constainsKey(currentTag))
+			if(flagMap.containsKey(currentTag))
 				flagMap.put(currentTag, true);
 		}
 
@@ -130,35 +122,39 @@ public class XMLTools{
 	   @Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
-			if (qName.equalsIgnoreCase("student")) {
-				System.out.println("End Element :" + qName);
-			}
+			//add arg to arg list, main issue will be position for positional args.
+			//flip flag on the arg.
+			String currentTag = qName.toLowerCase();
+			if(flagMap.get(currentTag))
+				flagMap.put(currentTag, false);
 		}
 
 		@Override
 		public void characters(char ch[], 
 		  int start, int length) throws SAXException {
+			// use flagMap to figure out what argument is being read in.
+			// put its values in temp variables until they are pushed to an Arg in endElement
 			try {
-				if (flagMap.get("arguments") == true) {
-					if(flagMap.get("programname") == true) {
+				if (flagMap.get("arguments")) {
+					if(flagMap.get("programname")) {
 						programName = new String(ch);
 					}
-					else if(flagMap.get("programdescription") == true) {
+					else if(flagMap.get("programdescription")) {
 						programDescription = new String(ch);
 					}
-					else if (flagMap.get("positional") == true) {
-						if(flagMap.get("name") == true) {
+					else if (flagMap.get("positional")) {
+						if(flagMap.get("name")) {
 							name = new String(ch);
 						}
-						else if(flagMap.get("type") == true) {
+						else if(flagMap.get("type")) {
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
-						else if(flagMap.get("position") == true) {
+						else if(flagMap.get("position")) {
 							
 						}
 					}
-					else if(flagMap.get("named") == true) {
+					else if(flagMap.get("named")) {
 						
 					}
 				} 
@@ -166,6 +162,6 @@ public class XMLTools{
 			catch(Exception e) {
 				e.printStackTrace();
 			}
-	   }
+		}
+	}
 }
-
