@@ -95,20 +95,13 @@ public class XMLTools{
 		private String programDescription;
 		private int position;
 		private char shortName;
+		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position"}; 
 		
 		public UserHandler(){
 			flagMap = new HashMap<String, Boolean>();
-			flagMap.put("arguments", false);
-			flagMap.put("programname", false);
-			flagMap.put("programdescription", false);
-			flagMap.put("positional", false);
-			flagMap.put("named", false);
-			flagMap.put("name", false);
-			flagMap.put("type", false);
-			flagMap.put("description", false);
-			flagMap.put("shortname", false);
-			flagMap.put("default", false);
-			flagMap.put("position", false);
+			for(String s : XMLTags){
+				flagMap.put(s, false);
+			}
 		}
 	   
 		@Override
