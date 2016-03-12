@@ -51,6 +51,10 @@ public class ArgsParser {
 		return programDescription;
 	}
 	
+	public void addArg(Arg a) {
+		argNames.add(a.getArgName());
+		argMap.put(a.getArgName(), a);
+	}
 	
 	public void addArg(String name) {
 		argNames.add(name);

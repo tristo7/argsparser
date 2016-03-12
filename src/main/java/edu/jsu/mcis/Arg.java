@@ -57,6 +57,10 @@ public class Arg {
 		return dType.toString().toLowerCase();
 	}
 	
+	public int getPosition() {
+		return position;
+	}
+	
 	public void setPosition(int pos) {
 		pos = position;
 	}
