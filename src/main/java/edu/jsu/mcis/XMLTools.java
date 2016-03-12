@@ -52,8 +52,8 @@ public class XMLTools{
 				File xmlFile = new File(fileLocation);
 				SAXParserFactory spFactory = SAXParserFactory.newInstance();
 				SAXParser saxParse = spFactory.newSAXParser();
-				DefaultHandler defaultH = new DefaultHandler();
-				saxParse.parse(xmlFile, defaultH);
+				UserHandler userH = new UserHandler();
+				saxParse.parse(xmlFile, userH);
 			}
 		}
 		catch(Exception e){
@@ -77,9 +77,15 @@ public class XMLTools{
 	
 	private class UserHandler extends DefaultHandler {
 
-	   boolean isPositional = false;
 	   
-
+		private Arg.DataType myType;
+		private String name;
+		private ArgsParser a;
+		private String programName;
+		private String programDescription;
+		private int position;
+		private char shortName;
+	   
 	   @Override
 	   public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
 		  if (qName.equalsIgnoreCase("positional")) {
@@ -93,16 +99,45 @@ public class XMLTools{
 		  }
 	   }
 
+	   @Override
+		public void endElement(String uri, 
+		String localName, String qName) throws SAXException {
+			if (qName.equalsIgnoreCase("student")) {
+				System.out.println("End Element :" + qName);
+			}
+		}
 
 	   @Override
 	   public void characters(char ch[], 
 		  int start, int length) throws SAXException {
-		  if (isPositional) {
-			 
-		  } 
-		  else {
-			
-		  }
+			try {
+				if (flagMap.get("arguments") == true) {
+					if(flagMap.get("programname") == true) {
+						programName = new String(ch);
+					}
+					else if(flagMap.get("programdescription") == true) {
+						programDescription = new String(ch);
+					}
+					else if (flagMap.get("positional") == true) {
+						if(flagMap.get("name") == true) {
+							name = new String(ch);
+						}
+						else if(flagMap.get("type") == true) {
+							String s = new String(ch);
+							myType = typeConversion(s);
+						}
+						else if(flagMap.get("position") == true) {
+							
+						}
+					}
+					else if(flagMap.get("named") == true) {
+						
+					}
+				} 
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
 	   }
    
 	}
