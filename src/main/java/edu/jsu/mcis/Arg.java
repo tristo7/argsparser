@@ -8,7 +8,6 @@ public class Arg {
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
 	private boolean isOptionalArgument = false;
-	private int position;
 
     public Arg(String name) {
         argumentName = name;

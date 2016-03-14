@@ -86,20 +86,28 @@ public class XMLTools{
 	private static class UserHandler extends DefaultHandler{
 		Map<String, Boolean> flagMap;
 		boolean isPositional = false;
-		private List<Arg> tempArgs;
+		private Map<Integer, Arg> tempArgs;
 		private String programDescription;
 		private String programName;
 		private String name;
 		private String defaultVal;
+		private String description;
 		private char shortName;
 		private Arg.DataType myType;
+		private int position;
 		private ArgsParser p;
+		private Arg tempArg;
 		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position"}; 
 		
 		public UserHandler(){
 			p = new ArgsParser();
 			flagMap = new HashMap<String, Boolean>();
 			tempArgs = new ArrayList<Arg>();
+			programDescription = "";
+			programName = "";
+			name = "";
+			defaultVal = "";
+			description = "";
 			for(String s : XMLTags){
 				flagMap.put(s, false);
 			}
@@ -117,9 +125,22 @@ public class XMLTools{
 	   @Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
-			for(Arg a : tempArgs) {
-				p.addArg(a);
+			if(qName.equals("named")) {
+				p.addOptionalArg(name, myType, defaultVal);
+				if(shortName != '\u0000') {
+					p.getArg(name).setArgShortName(shortName);
+				}
+				name = "";
+				defaultVal = "";
+				description = "";
 			}
+			else if(qName.equals("positional")) {
+				p.addArg(name, myType, description);
+				name = "";
+				myType = Arg.DataType.STRING;
+				description = "";
+			}
+			
 			String currentTag = qName.toLowerCase();
 			if(flagMap.get(currentTag))
 				flagMap.put(currentTag, false);
@@ -130,7 +151,6 @@ public class XMLTools{
 		  int start, int length) throws SAXException {
 			try {
 				if (flagMap.get("arguments")) {
-					Arg tempArg;
 					if(flagMap.get("programname")) {
 						programName = new String(ch);
 						p.setProgramName(programName);
@@ -147,11 +167,11 @@ public class XMLTools{
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
+						else if(flagMap.get("description") {
+							description = new String(ch);
+						}
 						else if(flagMap.get("position")) {
-							int argPos = Integer.parseInt(new String(ch));
-							tempArg = new Arg(name, myType, "");
-							//tempArg.setPosition(argPos);
-							tempArgs.add(tempArg);
+							position = Integer.parseInt(new String(ch));
 						}
 					}
 					else if(flagMap.get("named")) {
@@ -165,11 +185,11 @@ public class XMLTools{
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
+						else if(flagMap.get("description") {
+							description = new String(ch);
+						}
 						else if(flagMap.get("default")) {
-							String d = new String(ch);
-							tempArg = new Arg(name, myType, "", d);
-							tempArg.setArgShortName(shortName);
-							tempArgs.add(tempArg);
+							defaultVal = new String(ch);
 						}
 					}
 				} 
