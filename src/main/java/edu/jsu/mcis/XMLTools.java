@@ -129,7 +129,7 @@ public class XMLTools{
 			//flip flag on the arg.
 			if(qName.equals("named")) {
 				p.addOptionalArg(name, myType, defaultVal);
-				if(shortName != "\u0000") {
+				if(shortName != '\u0000') {
 					p.getArg(name).setArgShortName(shortName);
 				}
 				name = "";
