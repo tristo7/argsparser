@@ -102,7 +102,6 @@ public class XMLTools{
 		public UserHandler(){
 			p = new ArgsParser();
 			flagMap = new HashMap<String, Boolean>();
-			tempArgs = new ArrayList<Arg>();
 			programDescription = "";
 			programName = "";
 			name = "";
@@ -167,7 +166,7 @@ public class XMLTools{
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
-						else if(flagMap.get("description") {
+						else if(flagMap.get("description")) {
 							description = new String(ch);
 						}
 						else if(flagMap.get("position")) {
@@ -185,7 +184,7 @@ public class XMLTools{
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
-						else if(flagMap.get("description") {
+						else if(flagMap.get("description")) {
 							description = new String(ch);
 						}
 						else if(flagMap.get("default")) {
