@@ -11,30 +11,29 @@ public class ArgTest {
 	@Before
 	public void setUp() {
 		p = new ArgsParser();
-		x = new XMLTools();
 	}
 	
 	@Test
 	public void testToXML(){
 		p.addArg("one");
-		assertEquals("<positional>\n    <name>one</name>\n    <type>string</type>\n</positional>",
+		assertEquals("<positional>\n    <name>one</name>\n    <type>string</type>\n</positional>\n",
 			p.getArg("one").toXML());
 		
 		p.addArg("two", Arg.DataType.INTEGER, "This is a test.");
-		assertEquals("<positional>\n    <name>two</name>\n    <type>integer</type>\n    <description>This is a test.</description>\n</positional>",
+		assertEquals("<positional>\n    <name>two</name>\n    <type>integer</type>\n    <description>This is a test.</description>\n</positional>\n",
 			p.getArg("two").toXML());
 		
 		p.addOptionalArg("testArg", Arg.DataType.STRING, "test1", 't');
-		assertEquals("<named>\n    <name>testArg</name>\n    <type>string</type>\n    <shortname>t</shortname>\n    <default>test1</default>\n</named>",
+		assertEquals("<named>\n    <name>testArg</name>\n    <type>string</type>\n    <shortname>t</shortname>\n    <default>test1</default>\n</named>\n",
 			p.getArg("testArg").toXML());
 		
 		p.addOptionalArg("testArg2", Arg.DataType.STRING, "test12");
-		assertEquals("<named>\n    <name>testArg2</name>\n    <type>string</type>\n    <default>test12</default>\n</named>",
+		assertEquals("<named>\n    <name>testArg2</name>\n    <type>string</type>\n    <default>test12</default>\n</named>\n",
 			p.getArg("testArg2").toXML());
 		
 		p.addOptionalArg("testArg3", Arg.DataType.STRING, "test123", 'c');
 		p.getArg("testArg3").setDescription("NamedDescrip");
-		assertEquals("<named>\n    <name>testArg3</name>\n    <type>string</type>\n    <description>NamedDescrip</description>\n    <shortname>c</shortname>\n    <default>test123</default>\n</named>",
+		assertEquals("<named>\n    <name>testArg3</name>\n    <type>string</type>\n    <description>NamedDescrip</description>\n    <shortname>c</shortname>\n    <default>test123</default>\n</named>\n",
 			p.getArg("testArg3").toXML());
 	}
 	

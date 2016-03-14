@@ -25,9 +25,11 @@ public class XMLTools{
 		int position = 1;
 		for(String s : p.getPositionalArgumentNames()){
 			String temp = p.getArg(s).toXML();
-			temp = temp.substring(0,58);
-			temp += "    <position>" + String.valueOf(position) + "</position>\n</positional>";
-			xml += "    " + temp;
+			System.out.println(temp);
+			temp = temp.substring(13);
+			System.out.println(temp);
+			temp = "<position>" + String.valueOf(position) + "</position>\n" + temp;
+			xml += "<positional>\n" + "    " + temp;
 			position++;
 		}
 		for(String s : p.getOptionalArgumentNames()){
@@ -54,8 +56,6 @@ public class XMLTools{
 	
 	public static ArgsParser load(String fileLocation){
 		ArgsParser a = new ArgsParser();
-		//parse the xml document with a loop that calls addArg & addOptionalArg accordingly.
-		//return the resultant instance of ArgsParser.
 		try {
 			if(fileLocation.contains(".xml")) {
 				File xmlFile = new File(fileLocation);
@@ -117,9 +117,6 @@ public class XMLTools{
 	   @Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
-			//add arg to arg list, main issue will be position for positional args.
-			//flip flag on the arg.
-			Collections.sort(tempArgs, new CustomizedComparator());
 			for(Arg a : tempArgs) {
 				p.addArg(a);
 			}
@@ -131,8 +128,6 @@ public class XMLTools{
 		@Override
 		public void characters(char ch[], 
 		  int start, int length) throws SAXException {
-			// use flagMap to figure out what argument is being read in.
-			// put its values in temp variables until they are pushed to an Arg in endElement
 			try {
 				if (flagMap.get("arguments")) {
 					Arg tempArg;
@@ -155,7 +150,7 @@ public class XMLTools{
 						else if(flagMap.get("position")) {
 							int argPos = Integer.parseInt(new String(ch));
 							tempArg = new Arg(name, myType, "");
-							tempArg.setPosition(argPos);
+							//tempArg.setPosition(argPos);
 							tempArgs.add(tempArg);
 						}
 					}
