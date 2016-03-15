@@ -25,9 +25,11 @@ public class XMLTools{
 		int position = 1;
 		for(String s : p.getPositionalArgumentNames()){
 			String temp = p.getArg(s).toXML();
-			temp = temp.substring(0,58);
-			temp += "    <position>" + String.valueOf(position) + "</position>\n</positional>";
-			xml += "    " + temp;
+			System.out.println(temp);
+			temp = temp.substring(13);
+			System.out.println(temp);
+			temp = "<position>" + String.valueOf(position) + "</position>\n" + temp;
+			xml += "<positional>\n" + "    " + temp;
 			position++;
 		}
 		for(String s : p.getOptionalArgumentNames()){
@@ -54,14 +56,14 @@ public class XMLTools{
 	
 	public static ArgsParser load(String fileLocation){
 		ArgsParser a = new ArgsParser();
-		//parse the xml document with a loop that calls addArg & addOptionalArg accordingly.
-		//return the resultant instance of ArgsParser.
 		try {
 			if(fileLocation.contains(".xml")) {
 				File xmlFile = new File(fileLocation);
 				SAXParserFactory spFactory = SAXParserFactory.newInstance();
 				SAXParser saxParse = spFactory.newSAXParser();
 				saxParse.parse(xmlFile, userH);
+				a = userH.getArgsParser();
+				return a;
 			}
 		}
 		catch(Exception e){
@@ -86,20 +88,27 @@ public class XMLTools{
 	private static class UserHandler extends DefaultHandler{
 		Map<String, Boolean> flagMap;
 		boolean isPositional = false;
-		private List<Arg> tempArgs;
+		private Map<Integer, Arg> tempArgs;
 		private String programDescription;
 		private String programName;
 		private String name;
 		private String defaultVal;
+		private String description;
 		private char shortName;
 		private Arg.DataType myType;
+		private int position;
 		private ArgsParser p;
+		private Arg tempArg;
 		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position"}; 
 		
 		public UserHandler(){
 			p = new ArgsParser();
 			flagMap = new HashMap<String, Boolean>();
-			tempArgs = new ArrayList<Arg>();
+			programDescription = "";
+			programName = "";
+			name = "";
+			defaultVal = "";
+			description = "";
 			for(String s : XMLTags){
 				flagMap.put(s, false);
 			}
@@ -117,12 +126,24 @@ public class XMLTools{
 	   @Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
-			//add arg to arg list, main issue will be position for positional args.
-			//flip flag on the arg.
-			Collections.sort(tempArgs, new CustomizedComparator());
-			for(Arg a : tempArgs) {
-				p.addArg(a);
+			if(qName.equals("arguments")) {
+				if(qName.equals("named")) {
+					p.addOptionalArg(name, myType, defaultVal);
+					if(shortName != '\u0000') {
+						p.getArg(name).setArgShortName(shortName);
+					}
+					name = "";
+					defaultVal = "";
+					description = "";
+				}
+				else if(qName.equals("positional")) {
+					p.addArg(name, myType, description);
+					name = "";
+					myType = Arg.DataType.STRING;
+					description = "";
+				}
 			}
+			
 			String currentTag = qName.toLowerCase();
 			if(flagMap.get(currentTag))
 				flagMap.put(currentTag, false);
@@ -131,11 +152,8 @@ public class XMLTools{
 		@Override
 		public void characters(char ch[], 
 		  int start, int length) throws SAXException {
-			// use flagMap to figure out what argument is being read in.
-			// put its values in temp variables until they are pushed to an Arg in endElement
 			try {
 				if (flagMap.get("arguments")) {
-					Arg tempArg;
 					if(flagMap.get("programname")) {
 						programName = new String(ch);
 						p.setProgramName(programName);
@@ -152,11 +170,11 @@ public class XMLTools{
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
+						else if(flagMap.get("description")) {
+							description = new String(ch);
+						}
 						else if(flagMap.get("position")) {
-							int argPos = Integer.parseInt(new String(ch));
-							tempArg = new Arg(name, myType, "");
-							tempArg.setPosition(argPos);
-							tempArgs.add(tempArg);
+							position = Integer.parseInt(new String(ch));
 						}
 					}
 					else if(flagMap.get("named")) {
@@ -170,11 +188,11 @@ public class XMLTools{
 							String s = new String(ch);
 							myType = typeConversion(s);
 						}
+						else if(flagMap.get("description")) {
+							description = new String(ch);
+						}
 						else if(flagMap.get("default")) {
-							String d = new String(ch);
-							tempArg = new Arg(name, myType, "", d);
-							tempArg.setArgShortName(shortName);
-							tempArgs.add(tempArg);
+							defaultVal = new String(ch);
 						}
 					}
 				} 
@@ -182,6 +200,10 @@ public class XMLTools{
 			catch(Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		public ArgsParser getArgsParser() {
+			return p;
 		}
 	}
 }

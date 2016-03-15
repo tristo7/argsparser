@@ -8,7 +8,6 @@ public class Arg {
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
 	private boolean isOptionalArgument = false;
-	private int position;
 
     public Arg(String name) {
         argumentName = name;
@@ -48,21 +47,16 @@ public class Arg {
 	
 	public char getArgShortName(){
 		if(isOptionalArgument)
-			return argumentShortName;
+			if(argumentShortName != '\u0000')
+				return argumentShortName;
+			else
+				throw new RuntimeException("This named argument does not have a short name.");
 		else
 			throw new InvalidArgumentException("This is not a named argument.", this);
 	}
 
 	public String getDataType(){
 		return dType.toString().toLowerCase();
-	}
-	
-	public int getPosition() {
-		return position;
-	}
-	
-	public void setPosition(int pos) {
-		pos = position;
 	}
 	
     protected void setVal(String value) {
@@ -110,10 +104,10 @@ public class Arg {
 			if(argumentShortName != '\u0000'){
 				statement += "    <shortname>" + argumentShortName + "</shortname>\n";
 			}
-			statement += "    <default>" + String.valueOf(val) + "</default>\n</named>";
+			statement += "    <default>" + String.valueOf(val) + "</default>\n</named>\n";
 			
 		} else {
-			statement += "</positional>";
+			statement += "</positional>\n";
 		}
 		
 		

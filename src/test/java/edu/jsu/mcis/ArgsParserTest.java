@@ -72,7 +72,7 @@ public class ArgsParserTest {
 		p.addArg("h", Arg.DataType.FLOAT);
 		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
 		assertEquals("cube", p.getArgValue("type"));
-		assertEquals(4,p.getNumArguments());
+		assertEquals(4,p.getNumArguments());	
 	}
 	
 	@Test

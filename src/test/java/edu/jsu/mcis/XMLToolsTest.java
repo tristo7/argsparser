@@ -24,13 +24,13 @@ public class XMLToolsTest {
 		p.addOptionalArg("testArg2", Arg.DataType.STRING, "test12");
 		p.addOptionalArg("testArg3", Arg.DataType.STRING, "test123", 'c');
 		p.getArg("testArg3").setDescription("NamedDescrip");
-		x.save(p,"./src/test/java/edu/jsu/mcis/testSave.xml");
+		x.save(p,"./build/tmp/testSave.xml");
 		//read in xml file as string and test against known string
 		String actualXMLOutput = "";
-		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription>    <positional>    <name>one</name>    <type>string</type>    <position>1</position></positional>    <positional>    <name>two</name>    <type>integer</type>    <position>2</position></positional>    <named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named>    <named>    <name>testArg2</name>    <type>string</type>    <default>test12</default></named>    <named>    <name>testArg3</name>    <type>string</type>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>test123</default></named></arguments>";
+		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription><positional>    <position>1</position>    <name>one</name>    <type>string</type></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional>    <named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named>    <named>    <name>testArg2</name>    <type>string</type>    <default>test12</default></named>    <named>    <name>testArg3</name>    <type>string</type>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>test123</default></named></arguments>";
 		String currentLine = null;
 		try{
-			FileReader r = new FileReader("./src/test/java/edu/jsu/mcis/testSave.xml");
+			FileReader r = new FileReader("./build/tmp/testSave.xml");
 			BufferedReader b = new BufferedReader(r);
 			while((currentLine = b.readLine()) != null)
 				actualXMLOutput += currentLine;
@@ -40,6 +40,14 @@ public class XMLToolsTest {
 		}
 		assertEquals(expectedXLMOutput, actualXMLOutput);
 		
+	}
+	
+	@Test
+	public void testLoad() {
+		p = x.load("testSave.xml");
+		Arg expectedArg = new Arg("one");
+		Arg actualArg = p.getArg("one");
+		assertEquals(expectedArg.getArgName(), actualArg.getArgName());
 	}
 	
 }
