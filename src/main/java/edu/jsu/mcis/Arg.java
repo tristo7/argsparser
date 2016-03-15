@@ -50,7 +50,7 @@ public class Arg {
 		if(isOptionalArgument)
 			return argumentShortName;
 		else
-			throw new RuntimeException("This is not a named argument.");
+			throw new InvalidArgumentException("This is not a named argument.", this);
 	}
 
 	public String getDataType(){
