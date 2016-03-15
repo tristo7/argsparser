@@ -42,4 +42,12 @@ public class XMLToolsTest {
 		
 	}
 	
+	@Test
+	public void testLoad() {
+		p = x.load("testSave.xml");
+		Arg expectedArg = new Arg("one");
+		Arg actualArg = p.getArg("one");
+		assertEquals(expectedArg.getArgName(), actualArg.getArgName());
+	}
+	
 }

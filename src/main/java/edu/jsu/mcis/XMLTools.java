@@ -62,6 +62,8 @@ public class XMLTools{
 				SAXParserFactory spFactory = SAXParserFactory.newInstance();
 				SAXParser saxParse = spFactory.newSAXParser();
 				saxParse.parse(xmlFile, userH);
+				a = userH.getArgsParser();
+				return a;
 			}
 		}
 		catch(Exception e){
@@ -124,20 +126,22 @@ public class XMLTools{
 	   @Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
-			if(qName.equals("named")) {
-				p.addOptionalArg(name, myType, defaultVal);
-				if(shortName != '\u0000') {
-					p.getArg(name).setArgShortName(shortName);
+			if(qName.equals("arguments")) {
+				if(qName.equals("named")) {
+					p.addOptionalArg(name, myType, defaultVal);
+					if(shortName != '\u0000') {
+						p.getArg(name).setArgShortName(shortName);
+					}
+					name = "";
+					defaultVal = "";
+					description = "";
 				}
-				name = "";
-				defaultVal = "";
-				description = "";
-			}
-			else if(qName.equals("positional")) {
-				p.addArg(name, myType, description);
-				name = "";
-				myType = Arg.DataType.STRING;
-				description = "";
+				else if(qName.equals("positional")) {
+					p.addArg(name, myType, description);
+					name = "";
+					myType = Arg.DataType.STRING;
+					description = "";
+				}
 			}
 			
 			String currentTag = qName.toLowerCase();
@@ -196,6 +200,10 @@ public class XMLTools{
 			catch(Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		public ArgsParser getArgsParser() {
+			return p;
 		}
 	}
 }
