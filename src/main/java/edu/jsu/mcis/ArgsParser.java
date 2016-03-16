@@ -170,7 +170,7 @@ public class ArgsParser {
 	}
 	
 	public <T> T getArgValue(String name) {
-		return (T) argMap.get(name).getVal();
+		return (T) getArg(name).getVal();
 	}
 	
 	private String createExceptionMessage(String messageType){
