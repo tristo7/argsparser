@@ -152,54 +152,51 @@ public class XMLTools{
 		@Override
 		public void characters(char ch[], 
 		  int start, int length) throws SAXException {
-			try {
-				if (flagMap.get("arguments")) {
-					if(flagMap.get("programname")) {
-						programName = new String(ch);
-						p.setProgramName(programName);
-					}
-					else if(flagMap.get("programdescription")) {
-						programDescription = new String(ch);
-						p.setProgramDescription(programDescription);
-					}
-					else if (flagMap.get("positional")) {
-						if(flagMap.get("name")) {
-							name = new String(ch);
-						}
-						else if(flagMap.get("type")) {
-							String s = new String(ch);
-							myType = typeConversion(s);
-						}
-						else if(flagMap.get("description")) {
-							description = new String(ch);
-						}
-						else if(flagMap.get("position")) {
-							position = Integer.parseInt(new String(ch));
-						}
-					}
-					else if(flagMap.get("named")) {
-						if(flagMap.get("name")) {
-							name = new String(ch);
-						}
-						else if(flagMap.get("shortname")) {
-							shortName = ch[0];
-						}
-						else if(flagMap.get("type")) {
-							String s = new String(ch);
-							myType = typeConversion(s);
-						}
-						else if(flagMap.get("description")) {
-							description = new String(ch);
-						}
-						else if(flagMap.get("default")) {
-							defaultVal = new String(ch);
-						}
-					}
-				} 
+				String s = "";
+			for(int i = start; i < start + length; i++) {
+				s += String.valueOf(ch[i]);
 			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
+			if (flagMap.get("arguments")) {
+				if(flagMap.get("programname")) {
+					programName = s;
+					p.setProgramName(programName);
+				}
+				else if(flagMap.get("programdescription")) {
+					programDescription = s;
+					p.setProgramDescription(programDescription);
+				}
+				else if (flagMap.get("positional")) {
+					if(flagMap.get("name")) {
+						name = s;
+					}
+					else if(flagMap.get("type")) {
+						myType = typeConversion(s);
+					}
+					else if(flagMap.get("description")) {
+						description = s;
+					}
+					else if(flagMap.get("position")) {
+						position = Integer.parseInt(s);
+					}
+				}
+				else if(flagMap.get("named")) {
+					if(flagMap.get("name")) {
+						name = s;
+					}
+					else if(flagMap.get("shortname")) {
+						shortName = ch[start];
+					}
+					else if(flagMap.get("type")) {
+						myType = typeConversion(s);
+					}
+					else if(flagMap.get("description")) {
+						description = s;
+					}
+					else if(flagMap.get("default")) {
+						defaultVal = s;
+					}
+				}
+			} 
 		}
 		
 		public ArgsParser getArgsParser() {

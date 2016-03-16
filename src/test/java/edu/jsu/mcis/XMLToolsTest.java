@@ -7,11 +7,14 @@ import java.io.*;
 public class XMLToolsTest {
 	private ArgsParser p;
 	private XMLTools x;
+	private ArgsParser q;
 	
 	@Before
 	public void setUp() {
 		p = new ArgsParser();
 		x = new XMLTools();
+		q = new ArgsParser();
+		q = x.load("./src/test/java/edu/jsu/mcis/xmlFiles/testSave.xml");
 	}
 	
 	@Test
@@ -43,11 +46,19 @@ public class XMLToolsTest {
 	}
 	
 	@Test
-	public void testLoad() {
-		p = x.load("testSave.xml");
-		Arg expectedArg = new Arg("one");
-		Arg actualArg = p.getArg("one");
-		assertEquals(expectedArg.getArgName(), actualArg.getArgName());
+	public void testLoadGetProgramName() {
+		assertEquals("Test", q.getProgramName());
+	}
+	
+	@Test
+	public void testLoadGetProgramDescription() {
+		assertEquals("Test Program", q.getProgramDescription());
+	}
+	
+	@Test
+	public void testGetArgName() {
+		String s = q.getArg("one").getArgName();
+		assertEquals("one", s);
 	}
 	
 }
