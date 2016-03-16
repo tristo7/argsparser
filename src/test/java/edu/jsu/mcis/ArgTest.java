@@ -39,18 +39,8 @@ public class ArgTest {
 	
 	@Test
 	public void testGetArgShortName(){
-		boolean exception = false;
-		p.addArg("failureTest");
 		p.addOptionalArg("testArg", Arg.DataType.STRING, "test", 't');
 		assertEquals('t', p.getArg("testArg").getArgShortName());
-		try{
-			p.getArg("failureTest").getArgShortName();
-		} catch(RuntimeException e){
-			exception = true;
-			assertEquals("This is not a named argument.", e.getMessage());
-		} finally {
-			assertTrue(exception);
-		}
 	}
 	
 	@Test
@@ -78,5 +68,22 @@ public class ArgTest {
 		String argVal = p.getArgValue("arg1");
 		assertEquals("bob", argVal);
 		assertEquals("string", p.getArg("arg1").getDataType());
-	}	
+	}
+	
+	@Test
+	public void testShortNameException(){
+		p.addOptionalArg("test", Arg.DataType.STRING, "default");
+		p.addArg("testing");
+		try{
+		p.getArg("test").getArgShortName();
+		} catch(InvalidArgumentException e){
+			assertEquals("test does not have a shortname.", e.getMessage());
+		}
+		
+		try{
+			p.getArg("testing").getArgShortName();
+		}catch(InvalidArgumentException e){
+			assertEquals("testing is not a named argument.", e.getMessage());
+		}
+	}
 }

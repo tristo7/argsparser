@@ -25,9 +25,7 @@ public class XMLTools{
 		int position = 1;
 		for(String s : p.getPositionalArgumentNames()){
 			String temp = p.getArg(s).toXML();
-			System.out.println(temp);
 			temp = temp.substring(13);
-			System.out.println(temp);
 			temp = "<position>" + String.valueOf(position) + "</position>\n" + temp;
 			xml += "<positional>\n" + "    " + temp;
 			position++;
@@ -196,8 +194,7 @@ public class XMLTools{
 						}
 					}
 				} 
-			}
-			catch(Exception e) {
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}

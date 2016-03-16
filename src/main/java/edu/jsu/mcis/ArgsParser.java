@@ -163,7 +163,10 @@ public class ArgsParser {
 	}
 	
 	public Arg getArg(String name) {
-		return argMap.get(name);
+		if(argMap.containsKey(name))
+			return argMap.get(name);
+		else
+			throw new RuntimeException("Argument " + name + " does not exist.");
 	}
 	
 	public <T> T getArgValue(String name) {
