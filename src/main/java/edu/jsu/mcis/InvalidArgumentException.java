@@ -9,6 +9,11 @@ public class InvalidArgumentException extends RuntimeException {
 		super(msg + arg.getArgName() + ": invalid " + arg.getDataType() + " value: " + value);
         argument = arg;
     }
+	
+	public InvalidArgumentException(String msg, Arg arg){
+		super(msg);
+		argument = arg;
+	}
 
     public Arg getArgument(){
 		return argument;

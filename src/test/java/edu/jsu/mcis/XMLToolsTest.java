@@ -45,6 +45,7 @@ public class XMLToolsTest {
 		
 	}
 	
+<<<<<<< HEAD
 	@Test
 	public void testLoadGetProgramName() {
 		assertEquals("Test", q.getProgramName());
@@ -60,5 +61,14 @@ public class XMLToolsTest {
 		String s = q.getArg("one").getArgName();
 		assertEquals("one", s);
 	}
+=======
+	/* @Test
+	public void testLoad() {
+		p = x.load("testSave.xml");
+		Arg expectedArg = new Arg("one");
+		Arg actualArg = p.getArg("one");
+		assertEquals(expectedArg.getArgName(), actualArg.getArgName());
+	} */
+>>>>>>> b1e62ab21848de7a2b599a941f710c03b74ed4a5
 	
 }

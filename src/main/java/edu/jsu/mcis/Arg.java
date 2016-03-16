@@ -50,9 +50,9 @@ public class Arg {
 			if(argumentShortName != '\u0000')
 				return argumentShortName;
 			else
-				throw new RuntimeException("This named argument does not have a short name.");
+				throw new InvalidArgumentException(argumentName + " does not have a shortname.", this);
 		else
-			throw new RuntimeException("This is not a named argument.");
+			throw new InvalidArgumentException(argumentName + " is not a named argument.", this);
 	}
 
 	public String getDataType(){

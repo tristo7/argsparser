@@ -25,9 +25,7 @@ public class XMLTools{
 		int position = 1;
 		for(String s : p.getPositionalArgumentNames()){
 			String temp = p.getArg(s).toXML();
-			System.out.println(temp);
 			temp = temp.substring(13);
-			System.out.println(temp);
 			temp = "<position>" + String.valueOf(position) + "</position>\n" + temp;
 			xml += "<positional>\n" + "    " + temp;
 			position++;
@@ -178,6 +176,7 @@ public class XMLTools{
 					else if(flagMap.get("position")) {
 						position = Integer.parseInt(s);
 					}
+<<<<<<< HEAD
 				}
 				else if(flagMap.get("named")) {
 					if(flagMap.get("name")) {
@@ -197,6 +196,12 @@ public class XMLTools{
 					}
 				}
 			} 
+=======
+				} 
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+>>>>>>> b1e62ab21848de7a2b599a941f710c03b74ed4a5
 		}
 		
 		public ArgsParser getArgsParser() {
