@@ -8,12 +8,16 @@ public class XMLToolsTest {
 	private ArgsParser p;
 	private XMLTools x;
 	private ArgsParser q;
+	private ArgsParser n;
+	private XMLTools xmlParser;
 	
 	@Before
 	public void setUp() {
 		p = new ArgsParser();
 		x = new XMLTools();
+		xmlParser = new XMLTools();
 		q = new ArgsParser();
+		n = new ArgsParser();
 		q = x.load("./src/test/java/edu/jsu/mcis/xmlFiles/testSave.xml");
 	}
 	
@@ -65,6 +69,17 @@ public class XMLToolsTest {
 	public void testGetArgDataType() {
 		String s = q.getArg("one").getDataType();
 		assertEquals("string", s);
+	}
+	
+	@Test
+	public void testLoadForAnotherFile() {
+		n = xmlParser.load("./src/test/java/edu/jsu/mcis/xmlFiles/testLoadFile.xml");
+		String s = n.getArg("square").getDataType();
+		String m = n.getArg("blue").getArgName();
+		assertEquals("TestLoad", n.getProgramName());
+		assertEquals("TestLoadProgram", n.getProgramDescription());
+		assertEquals("integer", s);
+		assertEquals("blue", m);
 	}
 	
 }
