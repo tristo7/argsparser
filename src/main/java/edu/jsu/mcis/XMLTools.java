@@ -150,7 +150,7 @@ public class XMLTools{
 		@Override
 		public void characters(char ch[], 
 		  int start, int length) throws SAXException {
-				String s = "";
+			String s = "";
 			for(int i = start; i < start + length; i++) {
 				s += String.valueOf(ch[i]);
 			}
@@ -176,7 +176,6 @@ public class XMLTools{
 					else if(flagMap.get("position")) {
 						position = Integer.parseInt(s);
 					}
-<<<<<<< HEAD
 				}
 				else if(flagMap.get("named")) {
 					if(flagMap.get("name")) {
@@ -196,12 +195,6 @@ public class XMLTools{
 					}
 				}
 			} 
-=======
-				} 
-			}catch(Exception e){
-				e.printStackTrace();
-			}
->>>>>>> b1e62ab21848de7a2b599a941f710c03b74ed4a5
 		}
 		
 		public ArgsParser getArgsParser() {
