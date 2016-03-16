@@ -124,22 +124,20 @@ public class XMLTools{
 	   @Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
-			if(qName.equals("arguments")) {
-				if(qName.equals("named")) {
-					p.addOptionalArg(name, myType, defaultVal);
-					if(shortName != '\u0000') {
-						p.getArg(name).setArgShortName(shortName);
-					}
-					name = "";
-					defaultVal = "";
-					description = "";
+			if(qName.equals("named")) {
+				p.addOptionalArg(name, myType, defaultVal);
+				if(shortName != '\u0000') {
+					p.getArg(name).setArgShortName(shortName);
 				}
-				else if(qName.equals("positional")) {
-					p.addArg(name, myType, description);
-					name = "";
-					myType = Arg.DataType.STRING;
-					description = "";
-				}
+				name = "";
+				defaultVal = "";
+				description = "";
+			}
+			else if(qName.equals("positional")) {
+				p.addArg(name, myType, description);
+				name = "";
+				myType = Arg.DataType.STRING;
+				description = "";
 			}
 			
 			String currentTag = qName.toLowerCase();

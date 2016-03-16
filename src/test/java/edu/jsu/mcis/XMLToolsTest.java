@@ -61,4 +61,10 @@ public class XMLToolsTest {
 		assertEquals("one", s);
 	}
 	
+	@Test
+	public void testGetArgDataType() {
+		String s = q.getArg("one").getDataType();
+		assertEquals("string", s);
+	}
+	
 }
