@@ -1,33 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><arguments>
-    <programname>TestLoad</programname>
-    <programdescription>TestLoadProgram</programdescription>
+    
 <positional>
+    <type>string</type>
     <position>1</position>
     <name>blue</name>
-    <type>string</type>
 </positional>
 <positional>
-    <position>2</position>
-    <name>square</name>
     <type>integer</type>
     <description>TestDescription</description>
+    <position>2</position>
+    <name>square</name>
 </positional>
-    <named>
-    <name>testArg</name>
+<named>
     <type>string</type>
     <shortname>t</shortname>
+    <name>testArg</name>
     <default>test1</default>
 </named>
-    <named>
+<named>
     <name>testArg2</name>
     <type>string</type>
     <default>test12</default>
 </named>
-    <named>
+<named>
     <name>testArg3</name>
     <type>string</type>
     <description>NamedDescrip</description>
     <shortname>c</shortname>
     <default>test123</default>
 </named>
+<named>
+    <name>FloatTest</name>
+    <type>float</type>
+    <description>NamedDescrip</description>
+    <shortname>f</shortname>
+    <default>3.5</default>
+</named>
+<named>
+    <name>BooleanTest</name>
+    <type>boolean</type>
+    <description>NamedDescrip</description>
+    <shortname>b</shortname>
+    <default>false</default>
+</named>
+<programname>TestLoad</programname>
+<programdescription>TestLoadProgram</programdescription>
 </arguments>

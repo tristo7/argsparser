@@ -26,10 +26,10 @@ public class Arg {
 	public Arg(String name, DataType type, String desc, String defaultValue){
 		this(name, type, desc);
 		isOptionalArgument = true;
-		setVal(defaultValue);
+		setArgValue(defaultValue);
 	}
 	
-	public void setDescription(String s){
+	public void setArgDescription(String s){
 		argumentDescription = s;
 	}
 	
@@ -37,7 +37,7 @@ public class Arg {
 		argumentShortName = c;
 	}
 	
-	public String getDescription(){
+	public String getArgDescription(){
 		return argumentDescription;
 	}
 	
@@ -59,7 +59,7 @@ public class Arg {
 		return dType.toString().toLowerCase();
 	}
 	
-    protected void setVal(String value) {
+    protected void setArgValue(String value) {
 		switch(dType){
 			case INTEGER:
 				val = Integer.valueOf(value);
@@ -82,7 +82,7 @@ public class Arg {
         }
     }
 
-    public <T> T getVal() {
+    public <T> T getArgValue() {
         return (T) val;
     }
 	

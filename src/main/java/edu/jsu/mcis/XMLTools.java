@@ -11,11 +11,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class XMLTools{
-	private static UserHandler userH = new UserHandler();
-	public XMLTools (){
-		
-	}
-	
 	public static void save(ArgsParser p, String fileLocation){
 		String xml = "<arguments>\n";
 		if (!p.getProgramName().equals(""))
@@ -31,7 +26,7 @@ public class XMLTools{
 			position++;
 		}
 		for(String s : p.getOptionalArgumentNames()){
-			xml += "    " + p.getArg(s).toXML();
+			xml += p.getArg(s).toXML();
 		}
 		xml += "</arguments>";
 		
@@ -47,13 +42,13 @@ public class XMLTools{
 			StreamResult result = new StreamResult(new File(fileLocation));
 			transformer.transform(source, result);
 		}catch(Exception e){
-			e.printStackTrace();
+			throw new XMLException(e.getMessage());
 		}
-		
 	}
 	
-	public static ArgsParser load(String fileLocation){
+	public ArgsParser load(String fileLocation){
 		ArgsParser a = new ArgsParser();
+		UserHandler userH = new UserHandler();
 		try {
 			if(fileLocation.contains(".xml")) {
 				File xmlFile = new File(fileLocation);
@@ -62,12 +57,13 @@ public class XMLTools{
 				saxParse.parse(xmlFile, userH);
 				a = userH.getArgsParser();
 				return a;
+			} else {
+				throw new XMLException("The file must have an xml extension.");
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			throw new XMLException(e.getMessage());
 		}
-		return a;
 	}
 	
 	private static Arg.DataType typeConversion(String t) {
@@ -83,20 +79,14 @@ public class XMLTools{
 		}
 	}
 
-	private static class UserHandler extends DefaultHandler{
+	private class UserHandler extends DefaultHandler{
 		Map<String, Boolean> flagMap;
-		boolean isPositional = false;
 		private Map<Integer, Arg> tempArgs;
-		private String programDescription;
-		private String programName;
-		private String name;
-		private String defaultVal;
-		private String description;
+		private String programDescription, programName, name, defaultVal, description;
 		private char shortName;
 		private Arg.DataType myType;
 		private int position;
 		private ArgsParser p;
-		private Arg tempArg;
 		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position"}; 
 		
 		public UserHandler(){

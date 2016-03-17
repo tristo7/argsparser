@@ -32,7 +32,7 @@ public class ArgTest {
 			p.getArg("testArg2").toXML());
 		
 		p.addOptionalArg("testArg3", Arg.DataType.STRING, "test123", 'c');
-		p.getArg("testArg3").setDescription("NamedDescrip");
+		p.getArg("testArg3").setArgDescription("NamedDescrip");
 		assertEquals("<named>\n    <name>testArg3</name>\n    <type>string</type>\n    <description>NamedDescrip</description>\n    <shortname>c</shortname>\n    <default>test123</default>\n</named>\n",
 			p.getArg("testArg3").toXML());
 	}
@@ -46,9 +46,9 @@ public class ArgTest {
 	@Test
 	public void testDescription(){
 		p.addArg("arg1", Arg.DataType.FLOAT, "This is an argument. (float)");
-		assertEquals("This is an argument. (float)", p.getArg("arg1").getDescription());
-		p.getArg("arg1").setDescription("This is a test.");
-		assertEquals("This is a test.", p.getArg("arg1").getDescription());
+		assertEquals("This is an argument. (float)", p.getArg("arg1").getArgDescription());
+		p.getArg("arg1").setArgDescription("This is a test.");
+		assertEquals("This is a test.", p.getArg("arg1").getArgDescription());
 	}
 	
 	@Test

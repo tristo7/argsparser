@@ -113,7 +113,7 @@ public class ArgsParser {
 				dashedArgumentClassifier(currentArg, arguments);					
 			}else if(currentPosArg < argNames.size()){
 				try{
-					argMap.get(argNames.get(currentPosArg)).setVal(currentArg);
+					argMap.get(argNames.get(currentPosArg)).setArgValue(currentArg);
 				}catch(NumberFormatException n){
 					throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentPosArg)), currentArg);
 				}
@@ -151,10 +151,10 @@ public class ArgsParser {
 		if(!optionalArgNames.contains(optionalArgName)){
 			throw new InvalidOptionalArgumentNameException(createExceptionMessage("InvalidOptionalArgumentNameException"), optionalArgName);
 		}else if(argMap.get(optionalArgName).getDataType().equals("boolean")){
-			argMap.get(optionalArgName).setVal("true");
+			argMap.get(optionalArgName).setArgValue("true");
 		} else {		
 				try{
-					argMap.get(optionalArgName).setVal(q.element());
+					argMap.get(optionalArgName).setArgValue(q.element());
 					q.remove();
 				}catch(NumberFormatException n){
 					throw new InvalidArgumentException(createExceptionMessage("InvalidOptionalArgumentException"), argMap.get(optionalArgName), q.remove());
@@ -170,7 +170,7 @@ public class ArgsParser {
 	}
 	
 	public <T> T getArgValue(String name) {
-		return (T) getArg(name).getVal();
+		return (T) getArg(name).getArgValue();
 	}
 	
 	private String createExceptionMessage(String messageType){
@@ -185,7 +185,7 @@ public class ArgsParser {
 				msg = msg.substring(0, msg.length()-7);
 				msg += programDescription + "\npositional arguments:\n";
 				for(int i = 0; i < argNames.size(); i++){
-					msg += argNames.get(i) + " " + argMap.get(argNames.get(i)).getDescription() + "\n";
+					msg += argNames.get(i) + " " + argMap.get(argNames.get(i)).getArgDescription() + "\n";
 				}
 				break;
 			case "InvalidArgumentException":

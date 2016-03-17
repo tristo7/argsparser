@@ -332,5 +332,17 @@ public class ArgsParserTest {
 			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: optional argument name: b", incorrectArgMessage);
 		}
 	}
+	
+	@Test
+	public void testGetArgException(){
+		String msg = "default";
+		try{
+			p.getArg("thisdoesnotexist");
+		}catch(RuntimeException e){
+			msg = e.getMessage();
+		} finally{
+			assertEquals("Argument thisdoesnotexist does not exist.", msg);
+		}
+	}
 
 }

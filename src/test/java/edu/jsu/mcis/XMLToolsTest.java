@@ -9,17 +9,17 @@ public class XMLToolsTest {
 	private XMLTools x;
 	private ArgsParser q;
 	private ArgsParser n;
-	private XMLTools xmlParser;
 	
 	@Before
 	public void setUp() {
-		p = new ArgsParser();
+		p = new ArgsParser(); // for save
 		x = new XMLTools();
-		xmlParser = new XMLTools();
-		q = new ArgsParser();
-		n = new ArgsParser();
+		q = new ArgsParser(); //for load xml file made from save
 		q = x.load("./src/test/java/edu/jsu/mcis/xmlFiles/testSave.xml");
+		n = new ArgsParser(); //for load xml file made NOT from save
+		n = x.load("./src/test/java/edu/jsu/mcis/xmlFiles/testLoadFile.xml");
 	}
+	
 	
 	@Test
 	public void testSave(){
@@ -30,11 +30,11 @@ public class XMLToolsTest {
 		p.addOptionalArg("testArg", Arg.DataType.STRING, "test1", 't');
 		p.addOptionalArg("testArg2", Arg.DataType.STRING, "test12");
 		p.addOptionalArg("testArg3", Arg.DataType.STRING, "test123", 'c');
-		p.getArg("testArg3").setDescription("NamedDescrip");
+		p.getArg("testArg3").setArgDescription("NamedDescrip");
 		x.save(p,"./build/tmp/testSave.xml");
 		//read in xml file as string and test against known string
 		String actualXMLOutput = "";
-		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription><positional>    <position>1</position>    <name>one</name>    <type>string</type></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional>    <named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named>    <named>    <name>testArg2</name>    <type>string</type>    <default>test12</default></named>    <named>    <name>testArg3</name>    <type>string</type>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>test123</default></named></arguments>";
+		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription><positional>    <position>1</position>    <name>one</name>    <type>string</type></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional><named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named><named>    <name>testArg2</name>    <type>string</type>    <default>test12</default></named><named>    <name>testArg3</name>    <type>string</type>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>test123</default></named></arguments>";
 		String currentLine = null;
 		try{
 			FileReader r = new FileReader("./build/tmp/testSave.xml");
@@ -47,6 +47,30 @@ public class XMLToolsTest {
 		}
 		assertEquals(expectedXLMOutput, actualXMLOutput);
 		
+	}
+	
+	@Test
+	public void testLoadExceptionWithFileNotFound(){
+		boolean exception = false;
+		try{
+			x.load("thisfiledoesnotexist.xml");
+		} catch(XMLException e){
+			exception = true;
+		} finally{
+			assertTrue(exception);
+		}
+	}
+	
+	@Test
+	public void testLoadExceptionWithFileNotXMLExtension(){
+		boolean exception = false;
+		try{
+			x.load("thisfiledoesnotexist");
+		} catch(XMLException e){
+			exception = true;
+		} finally{
+			assertTrue(exception);
+		}
 	}
 
 	@Test
@@ -73,7 +97,7 @@ public class XMLToolsTest {
 	
 	@Test
 	public void testLoadForAnotherFile() {
-		n = xmlParser.load("./src/test/java/edu/jsu/mcis/xmlFiles/testLoadFile.xml");
+
 		String s = n.getArg("square").getDataType();
 		String m = n.getArg("blue").getArgName();
 		assertEquals("TestLoad", n.getProgramName());
