@@ -71,7 +71,7 @@ public class ArgTest {
 	}
 	
 	@Test
-	public void testShortNameException(){
+	public void testGetShortNameException(){
 		p.addOptionalArg("test", Arg.DataType.STRING, "default");
 		p.addArg("testing");
 		try{
@@ -84,6 +84,16 @@ public class ArgTest {
 			p.getArg("testing").getArgShortName();
 		}catch(InvalidArgumentException e){
 			assertEquals("testing is not a named argument.", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testSetShortNameException(){
+		p.addArg("test");
+		try{
+		p.getArg("test").setArgShortName('t');
+		} catch(InvalidArgumentException e){
+			assertEquals("test is a positional argument.", e.getMessage());
 		}
 	}
 }
