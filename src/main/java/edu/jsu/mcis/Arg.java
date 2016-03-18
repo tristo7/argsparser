@@ -34,7 +34,10 @@ public class Arg {
 	}
 	
 	public void setArgShortName(char c){
-		argumentShortName = c;
+		if(isOptionalArgument)
+			argumentShortName = c;
+		else
+			throw new InvalidArgumentException(argumentName + " is a positional argument.", this);
 	}
 	
 	public String getArgDescription(){
@@ -90,27 +93,21 @@ public class Arg {
 		String statement = "";
 		if(isOptionalArgument){
 			statement += "<named>\n";
-			
 		} else {
 			statement += "<positional>\n";
 		}
-		
 		statement += "    <name>" + argumentName + "</name>\n" +
 					 "    <type>" + dType.toString().toLowerCase() + "</type>\n";
 		if(!argumentDescription.equals(""))
 			statement += "    <description>" + argumentDescription + "</description>\n";
-		
 		if(isOptionalArgument){
 			if(argumentShortName != '\u0000'){
 				statement += "    <shortname>" + argumentShortName + "</shortname>\n";
 			}
 			statement += "    <default>" + String.valueOf(val) + "</default>\n</named>\n";
-			
 		} else {
 			statement += "</positional>\n";
 		}
-		
-		
 		return statement;
 	}
 }

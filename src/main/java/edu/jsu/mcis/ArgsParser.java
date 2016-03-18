@@ -51,11 +51,6 @@ public class ArgsParser {
 		return programDescription;
 	}
 	
-	// public void addArg(Arg a) {
-		// argNames.add(a.getArgName());
-		// argMap.put(a.getArgName(), a);
-	// }
-	
 	public void addArg(String name) {
 		argNames.add(name);
 		argMap.put(name, new Arg(name));
@@ -102,13 +97,12 @@ public class ArgsParser {
 		int currentPosArg = 0;
 		String extraArgs = "";
 		Queue<String> arguments = new LinkedList<String>();
+		
 		for(int i = 0;i<cla.length;i++){
 			arguments.add(cla[i]);
 		}
-		
 		while(!arguments.isEmpty()){
 			currentArg = arguments.remove();
-			
 			if(currentArg.contains("-")){
 				dashedArgumentClassifier(currentArg, arguments);					
 			}else if(currentPosArg < argNames.size()){
@@ -118,7 +112,6 @@ public class ArgsParser {
 					throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentPosArg)), currentArg);
 				}
 				currentPosArg++;
-				
 			}else{
 				extraArgs = currentArg;
 				while(!arguments.isEmpty()){

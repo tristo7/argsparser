@@ -102,16 +102,14 @@ public class XMLTools{
 			}
 		}
 		
-	   
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
 			String currentTag = qName.toLowerCase();
 			if(flagMap.containsKey(currentTag))
 				flagMap.put(currentTag, true);
 		}
-
-
-	   @Override
+		
+		@Override
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
 			if(qName.equals("named")) {
