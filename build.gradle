@@ -39,6 +39,12 @@ uploadArchives {
     }
 }
 
+task javaDocs(type: Javadoc){
+	source = sourceSets.main.allJava
+    classpath = configurations.compile
+    destinationDir = file("./build/Javadoc/")
+}
+
 if(hasProperty("Xlint:unchecked")) {
     tasks.withType(JavaCompile) { 
         options.compilerArgs << "-Xlint:unchecked" 
