@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><arguments>
+    <programname>VolumeCalculator</programname>
+    <programdescription>Calculate the volume of a cube, cylinder, or sphere.</programdescription>
+<positional>
+    <position>1</position>
+    <name>length</name>
+    <type>float</type>
+    <description>the length of the box (float)</description>
+</positional>
+<positional>
+    <position>2</position>
+    <name>width</name>
+    <type>float</type>
+    <description>the width of the box(float)</description>
+</positional>
+<positional>
+    <position>3</position>
+    <name>height</name>
+    <type>float</type>
+    <description>the height of the box(float)</description>
+</positional>
+<named>
+    <name>type</name>
+    <type>string</type>
+    <default>box</default>
+</named>
+<named>
+    <name>digits</name>
+    <type>integer</type>
+    <shortname>d</shortname>
+    <default>2</default>
+</named>
+</arguments>
