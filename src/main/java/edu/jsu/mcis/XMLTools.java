@@ -10,7 +10,20 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+/** Allows arguments to be saved and loaded via XML file format. 	
+*	
+*	@author Tristin Terry
+* 	@author Daniel Hilburn
+* 	@author Thomas Eyler
+* 	@author Jake Hamby
+* 	@author Amari Richardson
+*/	
 public class XMLTools{
+	
+	/** XML save method. This method extracts all known information from Argsparser and formats it in XML.
+	*	@param p ArgsParser instance to save from.
+	*	@param fileLocation filepath to save the XML file to. Entire path with file extension should be used.
+	*/	
 	public static void save(ArgsParser p, String fileLocation){
 		String xml = "<arguments>\n";
 		if (!p.getProgramName().equals(""))
@@ -46,6 +59,10 @@ public class XMLTools{
 		}
 	}
 	
+	/** XML load method. This method extracts information from an XML file and loads it into an ArgsParser.
+	*	@param fileLocation Path of the XML file. Entire path with file extension should be used.
+	*	@return ArgsParser with data from XML loaded into it. 
+	*/	
 	public ArgsParser load(String fileLocation){
 		ArgsParser a = new ArgsParser();
 		UserHandler userH = new UserHandler();
@@ -78,7 +95,7 @@ public class XMLTools{
 				return Arg.DataType.STRING;
 		}
 	}
-
+	
 	private class UserHandler extends DefaultHandler{
 		Map<String, Boolean> flagMap;
 		private Map<Integer, Arg> tempArgs;
