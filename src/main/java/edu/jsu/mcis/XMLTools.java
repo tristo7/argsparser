@@ -130,9 +130,10 @@ public class XMLTools{
 		public void endElement(String uri, 
 		String localName, String qName) throws SAXException {
 			if(qName.equals("named")) {
-				p.addOptionalArg(name, myType, defaultVal);
 				if(shortName != '\u0000') {
-					p.getArg(name).setArgShortName(shortName);
+					p.addOptionalArg(name, myType, defaultVal, shortName);
+				} else {
+					p.addOptionalArg(name, myType, defaultVal);
 				}
 				name = "";
 				defaultVal = "";
