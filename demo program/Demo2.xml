@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><arguments>
+    <programname>PizzaPlace</programname>
+    <programdescription>Order Pizza(s) and a drink!</programdescription>
+<positional>
+    <position>1</position>
+    <name>size</name>
+    <type>string</type>
+    <description>Pizza size: small ($5), medium ($7), or large ($10).</description>
+</positional>
+<positional>
+    <position>2</position>
+    <name>drink</name>
+    <type>string</type>
+    <description>Drinks: coke ($2), pepsi ($2), tea ($1), or water (free).</description>
+</positional>
+<named>
+    <name>ExtraCheese</name>
+    <type>boolean</type>
+    <description>($2)</description>
+    <shortname>c</shortname>
+    <default>false</default>
+</named>
+<named>
+    <name>NoPepperoni</name>
+    <type>boolean</type>
+    <shortname>p</shortname>
+    <default>false</default>
+</named>
+<named>
+    <name>PizzaQuantity</name>
+    <type>integer</type>
+    <shortname>q</shortname>
+    <default>1</default>
+</named>
+</arguments>
