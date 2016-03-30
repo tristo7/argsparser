@@ -14,7 +14,9 @@ if /I "%INPUT%"=="n" goto no
 cd ..
 start "" "file://%CD%\build\reports\tests\index.html"
 start "" "file://%CD%\build\reports\jacoco\test\html\index.html"
+start "" "file://%CD%\build\javadoc\index.html"
 start "" "file://%CD%\acceptance\report.html"
+
 
 :no
 exit 0
