@@ -32,7 +32,7 @@ public class InvalidArgumentException extends RuntimeException {
 		argument = arg;
 	}
 
-	/** Gives the argument that caused the exception for handling.
+	/** Gives the argument that caused the exception.
 	*	@return The argument that had the exception. 
 	*/	
     public Arg getArgument(){

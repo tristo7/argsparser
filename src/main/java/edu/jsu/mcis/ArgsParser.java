@@ -71,6 +71,11 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name, myType, description));
 	}
 	
+	public void addArg(String name, Arg.DataType myType, String description, List<String> restrictedValues) {
+		argNames.add(name);
+		argMap.put(name, new Arg(name, myType, description, restrictedValues));
+	}
+	
 	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
 		switch(type){
@@ -86,10 +91,26 @@ public class ArgsParser {
 		}
 	}
 	
+	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName, List<String> restrictedValues){
+		switch(type){
+			case BOOLEAN:
+				if(!defaultValue.toLowerCase().equals("false"))
+					throw new FlagDefaultNotFalseException(createExceptionMessage("FlagDefaultNotFalseException"),name, defaultValue);
+			case INTEGER:
+			case STRING:
+			case FLOAT:
+				optionalArgNames.add(name);
+				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
+				argMap.get(name).setArgShortName(shortName);
+				shortNameMap.put(shortName, name);
+				break;
+		}
+	}
+	
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName){
 		shortNameMap.put(shortName, name);
 		addOptionalArg(name, type, defaultValue);
-		getArg(name).setArgShortName(shortName);
+		argMap.get(name).setArgShortName(shortName);
 	}
 
 	public void parse(String[] cla) {

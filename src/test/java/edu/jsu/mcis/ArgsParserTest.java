@@ -3,6 +3,7 @@ package edu.jsu.mcis;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.io.*;
+import java.util.*;
 
 public class ArgsParserTest {
 	private ArgsParser p;
@@ -342,6 +343,39 @@ public class ArgsParserTest {
 			msg = e.getMessage();
 		} finally{
 			assertEquals("Argument thisdoesnotexist does not exist.", msg);
+		}
+	}
+	
+	@Test
+	public void testRestrictedValuesExceptionWithNormalArg(){
+		boolean exceptionThrown = false;
+		List<String> values = new ArrayList<String>();
+		values.add("one");
+		values.add("three");
+		p.addArg("testArg", Arg.DataType.STRING, "This is a test.", values);
+		try{
+			p.parse(new String[] {"two"});
+		} catch(RestrictedValuesException e){
+			exceptionThrown = true;
+		} finally{
+			assertTrue(exceptionThrown);
+		}
+	}
+	
+	@Test
+	public void testRestrictedValuesExceptionWithOptionalArg(){
+		boolean exceptionThrown = false;
+		List<String> values = new ArrayList<String>();
+		values.add("one");
+		values.add("three");
+		p.addArg("testArg");
+		p.addOptionalArg("testArg2", Arg.DataType.STRING, "one", 'a', values);
+		try{
+			p.parse(new String[] {"one", "-a", "two"});
+		} catch(RestrictedValuesException e){
+			exceptionThrown = true;
+		} finally{
+			assertTrue(exceptionThrown);
 		}
 	}
 

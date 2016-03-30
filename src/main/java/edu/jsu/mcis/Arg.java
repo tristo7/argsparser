@@ -1,5 +1,7 @@
 package edu.jsu.mcis;
 
+import java.util.*;
+
 /** Argument class. Holds information about either positional or named arguments.	
 *	
 *	@author Tristin Terry
@@ -20,6 +22,8 @@ public class Arg {
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
 	private boolean isOptionalArgument = false;
+	private boolean isRestricted = false;
+	private List<String> restrictedValues;
 	
 	/** Constructor that sets the name of the argument.
 	*	@param name The name of the argument. 
@@ -48,6 +52,12 @@ public class Arg {
 		argumentDescription = desc;
     }
 	
+	public Arg(String name, DataType type, String desc, List<String> restrictedValues) {
+        this(name, type, desc);
+		isRestricted = true;
+		this.restrictedValues = restrictedValues;
+    }
+	
 	/** Constructor that sets the name, data type, description, and default value of the argument. <STRONG>Using this constructor indicates a named argument.</STRONG>
 	*	@param name The name of the argument. 
 	* 	@param type The data type of the argument.
@@ -58,6 +68,22 @@ public class Arg {
 	public Arg(String name, DataType type, String desc, String defaultValue){
 		this(name, type, desc);
 		isOptionalArgument = true;
+		setArgValue(defaultValue);
+	}
+	
+	/** Constructor that sets the name, data type, description, default value, and restricted values of the argument. <STRONG>Using this constructor indicates a named argument.</STRONG>
+	*	@param name The name of the argument. 
+	* 	@param type The data type of the argument.
+	* 	@param desc Description of the argument.
+			For example, an argument named "length" may have a description "The length of the box."
+	*	@param defaultValue The argument's default value entered as a string.
+	*	@param restrictedValues List of the values the argument should be restricted to take on.
+	*/	
+	public Arg(String name, DataType type, String desc, String defaultValue, List<String> restrictedValues){
+		this(name, type, desc);
+		isOptionalArgument = true;
+		isRestricted = true;
+		this.restrictedValues = restrictedValues;
 		setArgValue(defaultValue);
 	}
 	
@@ -117,6 +143,10 @@ public class Arg {
 	}
 
     protected void setArgValue(String value) {
+		if(isRestricted && !restrictedValues.contains(value)){
+			throw new RestrictedValuesException(argumentName + " has a restricted set of values: ", this, value, restrictedValues);
+		}
+			
 		switch(dType){
 			case INTEGER:
 				val = Integer.valueOf(value);
