@@ -104,7 +104,11 @@ public class XMLTools{
 		private Arg.DataType myType;
 		private int position;
 		private ArgsParser p;
-		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position", "restrictedvalues"}; 
+		private final String[] XMLTags = 
+			{"arguments", "programname", "programdescription", 
+			"positional", "named", "name", 
+			"type", "description", "shortname", 
+			"default", "position", "restrictedvalues"}; 
 		private List<String> restrictedValues;
 		
 		public UserHandler(){
@@ -130,6 +134,7 @@ public class XMLTools{
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
 			String currentTag = qName.toLowerCase();
+			
 			if(currentTag.equals("named")) {
 				if(shortName != '\u0000') {
 					if(!restrictedValues.isEmpty())
@@ -142,10 +147,6 @@ public class XMLTools{
 					else
 						p.addOptionalArg(name, myType, defaultVal);
 				}
-				restrictedValues = new ArrayList<String>();
-				name = "";
-				defaultVal = "";
-				description = "";
 			}
 			else if(currentTag.equals("positional")) {
 				if(restrictedValues.isEmpty()){
@@ -153,12 +154,14 @@ public class XMLTools{
 				} else {
 					p.addArg(name, myType, description, restrictedValues);
 				}
-				name = "";
-				myType = Arg.DataType.STRING;
-				description = "";
-				restrictedValues = new ArrayList<String>();
 			}
-			
+			if(currentTag.equals("positional") || currentTag.equals("named")){
+				restrictedValues = new ArrayList<String>();
+				name = "";
+				defaultVal = "";
+				description = "";
+				shortName = '\u0000';
+			}
 			flagMap.put(currentTag, false);
 		}
 
@@ -193,7 +196,6 @@ public class XMLTools{
 					}
 					else if(flagMap.get("restrictedvalues")){
 						restrictedValues = new ArrayList<String>(Arrays.asList(s.split(", ")));
-						System.out.println("\n\n\n\nPOSITIONAL: " + restrictedValues.toString());
 					}
 				}
 				else if(flagMap.get("named")) {
@@ -214,7 +216,6 @@ public class XMLTools{
 					}
 					else if(flagMap.get("restrictedvalues")){
 						restrictedValues = new ArrayList<String>(Arrays.asList(s.split(", ")));
-						System.out.println("\n\n\n\nNAMED: " + restrictedValues.toString());
 					}
 				}
 			} 

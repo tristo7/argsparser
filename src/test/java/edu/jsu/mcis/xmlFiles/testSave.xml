@@ -5,6 +5,7 @@
     <position>1</position>
     <name>one</name>
     <type>string</type>
+    <restrictedvalues>one, two, three</restrictedvalues>
 </positional>
 <positional>
     <position>2</position>
@@ -12,22 +13,24 @@
     <type>integer</type>
     <description>This is a test.</description>
 </positional>
-    <named>
+<named>
     <name>testArg</name>
     <type>string</type>
     <shortname>t</shortname>
     <default>test1</default>
 </named>
-    <named>
+<named>
     <name>testArg2</name>
     <type>string</type>
-    <default>test12</default>
+    <restrictedvalues>one, two, three</restrictedvalues>
+    <default>three</default>
 </named>
-    <named>
+<named>
     <name>testArg3</name>
     <type>string</type>
+    <restrictedvalues>one, two, three</restrictedvalues>
     <description>NamedDescrip</description>
     <shortname>c</shortname>
-    <default>test123</default>
+    <default>one</default>
 </named>
 </arguments>

@@ -2,17 +2,28 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-/** Argument class. Holds information about either positional or named arguments.	
-*	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
-*/	
+/** Holds information about the argument. <br>
+ *	An argument can be either <STRONG>positional</STRONG> or <STRONG>named</STRONG>. <br>
+ *	There is also an option to make both arguments <STRONG>restricted</STRONG>.<p>
+ *		<STRONG>Positional</STRONG> arguments are required. These arguments will be core to the program.<br>
+ *			An example of a positional argument would be length width and height in a volume calculating program.<p>
+ *		<STRONG>Named</STRONG>  arguments are considered optional.<br>
+ *			An example of a named argument would be numeric precsision in a volume calculating program.<br>
+ *				The default precision could be to two decimal places, but have support for more.<p>
+ *		<STRONG>Resctricted</STRONG> arguments are limited to a specified set of values. This can be thought of as an enumeration.<br>
+ *			An example of a restricted (named) argument would be the shape of an object in a volume calculating program.<br> 
+ *				It could be limited to the following list: box, sphere, or a cylinder.
+ *	
+ *	
+ *	@author Tristin Terry
+ * 	@author Daniel Hilburn
+ * 	@author Thomas Eyler 
+ * 	@author Jake Hamby
+ * 	@author Amari Richardson
+ */	
 public class Arg {
 	/** 
-	*	Data types that are supported.
+	*	Supported data types.
 	*/
     public enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};
     
@@ -25,14 +36,14 @@ public class Arg {
 	private boolean isRestricted = false;
 	private List<String> restrictedValues;
 	
-	/** Constructor that sets the name of the argument.
+	/** Sets the name of the argument.
 	*	@param name The name of the argument. 
 	*/	
     public Arg(String name) {
         argumentName = name;
     }
 	
-	/** Constructor that sets the name and data type of the argument.
+	/** Sets the name and data type of the argument.
 	*	@param name The name of the argument. 
 	* 	@param type The data type of the argument.
 	*/	
@@ -41,7 +52,7 @@ public class Arg {
 		dType = type;
     }
 	
-	/** Constructor that sets the name, data type, and description of the argument.
+	/** Sets the name, data type, and description of the argument.
 	*	@param name The name of the argument. 
 	* 	@param type The data type of the argument.
 	* 	@param desc Description of the argument.
@@ -52,13 +63,7 @@ public class Arg {
 		argumentDescription = desc;
     }
 	
-	public Arg(String name, DataType type, String desc, List<String> restrictedValues) {
-        this(name, type, desc);
-		isRestricted = true;
-		this.restrictedValues = restrictedValues;
-    }
-	
-	/** Constructor that sets the name, data type, description, and default value of the argument. <STRONG>Using this constructor indicates a named argument.</STRONG>
+	/** Sets the name, data type, description, and default value of the<STRONG> named </STRONG>argument.
 	*	@param name The name of the argument. 
 	* 	@param type The data type of the argument.
 	* 	@param desc Description of the argument.
@@ -71,7 +76,20 @@ public class Arg {
 		setArgValue(defaultValue);
 	}
 	
-	/** Constructor that sets the name, data type, description, default value, and restricted values of the argument. <STRONG>Using this constructor indicates a named argument.</STRONG>
+	/** Sets the name, data type, description, and restricted values of the<STRONG> resctricted </STRONG>argument.
+	*	@param name The name of the argument. 
+	* 	@param type The data type of the argument.
+	* 	@param desc Description of the argument.
+			For example, an argument named "length" may have a description "The length of the box."
+		@param restrictedValues List of the values the argument should be restricted to take on.
+	*/	
+	public Arg(String name, DataType type, String desc, List<String> restrictedValues) {
+		this(name, type, desc);
+		isRestricted = true;
+		this.restrictedValues = restrictedValues;
+    }
+	
+	/** Sets the name, data type, description, default value, and restricted values of the<STRONG> restricted named </STRONG>argument.
 	*	@param name The name of the argument. 
 	* 	@param type The data type of the argument.
 	* 	@param desc Description of the argument.
@@ -87,16 +105,25 @@ public class Arg {
 		setArgValue(defaultValue);
 	}
 	
+	/** Sets the restricted values of the argument. The argument will be considered<STRONG> restricted </STRONG> after calling this method on it.
+	*	@param values List of the values the argument should be restricted to take on.
+	*/	
 	public void setRestrictedValues(List<String> values){
+		if(dType == DataType.BOOLEAN)
+			throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + argumentName);
 		restrictedValues = values;
 		isRestricted = true;
 	}
 	
+	/** Gets the restricted values of the argument formatted in a string.<p>
+	*		Example output: "[1, 2, 3]"
+	*	@return restricted values of the argument.
+	*/	
 	public String getRestrictedValues(){
 		if(isRestricted)
 			return restrictedValues.toString();
 		else
-			throw new RuntimeException("This is not a restricted argument.");
+			throw new RuntimeException(argumentName + " is not a restricted argument.");
 	}
 	
 	/** Sets the description of the argument.
@@ -106,7 +133,7 @@ public class Arg {
 		argumentDescription = s;
 	}
 	
-	/** Sets the short form name of a <STRONG>named argument</STRONG>.
+	/** Sets the short form name of a<STRONG> named </STRONG>argument.
 	*	@param c Character used to identify the named argument.
 	*/	
 	public void setArgShortName(char c){
@@ -117,8 +144,8 @@ public class Arg {
 	}
 	
 	/**
-	*	Gives the argument's descipriton.
-	*	@return String value of the argument's descipriton.
+	*	Gives the argument's description.
+	*	@return String value of the argument's description.
 	*/	
 	public String getArgDescription(){
 		return argumentDescription;
@@ -133,7 +160,7 @@ public class Arg {
 	}
 	
 	/**
-	*	Gives the named argument's short form name.
+	*	Gives character that represents the<STRONG> named </STRONG>argument's short name.
 	*	@return character value of the named argument's short form name.
 	*/	
 	public char getArgShortName(){
@@ -147,13 +174,16 @@ public class Arg {
 	}
 	
 	/**
-	*	Returns the argument's data type as a String.
+	*	Returns the argument's data type as a string in lowercase. Values may be the following: string, integer, boolean, or float.
 	* 	@return String value of the argument's data type.
 	*/	
 	public String getDataType(){
 		return dType.toString().toLowerCase();
 	}
-
+	
+	/**	Sets and stores the value of the argument.
+	*	@param value Value to be stored in the argument. It will be parsed and cast to its proper data type.
+	*/	
     protected void setArgValue(String value) {
 		if(isRestricted && !restrictedValues.contains(value)){
 			throw new RestrictedValuesException(argumentName + " has a restricted set of values: ", this, value, restrictedValues);
@@ -181,8 +211,9 @@ public class Arg {
         }
     }
 	
-	/** Returns the value of the argument as a generic type. Result must be cast to the proper data type.
-	*		Example cases: int i = p.getArgValue() or (int) p.getArgValue();
+	/** Returns the value of the argument as a generic type. Result must be cast to the proper data type. <p>
+	*		Example cases: int i = p.getArgValue("myarg") or (int) p.getArgValue("myarg"); <br>
+	*			Where p is an instance of ArgsParser.
 	*	@param <T> Generic type for the argument. 
 	*	@return The argument's value as a generic T type. This should then be cast to the proper data type.
 	*/

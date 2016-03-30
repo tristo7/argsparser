@@ -61,7 +61,7 @@ public class ArgsParser {
 	
 	/**
 	*	Sets the program name based upon a string from the user.
-	*	@param the name for the program
+	*	@param name the name for the program
 	*/	
 	public void setProgramName(String name) {
 		programName = name;
@@ -77,7 +77,7 @@ public class ArgsParser {
 	
 	/**
 	*	Sets the program description based upon a string from the user.
-	*	@param the string for the description of the program using ArgsParser.
+	*	@param s the string for the description of the program using ArgsParser.
 	*/	
 	public void setProgramDescription(String s) {
 		programDescription = s;
@@ -94,7 +94,7 @@ public class ArgsParser {
 	
 	/**
 	*	Method to add an argument with the name of the argument.
-	*	@param the string for the name of the argument to be added.
+	*	@param name the string for the name of the argument to be added.
 	*/
 	public void addArg(String name) {
 		argNames.add(name);
@@ -103,8 +103,8 @@ public class ArgsParser {
 	
 	/**
 	*	Method to add an argument with the name of the argument and description.
-	*	@param the string for the name of the argument to be added.
-	*	@param the description of the argument to be added.
+	*	@param name the string for the name of the argument to be added.
+	*	@param description the description of the argument to be added.
 	*/
 	public void addArg(String name, String description) {
 		argNames.add(name);
@@ -113,8 +113,8 @@ public class ArgsParser {
 	
 	/**
 	*	Method to add an argument with the name of the argument and description.
-	*	@param the string for the name of the argument to be added.
-	*	@param the datatype of the argument to be added.
+	*	@param name the string for the name of the argument to be added.
+	*	@param myType the datatype of the argument to be added.
 	*/
 	public void addArg(String name, Arg.DataType myType) {
 		argNames.add(name);
@@ -123,15 +123,22 @@ public class ArgsParser {
 	
 	/**
 	*	Method to add an argument with the name of the argument and description.
-	*	@param the string for the name of the argument to be added.
-	*	@param the datatype of the argument to be added.
-	*	@param the description of the argument to be added.
+	*	@param name the string for the name of the argument to be added.
+	*	@param myType the datatype of the argument to be added.
+	*	@param description the description of the argument to be added.
 	*/
 	public void addArg(String name, Arg.DataType myType, String description) {
 		argNames.add(name);
 		argMap.put(name, new Arg(name, myType, description));
 	}
-
+	
+	/**
+	*	Method to add an argument with the name of the argument and description.
+	*	@param name the string for the name of the argument to be added.
+	*	@param myType the datatype of the argument to be added.
+	*	@param description the description of the argument to be added.
+	*	@param restrictedValues List of the values the argument should be restricted to take on.
+	*/
 	public void addArg(String name, Arg.DataType myType, String description, List<String> restrictedValues) {
 		argNames.add(name);
 		argMap.put(name, new Arg(name, myType, description, restrictedValues));
@@ -139,9 +146,9 @@ public class ArgsParser {
 	
 	/**
 	*	Adds an optional argument to the HashMap without the shortname
-	* 	@param String name of the optional argument.
-	*	@param DataType of the argument being added.
-	*	@param the default value for the argument being created.
+	* 	@param name String name of the optional argument.
+	*	@param type DataType of the argument being added.
+	*	@param defaultValue the default value for the argument being created.
 	*/
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
 		switch(type){
@@ -157,6 +164,14 @@ public class ArgsParser {
 		}
 	}
 	
+	/**
+	*	Adds an optional argument to the HashMap
+	* 	@param name String name of the optional argument.
+	*	@param type DataType of the argument being added.
+	*	@param defaultValue the default value for the argument being created.
+	*	@param shortName the character for the short name of the argument.
+	*	@param restrictedValues List of the values the argument should be restricted to take on.
+	*/
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName, List<String> restrictedValues){
 		switch(type){
 			case BOOLEAN:
@@ -172,6 +187,13 @@ public class ArgsParser {
 		}
 	}
 	
+	/**
+	*	Adds an optional argument to the HashMap
+	* 	@param name String name of the optional argument.
+	*	@param type DataType of the argument being added.
+	*	@param defaultValue the default value for the argument being created.
+	*	@param restrictedValues List of the values the argument should be restricted to take on.
+	*/
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, List<String> restrictedValues){
 		switch(type){
 			case BOOLEAN:
@@ -187,10 +209,10 @@ public class ArgsParser {
 	
 	/**
 	*	Adds an optional argument to the HashMap and name, shortname to the list of names, shortnames
-	* 	@param String name of the optional argument.
-	*	@param DataType of the argument being added.
-	*	@param the default value for the argument being created.
-	*	@param the character for the short name of the argument
+	* 	@param name String name of the optional argument.
+	*	@param type DataType of the argument being added.
+	*	@param defaultValue the default value for the argument being created.
+	*	@param shortName the character for the short name of the argument.
 	*/
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName){
 		shortNameMap.put(shortName, name);
@@ -200,7 +222,7 @@ public class ArgsParser {
 
 	/**
 	*	Parses the data passed from the command line and stores arguments.
-	* 	@param String array of the command line arguments
+	* 	@param cla String array of the command line arguments.
 	*/
 	public void parse(String[] cla) {
 		String currentArg = "";
@@ -267,6 +289,7 @@ public class ArgsParser {
 	
 	/**
 	*	Gives an Arg based upon the given String name.
+	* 	@param name Name of the argument.
 	*	@return Arg object from the argMap given the name of the Arg.
 	*/	
 	public Arg getArg(String name) {
@@ -278,6 +301,8 @@ public class ArgsParser {
 	
 	/**
 	*	Gives the value of an argument cast as type T.
+	*	@param <T> Generic type.
+	*	@param name Name of the argument.
 	*	@return type T representation of the argument's associated value given the name.
 	*/	
 	public <T> T getArgValue(String name) {

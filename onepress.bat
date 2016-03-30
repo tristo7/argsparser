@@ -1,7 +1,7 @@
 @ECHO OFF
 
 echo Running Gradle...
-call gradle clean build jacocoTestReport
+call gradle clean build jacocoTestReport javadocs
 
 echo Running Acceptance Tests...
 cd acceptance

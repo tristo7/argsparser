@@ -413,6 +413,42 @@ public class ArgsParserTest {
 			s = e.getMessage();
 		} finally{
 			assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: booleanArg", s);
+			try{
+			p.addOptionalArg("booleanArg2", Arg.DataType.BOOLEAN, "false", values);
+			} catch (RuntimeException e){
+				s = e.getMessage();
+			} finally{
+				assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: booleanArg2", s);
+			}
+			
+		}
+	}
+	
+	@Test
+	public void setRestrictedValuesOnBooleanArgCausesException(){
+		p.addOptionalArg("boolean1", Arg.DataType.BOOLEAN, "false");
+		List<String> values = new ArrayList<String>();
+		values.add("whatever");
+		String s = "";
+		try{
+			p.getArg("boolean1").setRestrictedValues(values);
+		} catch (RuntimeException e){
+			s = e.getMessage();
+		} finally {
+			assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: boolean1", s);
+		}
+	}
+	
+	@Test
+	public void getRestrictedValuesCausesExceptionWhenNoneAreSet(){
+		p.addArg("test");
+		String s = "";
+		try{
+			p.getArg("test").getRestrictedValues();
+		} catch (RuntimeException e){
+			s = e.getMessage();
+		} finally {
+			assertEquals("test is not a restricted argument.", s);
 		}
 	}
 }

@@ -17,6 +17,7 @@ public class RestrictedValuesException extends RuntimeException {
 	*	@param msg The message to be assigned to the exception.
 	*	@param arg The argument that has an error.
 	*	@param value The incorrect value that was assigned to the argument.
+	*	@param restrictedValues List of the values the argument should be restricted to take on.
 	*/
     public RestrictedValuesException(String msg, Arg arg, String value, List<String> restrictedValues) {
 		super(msg + restrictedValues + " " + value +" is not in that list.");
