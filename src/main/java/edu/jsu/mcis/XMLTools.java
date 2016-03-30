@@ -129,7 +129,8 @@ public class XMLTools{
 		
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-			if(qName.equals("named")) {
+			String currentTag = qName.toLowerCase();
+			if(currentTag.equals("named")) {
 				if(shortName != '\u0000') {
 					if(!restrictedValues.isEmpty())
 						p.addOptionalArg(name, myType, defaultVal, shortName, restrictedValues);
@@ -146,7 +147,7 @@ public class XMLTools{
 				defaultVal = "";
 				description = "";
 			}
-			else if(qName.equals("positional")) {
+			else if(currentTag.equals("positional")) {
 				if(restrictedValues.isEmpty()){
 					p.addArg(name, myType, description);
 				} else {
@@ -158,9 +159,7 @@ public class XMLTools{
 				restrictedValues = new ArrayList<String>();
 			}
 			
-			String currentTag = qName.toLowerCase();
-			if(flagMap.get(currentTag))
-				flagMap.put(currentTag, false);
+			flagMap.put(currentTag, false);
 		}
 
 		@Override
