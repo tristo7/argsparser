@@ -104,7 +104,8 @@ public class XMLTools{
 		private Arg.DataType myType;
 		private int position;
 		private ArgsParser p;
-		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position"}; 
+		private final String[] XMLTags = {"arguments", "programname", "programdescription", "positional", "named", "name", "type", "description", "shortname", "default", "position", "restrictedvalues"}; 
+		private List<String> restrictedValues;
 		
 		public UserHandler(){
 			p = new ArgsParser();
@@ -114,9 +115,9 @@ public class XMLTools{
 			name = "";
 			defaultVal = "";
 			description = "";
-			for(String s : XMLTags){
+			restrictedValues = new ArrayList<String>();
+			for(String s : XMLTags)
 				flagMap.put(s, false);
-			}
 		}
 		
 		@Override
@@ -127,23 +128,34 @@ public class XMLTools{
 		}
 		
 		@Override
-		public void endElement(String uri, 
-		String localName, String qName) throws SAXException {
+		public void endElement(String uri, String localName, String qName) throws SAXException {
 			if(qName.equals("named")) {
 				if(shortName != '\u0000') {
-					p.addOptionalArg(name, myType, defaultVal, shortName);
+					if(!restrictedValues.isEmpty())
+						p.addOptionalArg(name, myType, defaultVal, shortName, restrictedValues);
+					else
+						p.addOptionalArg(name, myType, defaultVal, shortName);
 				} else {
-					p.addOptionalArg(name, myType, defaultVal);
+					if(!restrictedValues.isEmpty())
+						p.addOptionalArg(name, myType, defaultVal, restrictedValues);
+					else
+						p.addOptionalArg(name, myType, defaultVal);
 				}
+				restrictedValues = new ArrayList<String>();
 				name = "";
 				defaultVal = "";
 				description = "";
 			}
 			else if(qName.equals("positional")) {
-				p.addArg(name, myType, description);
+				if(restrictedValues.isEmpty()){
+					p.addArg(name, myType, description);
+				} else {
+					p.addArg(name, myType, description, restrictedValues);
+				}
 				name = "";
 				myType = Arg.DataType.STRING;
 				description = "";
+				restrictedValues = new ArrayList<String>();
 			}
 			
 			String currentTag = qName.toLowerCase();
@@ -152,12 +164,12 @@ public class XMLTools{
 		}
 
 		@Override
-		public void characters(char ch[], 
-		  int start, int length) throws SAXException {
+		public void characters(char ch[], int start, int length) throws SAXException {
 			String s = "";
 			for(int i = start; i < start + length; i++) {
 				s += String.valueOf(ch[i]);
 			}
+			
 			if (flagMap.get("arguments")) {
 				if(flagMap.get("programname")) {
 					programName = s;
@@ -180,6 +192,10 @@ public class XMLTools{
 					else if(flagMap.get("position")) {
 						position = Integer.parseInt(s);
 					}
+					else if(flagMap.get("restrictedvalues")){
+						restrictedValues = new ArrayList<String>(Arrays.asList(s.split(", ")));
+						System.out.println("\n\n\n\nPOSITIONAL: " + restrictedValues.toString());
+					}
 				}
 				else if(flagMap.get("named")) {
 					if(flagMap.get("name")) {
@@ -196,6 +212,10 @@ public class XMLTools{
 					}
 					else if(flagMap.get("default")) {
 						defaultVal = s;
+					}
+					else if(flagMap.get("restrictedvalues")){
+						restrictedValues = new ArrayList<String>(Arrays.asList(s.split(", ")));
+						System.out.println("\n\n\n\nNAMED: " + restrictedValues.toString());
 					}
 				}
 			} 

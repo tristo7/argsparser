@@ -5,7 +5,7 @@ public class Math {
 	public static void main(String[] args) {
 		ArgsParser p = new ArgsParser();
 		p.setProgramName("Math");
-		p.setProgramDescription("Does simple math with three numbers.")
+		p.setProgramDescription("Does simple math with three numbers.");
 		p.addArg("first", Arg.DataType.FLOAT, "the first number");
 		p.addArg("second", Arg.DataType.FLOAT, "the second number");
 		p.addArg("third", Arg.DataType.FLOAT, "the third number");

@@ -370,13 +370,49 @@ public class ArgsParserTest {
 		values.add("three");
 		p.addArg("testArg");
 		p.addOptionalArg("testArg2", Arg.DataType.STRING, "one", 'a', values);
+		Arg arg = new Arg("initialArgName");
 		try{
 			p.parse(new String[] {"one", "-a", "two"});
 		} catch(RestrictedValuesException e){
 			exceptionThrown = true;
+			arg = e.getArgument();
 		} finally{
 			assertTrue(exceptionThrown);
+			assertEquals("testArg2", arg.getArgName());
 		}
 	}
-
+	
+	@Test
+	public void testRestrictedValues(){
+		List<String> values = new ArrayList<String>();
+		values.add("one");
+		values.add("three");
+		
+		List<String> values2 = new ArrayList<String>();
+		values2.add("1");
+		values2.add("3");
+		
+		p.addArg("firstArg", Arg.DataType.STRING, "This is a test.", values);
+		p.addOptionalArg("secondArg", Arg.DataType.INTEGER, "1", 's', values2);
+		
+		p.parse(new String[] {"three", "-s", "3"} );
+		
+		assertEquals("three", (String) p.getArgValue("firstArg"));
+		assertEquals(3, (int) p.getArgValue("secondArg"));
+	}
+	
+	@Test
+	public void testBooleanRestrictredValuesCausesException(){
+		List<String> values = new ArrayList<String>();
+		values.add("true");
+		values.add("false");
+		String s = "";
+		try{
+			p.addOptionalArg("booleanArg", Arg.DataType.BOOLEAN, "false", 'b', values);
+		} catch (RuntimeException e){
+			s = e.getMessage();
+		} finally{
+			assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: booleanArg", s);
+		}
+	}
 }

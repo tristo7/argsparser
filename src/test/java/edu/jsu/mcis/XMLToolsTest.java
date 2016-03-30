@@ -3,6 +3,7 @@ package edu.jsu.mcis;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.io.*;
+import java.util.*;
 
 public class XMLToolsTest {
 	private ArgsParser p;
@@ -23,18 +24,25 @@ public class XMLToolsTest {
 	
 	@Test
 	public void testSave(){
+		List<String> values = new ArrayList<String>();
+		values.add("one");
+		values.add("two");
+		values.add("three");
+		
 		p.setProgramName("Test");
 		p.setProgramDescription("Test Program");
 		p.addArg("one");
+		p.getArg("one").setRestrictedValues(values);
 		p.addArg("two", Arg.DataType.INTEGER, "This is a test.");
 		p.addOptionalArg("testArg", Arg.DataType.STRING, "test1", 't');
 		p.addOptionalArg("testArg2", Arg.DataType.STRING, "test12");
-		p.addOptionalArg("testArg3", Arg.DataType.STRING, "test123", 'c');
+		p.addOptionalArg("testArg3", Arg.DataType.STRING, "one", 'c', values);
 		p.getArg("testArg3").setArgDescription("NamedDescrip");
+		
 		x.save(p,"./build/tmp/testSave.xml");
 		//read in xml file as string and test against known string
 		String actualXMLOutput = "";
-		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription><positional>    <position>1</position>    <name>one</name>    <type>string</type></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional><named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named><named>    <name>testArg2</name>    <type>string</type>    <default>test12</default></named><named>    <name>testArg3</name>    <type>string</type>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>test123</default></named></arguments>";
+		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription><positional>    <position>1</position>    <name>one</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional><named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named><named>    <name>testArg2</name>    <type>string</type>    <default>test12</default></named><named>    <name>testArg3</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>one</default></named></arguments>";
 		String currentLine = null;
 		try{
 			FileReader r = new FileReader("./build/tmp/testSave.xml");
@@ -93,6 +101,12 @@ public class XMLToolsTest {
 	public void testGetArgDataType() {
 		String s = q.getArg("one").getDataType();
 		assertEquals("string", s);
+	}
+	
+	@Test
+	public void testGetRestrictedValues(){
+		assertEquals("[one, two, three]", q.getArg("one").getRestrictedValues());
+		assertEquals("[one, two, three]", q.getArg("testArg3").getRestrictedValues());
 	}
 	
 	@Test

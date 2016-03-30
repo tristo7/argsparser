@@ -160,8 +160,7 @@ public class ArgsParser {
 	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName, List<String> restrictedValues){
 		switch(type){
 			case BOOLEAN:
-				if(!defaultValue.toLowerCase().equals("false"))
-					throw new FlagDefaultNotFalseException(createExceptionMessage("FlagDefaultNotFalseException"),name, defaultValue);
+				throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + name);
 			case INTEGER:
 			case STRING:
 			case FLOAT:
@@ -169,6 +168,19 @@ public class ArgsParser {
 				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
 				argMap.get(name).setArgShortName(shortName);
 				shortNameMap.put(shortName, name);
+				break;
+		}
+	}
+	
+	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, List<String> restrictedValues){
+		switch(type){
+			case BOOLEAN:
+				throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + name);
+			case INTEGER:
+			case STRING:
+			case FLOAT:
+				optionalArgNames.add(name);
+				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
 				break;
 		}
 	}

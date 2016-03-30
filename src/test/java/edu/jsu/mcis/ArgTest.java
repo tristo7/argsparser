@@ -3,6 +3,7 @@ package edu.jsu.mcis;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.io.*;
+import java.util.*;
 
 public class ArgTest {
 	private ArgsParser p;
@@ -35,6 +36,16 @@ public class ArgTest {
 		p.getArg("testArg3").setArgDescription("NamedDescrip");
 		assertEquals("<named>\n    <name>testArg3</name>\n    <type>string</type>\n    <description>NamedDescrip</description>\n    <shortname>c</shortname>\n    <default>test123</default>\n</named>\n",
 			p.getArg("testArg3").toXML());
+		
+		List<String> values = new ArrayList<String>();
+		values.add("1");
+		values.add("3");
+		values.add("5");
+		values.add("7");
+		
+		p.addOptionalArg("testArg4", Arg.DataType.INTEGER, "1", 'r', values);
+		assertEquals("<named>\n    <name>testArg4</name>\n    <type>integer</type>\n    <restrictedvalues>1, 3, 5, 7</restrictedvalues>\n    <shortname>r</shortname>\n    <default>1</default>\n</named>\n",
+			p.getArg("testArg4").toXML());
 	}
 	
 	@Test

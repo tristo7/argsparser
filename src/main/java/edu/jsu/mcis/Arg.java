@@ -87,6 +87,18 @@ public class Arg {
 		setArgValue(defaultValue);
 	}
 	
+	public void setRestrictedValues(List<String> values){
+		restrictedValues = values;
+		isRestricted = true;
+	}
+	
+	public String getRestrictedValues(){
+		if(isRestricted)
+			return restrictedValues.toString();
+		else
+			throw new RuntimeException("This is not a restricted argument.");
+	}
+	
 	/** Sets the description of the argument.
 	*	@param s Description of the argument.
 	*/	
@@ -189,8 +201,13 @@ public class Arg {
 		} else {
 			statement += "<positional>\n";
 		}
+		
+		
 		statement += "    <name>" + argumentName + "</name>\n" +
 					 "    <type>" + dType.toString().toLowerCase() + "</type>\n";
+		if(isRestricted){
+			statement += "    <restrictedvalues>" + restrictedValues.toString().replace("[","").replace("]","") + "</restrictedvalues>\n";
+		}
 		if(!argumentDescription.equals(""))
 			statement += "    <description>" + argumentDescription + "</description>\n";
 		if(isOptionalArgument){
