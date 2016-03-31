@@ -5,12 +5,14 @@
     <position>1</position>
     <name>size</name>
     <type>string</type>
+	<restrictedvalues>small, medium, large</restrictedvalues>
     <description>Pizza size: small ($5), medium ($7), or large ($10).</description>
 </positional>
 <positional>
     <position>2</position>
     <name>drink</name>
     <type>string</type>
+	<restrictedvalues>coke, pepsi, tea, water</restrictedvalues>
     <description>Drinks: coke ($2), pepsi ($2), tea ($1), or water (free).</description>
 </positional>
 <named>

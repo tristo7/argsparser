@@ -20,7 +20,7 @@ public class RestrictedValuesException extends RuntimeException {
 	*	@param restrictedValues List of the values the argument should be restricted to take on.
 	*/
     public RestrictedValuesException(String msg, Arg arg, String value, List<String> restrictedValues) {
-		super(msg + restrictedValues + " " + value +" is not in that list.");
+		super(msg + restrictedValues + ". " + value +" is not an accepted value.");
 		argument = arg;
     }
 	

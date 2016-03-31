@@ -1,15 +1,23 @@
 import edu.jsu.mcis.*;
 
+import java.util.*;
+import java.lang.*;
 public class VolumeCalculator {
 	public static void main(String[] args) {
 		ArgsParser p = new ArgsParser();
 		XMLTools x = new XMLTools();
+		List<String> typeValues = new ArrayList<String>();
+		typeValues.add("box");
+		typeValues.add("cylinder");
+		typeValues.add("sphere");
+		
+		
 		p.setProgramName("VolumeCalculator");
 		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
 		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
 		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
 		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
-		p.addOptionalArg("type", Arg.DataType.STRING, "box");
+		p.addOptionalArg("type", Arg.DataType.STRING, "box", 'b', typeValues);
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
 		x.save(p, "testing.xml");
 		p.parse(args);
@@ -37,10 +45,6 @@ public class VolumeCalculator {
 			case "sphere":
 				r = p.getArgValue("width");
 				vol = (4.0 / 3.0)*Math.PI*Math.pow(r, 3);
-				break;
-			default:
-				System.err.println("Invalid object type.");
-				System.exit(1);
 				break;
 		}
 		

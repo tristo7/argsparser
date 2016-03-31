@@ -22,6 +22,8 @@
 <named>
     <name>type</name>
     <type>string</type>
+    <restrictedvalues>box, cylinder, sphere</restrictedvalues>
+    <shortname>b</shortname>
     <default>box</default>
 </named>
 <named>
