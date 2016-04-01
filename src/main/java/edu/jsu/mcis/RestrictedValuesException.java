@@ -2,7 +2,7 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-/** Handles when an argument is not within a restricted set of allowed values.
+/** Case where a value that is not within a restricted set of allowed values is entered.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

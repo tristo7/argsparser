@@ -2,7 +2,7 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-/** Handles invalid values assigned to positional arguments. Also deals with invalid function calls on arguments.
+/** Case where invalid values are assigned to positional arguments. Also deals with invalid function calls on arguments.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

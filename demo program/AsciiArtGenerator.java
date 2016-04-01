@@ -77,8 +77,8 @@ public class AsciiArtGenerator{
 			for(int i = 0; i < numLines/2 - 1; i++) {
 				numChars += 2;
 			}
+			int numSpaces = 2;
 			for(int m = numLines/2; m > 0; m--) {
-				int numSpaces = 2;
 				for(int j = 0; j < numSpaces; j++) {
 					asciiDiamond += " ";
 				}

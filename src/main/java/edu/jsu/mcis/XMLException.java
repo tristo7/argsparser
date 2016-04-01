@@ -2,7 +2,7 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-/** Handles exceptions related to XML input/output.
+/** Errors related to XML input/output.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

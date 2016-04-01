@@ -8,7 +8,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 
-/** Parser class for the Arguments
+/** Creates arguments, parses the command line, and returns their values. <p>
+*		The major functions of this class are to properly add arguments and parse the command line 
+			(or any other String array). Other functions exist to return information about the argument(s) or the program.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn
@@ -25,7 +27,7 @@ public class ArgsParser {
 	private String programDescription = "";
 	private Map<Character, String> shortNameMap;
 	
-	/** Constructor that creates a new instance of ArgsParser.
+	/** Default constructor.
 	*	Initializes new HashMaps and ArrayLists for storing Args.
 	*/
 	public ArgsParser() {
@@ -93,7 +95,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Method to add an argument with the name of the argument.
+	*	Adds an argument with a name.
 	*	@param name the string for the name of the argument to be added.
 	*/
 	public void addArg(String name) {
@@ -102,7 +104,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Method to add an argument with the name of the argument and description.
+	*	Adds an argument with a name and description.
 	*	@param name the string for the name of the argument to be added.
 	*	@param description the description of the argument to be added.
 	*/
@@ -112,7 +114,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Method to add an argument with the name of the argument and description.
+	*	Adds an argument with a name and data type.
 	*	@param name the string for the name of the argument to be added.
 	*	@param myType the datatype of the argument to be added.
 	*/
@@ -122,7 +124,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Method to add an argument with the name of the argument and description.
+	*	Adds an argument with a name, data type, and description.
 	*	@param name the string for the name of the argument to be added.
 	*	@param myType the datatype of the argument to be added.
 	*	@param description the description of the argument to be added.
@@ -133,7 +135,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Method to add an argument with the name of the argument and description.
+	*	Adds an argument with a name, data type, description, and restricted values.
 	*	@param name the string for the name of the argument to be added.
 	*	@param myType the datatype of the argument to be added.
 	*	@param description the description of the argument to be added.
@@ -145,7 +147,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Adds an optional argument to the HashMap without the shortname
+	*	Adds a named argument with a name, data type, and default value.
 	* 	@param name String name of the optional argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
@@ -165,7 +167,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Adds an optional argument to the HashMap
+	*	Adds a named argument with a name, data type, default value, short name, and restricted values.
 	* 	@param name String name of the optional argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
@@ -188,7 +190,7 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Adds an optional argument to the HashMap
+	*	Adds a named argument with a name, data type, default value, and restricted values.
 	* 	@param name String name of the optional argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.

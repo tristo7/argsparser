@@ -11,13 +11,12 @@ public class VolumeCalculator {
 		typeValues.add("cylinder");
 		typeValues.add("sphere");
 		
-		
 		p.setProgramName("VolumeCalculator");
 		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
 		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
-		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
-		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
-		p.addOptionalArg("type", Arg.DataType.STRING, "box", 'b', typeValues);
+		p.addArg("width", Arg.DataType.FLOAT, "the width of the box (float)");
+		p.addArg("height", Arg.DataType.FLOAT, "the height of the box (float)");
+		p.addOptionalArg("type", Arg.DataType.STRING, "box", 't', typeValues);
 		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
 		x.save(p, "testing.xml");
 		p.parse(args);
@@ -25,10 +24,8 @@ public class VolumeCalculator {
 		String option1 = p.getArgValue("type");
 		int option2 = p.getArgValue("digits");
 		double vol = 0;
-		float h = 0;
-		float l = 0;
-		float w = 0;
-		float r = 0;
+		float h, l, w, r;
+		h = l = w = r = 0;
 		
 		switch(option1) {
 			case "box":

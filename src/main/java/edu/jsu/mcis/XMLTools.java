@@ -10,7 +10,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-/** Allows arguments to be saved and loaded via XML file format. 	
+/** Allows XML input/output.	
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

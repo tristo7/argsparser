@@ -1,6 +1,6 @@
 package edu.jsu.mcis;
 
-/** Handles exceptions related to XML input/output.
+/** Case where too many arguments are given.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

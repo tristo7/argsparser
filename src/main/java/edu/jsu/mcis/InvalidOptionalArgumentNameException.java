@@ -1,6 +1,6 @@
 package edu.jsu.mcis;
 
-/** Handles cases when named arguments that do not exist are referenced, wether it be by full name or short name. 
+/** Case where named arguments that do not exist are referenced. 
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn
@@ -11,7 +11,7 @@ package edu.jsu.mcis;
 public class InvalidOptionalArgumentNameException extends RuntimeException {
 	private String argName;
 	
-	/** Assigns the exception message and the name that put in.
+	/** Assigns the exception message and the name that was entered.
 	*	@param msg The exception message.
 	*	@param name The invalid argument name.
 	*/
@@ -20,7 +20,8 @@ public class InvalidOptionalArgumentNameException extends RuntimeException {
 		argName = name;
     }
 	
-	/**	@return The invalid argument's name.
+	/**	Gives the error-causing name.
+	* 	@return The invalid argument's name.
 	*/
 	public String getArgName(){
 		return argName;

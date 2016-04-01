@@ -2,7 +2,7 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-/** Handles usage information for the program and its arguments.
+/** Usage information for the program.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

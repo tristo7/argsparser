@@ -2,7 +2,7 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-/** Handles when a named argument with data type boolean is not false by default. Boolean named arguments are considered flags and should all be false by default.
+/** Case where a boolean named argument is not assigned "false" by default. Boolean named arguments are considered flags and should all be false by default.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn

@@ -4,8 +4,6 @@ public class PizzaPlace {
 	public static void main(String[] args) {
 		XMLTools x = new XMLTools();
 		ArgsParser p = x.load("Demo2.xml");
-		
-		
 		p.parse(args);
 		float subtotal = 0;
 		float total = 0;
