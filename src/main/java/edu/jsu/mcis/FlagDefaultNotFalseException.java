@@ -26,13 +26,13 @@ public class FlagDefaultNotFalseException extends RuntimeException {
 	
 	/**@return The name of the argument that caused the exception.
 	*/
-	public String getArgName(){
+	public String getName(){
 		return argName;
 	}
 	
 	/**@return The value of the argument that caused the exception.
 	*/
-	public String getArgValue(){
+	public String getValue(){
 		return argValue;
 	}
 }

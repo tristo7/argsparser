@@ -38,7 +38,7 @@ public class XMLTools{
 			xml += "<positional>\n" + "    " + temp;
 			position++;
 		}
-		for(String s : p.getOptionalArgumentNames()){
+		for(String s : p.getNamedArgumentNames()){
 			xml += p.getArg(s).toXML();
 		}
 		xml += "</arguments>";
@@ -138,14 +138,14 @@ public class XMLTools{
 			if(currentTag.equals("named")) {
 				if(shortName != '\u0000') {
 					if(!restrictedValues.isEmpty())
-						p.addOptionalArg(name, myType, defaultVal, shortName, restrictedValues);
+						p.addNamedArg(name, myType, defaultVal, shortName, restrictedValues);
 					else
-						p.addOptionalArg(name, myType, defaultVal, shortName);
+						p.addNamedArg(name, myType, defaultVal, shortName);
 				} else {
 					if(!restrictedValues.isEmpty())
-						p.addOptionalArg(name, myType, defaultVal, restrictedValues);
+						p.addNamedArg(name, myType, defaultVal, restrictedValues);
 					else
-						p.addOptionalArg(name, myType, defaultVal);
+						p.addNamedArg(name, myType, defaultVal);
 				}
 			}
 			else if(currentTag.equals("positional")) {

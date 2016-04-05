@@ -7,7 +7,7 @@ import java.util.*;
  *	There is also an option to make both arguments <STRONG>restricted</STRONG>.<p>
  *		<STRONG>Positional</STRONG> arguments are required. These arguments will be core to the program.<br>
  *			An example of a positional argument would be length width and height in a volume calculating program.<p>
- *		<STRONG>Named</STRONG>  arguments are considered optional.<br>
+ *		<STRONG>Named</STRONG>  arguments are considered named.<br>
  *			An example of a named argument would be numeric precsision in a volume calculating program.<br>
  *				The default precision could be to two decimal places, but have support for more.<p>
  *		<STRONG>Resctricted</STRONG> arguments are limited to a specified set of values. This can be thought of as an enumeration.<br>
@@ -32,7 +32,7 @@ public class Arg {
     private Object val;
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
-	private boolean isOptionalArgument = false;
+	private boolean isNamedArgument = false;
 	private boolean isRestricted = false;
 	private List<String> restrictedValues;
 	
@@ -72,8 +72,8 @@ public class Arg {
 	*/	
 	public Arg(String name, DataType type, String desc, String defaultValue){
 		this(name, type, desc);
-		isOptionalArgument = true;
-		setArgValue(defaultValue);
+		isNamedArgument = true;
+		setValue(defaultValue);
 	}
 	
 	/** Sets the name, data type, description, and restricted values of the<STRONG> resctricted </STRONG>argument.
@@ -99,10 +99,10 @@ public class Arg {
 	*/	
 	public Arg(String name, DataType type, String desc, String defaultValue, List<String> restrictedValues){
 		this(name, type, desc);
-		isOptionalArgument = true;
+		isNamedArgument = true;
 		isRestricted = true;
 		this.restrictedValues = restrictedValues;
-		setArgValue(defaultValue);
+		setValue(defaultValue);
 	}
 	
 	/** Sets the restricted values of the argument. The argument will be considered<STRONG> restricted </STRONG> after calling this method on it.
@@ -129,15 +129,15 @@ public class Arg {
 	/** Sets the description of the argument.
 	*	@param s Description of the argument.
 	*/	
-	public void setArgDescription(String s){
+	public void setDescrption(String s){
 		argumentDescription = s;
 	}
 	
 	/** Sets the short form name of a<STRONG> named </STRONG>argument.
 	*	@param c Character used to identify the named argument.
 	*/	
-	public void setArgShortName(char c){
-		if(isOptionalArgument)
+	public void setShortName(char c){
+		if(isNamedArgument)
 			argumentShortName = c;
 		else
 			throw new InvalidArgumentException(argumentName + " is a positional argument.", this);
@@ -147,7 +147,7 @@ public class Arg {
 	*	Gives the argument's description.
 	*	@return String value of the argument's description.
 	*/	
-	public String getArgDescription(){
+	public String getDescription(){
 		return argumentDescription;
 	}
 	
@@ -155,7 +155,7 @@ public class Arg {
 	*	Gives the argument's name.
 	*	@return String value of the argument's name.
 	*/	
-	public String getArgName(){
+	public String getName(){
 		return argumentName;
 	}
 	
@@ -163,8 +163,8 @@ public class Arg {
 	*	Gives character that represents the<STRONG> named </STRONG>argument's short name.
 	*	@return character value of the named argument's short form name.
 	*/	
-	public char getArgShortName(){
-		if(isOptionalArgument)
+	public char getShortName(){
+		if(isNamedArgument)
 			if(argumentShortName != '\u0000')
 				return argumentShortName;
 			else
@@ -184,7 +184,7 @@ public class Arg {
 	/**	Sets and stores the value of the argument.
 	*	@param value Value to be stored in the argument. It will be parsed and cast to its proper data type.
 	*/	
-    protected void setArgValue(String value) {
+    protected void setValue(String value) {
 		if(isRestricted && !restrictedValues.contains(value)){
 			throw new RestrictedValuesException(argumentName + " has a restricted set of values: ", this, value, restrictedValues);
 		}
@@ -212,12 +212,12 @@ public class Arg {
     }
 	
 	/** Returns the value of the argument as a generic type. Result must be cast to the proper data type. <p>
-	*		Example cases: int i = p.getArgValue("myarg") or (int) p.getArgValue("myarg"); <br>
+	*		Example cases: int i = p.getValue("myarg") or (int) p.getValue("myarg"); <br>
 	*			Where p is an instance of ArgsParser.
 	*	@param <T> Generic type for the argument. 
 	*	@return The argument's value as a generic T type. This should then be cast to the proper data type.
 	*/
-    public <T> T getArgValue() {
+    public <T> T getValue() {
         return (T) val;
     }
 	
@@ -227,7 +227,7 @@ public class Arg {
 	*/
 	public String toXML(){
 		String statement = "";
-		if(isOptionalArgument){
+		if(isNamedArgument){
 			statement += "<named>\n";
 		} else {
 			statement += "<positional>\n";
@@ -241,7 +241,7 @@ public class Arg {
 		}
 		if(!argumentDescription.equals(""))
 			statement += "    <description>" + argumentDescription + "</description>\n";
-		if(isOptionalArgument){
+		if(isNamedArgument){
 			if(argumentShortName != '\u0000'){
 				statement += "    <shortname>" + argumentShortName + "</shortname>\n";
 			}

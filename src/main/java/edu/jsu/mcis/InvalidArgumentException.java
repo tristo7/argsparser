@@ -19,7 +19,7 @@ public class InvalidArgumentException extends RuntimeException {
 	*	@param value The incorrect value that was assigned to the argument.
 	*/	
     public InvalidArgumentException(String msg, Arg arg, String value) {
-		super(msg + arg.getArgName() + ": invalid " + arg.getDataType() + " value: " + value);
+		super(msg + arg.getName() + ": invalid " + arg.getDataType() + " value: " + value);
         argument = arg;
     }
 	

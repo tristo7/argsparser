@@ -34,11 +34,11 @@ public class XMLToolsTest {
 		p.addArg("one");
 		p.getArg("one").setRestrictedValues(values);
 		p.addArg("two", Arg.DataType.INTEGER, "This is a test.");
-		p.addOptionalArg("testArg", Arg.DataType.STRING, "test1", 't');
-		p.addOptionalArg("testArg2", Arg.DataType.STRING, "three");
+		p.addNamedArg("testArg", Arg.DataType.STRING, "test1", 't');
+		p.addNamedArg("testArg2", Arg.DataType.STRING, "three");
 		p.getArg("testArg2").setRestrictedValues(values);
-		p.addOptionalArg("testArg3", Arg.DataType.STRING, "one", 'c', values);
-		p.getArg("testArg3").setArgDescription("NamedDescrip");
+		p.addNamedArg("testArg3", Arg.DataType.STRING, "one", 'c', values);
+		p.getArg("testArg3").setDescrption("NamedDescrip");
 		
 		x.save(p,"./build/tmp/testSave.xml");
 		//read in xml file as string and test against known string
@@ -94,7 +94,7 @@ public class XMLToolsTest {
 	
 	@Test
 	public void testGetArgName() {
-		String s = q.getArg("one").getArgName();
+		String s = q.getArg("one").getName();
 		assertEquals("one", s);
 	}
 	
@@ -114,7 +114,7 @@ public class XMLToolsTest {
 	public void testLoadForAnotherFile() {
 
 		String s = n.getArg("square").getDataType();
-		String m = n.getArg("blue").getArgName();
+		String m = n.getArg("blue").getName();
 		assertEquals("TestLoad", n.getProgramName());
 		assertEquals("TestLoadProgram", n.getProgramDescription());
 		assertEquals("integer", s);
