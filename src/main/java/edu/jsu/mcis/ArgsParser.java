@@ -10,8 +10,23 @@ import java.io.File;
 
 /** Creates arguments, parses the command line, and returns their values. <p>
 *		The major functions of this class are to properly add arguments and parse the command line 
-			(or any other String array). Other functions exist to return information about the argument(s) or the program.
-*	
+*			(or any other String array). Other functions exist to return information about the argument(s) or the program.
+*		
+*		Example code using ArgsParser:
+*		<pre>
+*		{@code
+*			public static void main(String[] args) {
+*				ArgsParser p = new ArgsParser();
+*				p.setProgramName("VolumeCalculator");
+*				p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
+*				p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
+*				p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
+*				p.parse(args);
+*			}
+*		}
+*		</pre>
+*		Example command line arguments:
+*		VolumeCalculator 7.5 2.4 --type cylinder 8.2 --digits 3	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn
 * 	@author Thomas Eyler
