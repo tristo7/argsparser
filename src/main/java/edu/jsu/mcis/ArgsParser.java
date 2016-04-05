@@ -36,7 +36,7 @@ import java.io.File;
 public class ArgsParser {
 
 	private List<String> argNames;
-	private List<String> optionalArgNames;
+	private List<String> namedArgNames;
 	private Map<String, Arg> argMap;
 	private String programName = "";
 	private String programDescription = "";
@@ -47,7 +47,7 @@ public class ArgsParser {
 	*/
 	public ArgsParser() {
 		argNames = new ArrayList<String>();
-		optionalArgNames = new ArrayList<String>();
+		namedArgNames = new ArrayList<String>();
 		argMap = new HashMap<String, Arg>();
 		shortNameMap = new HashMap<Character, String>();
 	}
@@ -64,8 +64,8 @@ public class ArgsParser {
 	*	Gives the List of names of named Args that ArgsParser has stored.
 	*	@return the List of names of named Args currently being stored by ArgsParser.
 	*/
-	public List<String> getOptionalArgumentNames(){
-		return optionalArgNames;
+	public List<String> getNamedArgumentNames(){
+		return namedArgNames;
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class ArgsParser {
 	*	@return the number of Args currently being stored by ArgsParser.
 	*/
 	public int getNumArguments() {
-		return argNames.size()+optionalArgNames.size();
+		return argNames.size()+namedArgNames.size();
 	}
 	
 	/**
@@ -163,11 +163,11 @@ public class ArgsParser {
 	
 	/**
 	*	Adds a named argument with a name, data type, and default value.
-	* 	@param name String name of the optional argument.
+	* 	@param name String name of the named argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
 	*/
-	public void addOptionalArg(String name, Arg.DataType type, String defaultValue){
+	public void addNamedArg(String name, Arg.DataType type, String defaultValue){
 		switch(type){
 			case BOOLEAN:
 				if(!defaultValue.toLowerCase().equals("false"))
@@ -175,7 +175,7 @@ public class ArgsParser {
 			case INTEGER:
 			case STRING:
 			case FLOAT:
-				optionalArgNames.add(name);
+				namedArgNames.add(name);
 				argMap.put(name, new Arg(name, type, "", defaultValue));
 				break;
 		}
@@ -183,22 +183,22 @@ public class ArgsParser {
 	
 	/**
 	*	Adds a named argument with a name, data type, default value, short name, and restricted values.
-	* 	@param name String name of the optional argument.
+	* 	@param name String name of the named argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
 	*	@param shortName the character for the short name of the argument.
 	*	@param restrictedValues List of the values the argument should be restricted to take on.
 	*/
-	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName, List<String> restrictedValues){
+	public void addNamedArg(String name, Arg.DataType type, String defaultValue, char shortName, List<String> restrictedValues){
 		switch(type){
 			case BOOLEAN:
 				throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + name);
 			case INTEGER:
 			case STRING:
 			case FLOAT:
-				optionalArgNames.add(name);
+				namedArgNames.add(name);
 				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
-				argMap.get(name).setArgShortName(shortName);
+				argMap.get(name).setShortName(shortName);
 				shortNameMap.put(shortName, name);
 				break;
 		}
@@ -206,35 +206,35 @@ public class ArgsParser {
 	
 	/**
 	*	Adds a named argument with a name, data type, default value, and restricted values.
-	* 	@param name String name of the optional argument.
+	* 	@param name String name of the named argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
 	*	@param restrictedValues List of the values the argument should be restricted to take on.
 	*/
-	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, List<String> restrictedValues){
+	public void addNamedArg(String name, Arg.DataType type, String defaultValue, List<String> restrictedValues){
 		switch(type){
 			case BOOLEAN:
 				throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + name);
 			case INTEGER:
 			case STRING:
 			case FLOAT:
-				optionalArgNames.add(name);
+				namedArgNames.add(name);
 				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
 				break;
 		}
 	}
 	
 	/**
-	*	Adds an optional argument to the HashMap and name, shortname to the list of names, shortnames
-	* 	@param name String name of the optional argument.
+	*	Adds an named argument to the HashMap and name, shortname to the list of names, shortnames
+	* 	@param name String name of the named argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
 	*	@param shortName the character for the short name of the argument.
 	*/
-	public void addOptionalArg(String name, Arg.DataType type, String defaultValue, char shortName){
+	public void addNamedArg(String name, Arg.DataType type, String defaultValue, char shortName){
 		shortNameMap.put(shortName, name);
-		addOptionalArg(name, type, defaultValue);
-		argMap.get(name).setArgShortName(shortName);
+		addNamedArg(name, type, defaultValue);
+		argMap.get(name).setShortName(shortName);
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class ArgsParser {
 				dashedArgumentClassifier(currentArg, arguments);					
 			}else if(currentPosArg < argNames.size()){
 				try{
-					argMap.get(argNames.get(currentPosArg)).setArgValue(currentArg);
+					argMap.get(argNames.get(currentPosArg)).setValue(currentArg);
 				}catch(NumberFormatException n){
 					throw new InvalidArgumentException(createExceptionMessage("InvalidArgumentException"), argMap.get(argNames.get(currentPosArg)), currentArg);
 				}
@@ -283,23 +283,23 @@ public class ArgsParser {
 				if(shortNameMap.containsKey(currentShortArg)){
 					dashedArgumentHandler(shortNameMap.get(t.charAt(i)), q);
 				}else{
-					throw new InvalidOptionalArgumentNameException(createExceptionMessage("InvalidOptionalArgumentNameException"), String.valueOf(currentShortArg));
+					throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), String.valueOf(currentShortArg));
 				}
 			}
 		}
 	}
 	
-	private void dashedArgumentHandler(String optionalArgName, Queue<String> q){
-		if(!optionalArgNames.contains(optionalArgName)){
-			throw new InvalidOptionalArgumentNameException(createExceptionMessage("InvalidOptionalArgumentNameException"), optionalArgName);
-		}else if(argMap.get(optionalArgName).getDataType().equals("boolean")){
-			argMap.get(optionalArgName).setArgValue("true");
+	private void dashedArgumentHandler(String namedArgName, Queue<String> q){
+		if(!namedArgNames.contains(namedArgName)){
+			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), namedArgName);
+		}else if(argMap.get(namedArgName).getDataType().equals("boolean")){
+			argMap.get(namedArgName).setValue("true");
 		} else {		
 				try{
-					argMap.get(optionalArgName).setArgValue(q.element());
+					argMap.get(namedArgName).setValue(q.element());
 					q.remove();
 				}catch(NumberFormatException n){
-					throw new InvalidArgumentException(createExceptionMessage("InvalidOptionalArgumentException"), argMap.get(optionalArgName), q.remove());
+					throw new InvalidArgumentException(createExceptionMessage("InvalidNamedArgumentException"), argMap.get(namedArgName), q.remove());
 				}
 		}
 	}
@@ -322,8 +322,8 @@ public class ArgsParser {
 	*	@param name Name of the argument.
 	*	@return type T representation of the argument's associated value given the name.
 	*/	
-	public <T> T getArgValue(String name) {
-		return (T) getArg(name).getArgValue();
+	public <T> T getValue(String name) {
+		return (T) getArg(name).getValue();
 	}
 	
 	private String createExceptionMessage(String messageType){
@@ -338,18 +338,18 @@ public class ArgsParser {
 				msg = msg.substring(0, msg.length()-7);
 				msg += programDescription + "\npositional arguments:\n";
 				for(int i = 0; i < argNames.size(); i++){
-					msg += argNames.get(i) + " " + argMap.get(argNames.get(i)).getArgDescription() + "\n";
+					msg += argNames.get(i) + " " + argMap.get(argNames.get(i)).getDescription() + "\n";
 				}
 				break;
 			case "InvalidArgumentException":
 				msg += "argument ";
 				break;
 			case "FlagDefaultNotFalseException":
-			case "InvalidOptionalArgumentException":
-				msg += "optional argument ";
+			case "InvalidNamedArgumentException":
+				msg += "named argument ";
 				break;
-			case "InvalidOptionalArgumentNameException":
-				msg += "optional argument name: ";
+			case "InvalidNamedArgumentNameException":
+				msg += "named argument name: ";
 				break;
 			case "TooManyArgumentsException":
 				msg += "unrecognized arguments: ";

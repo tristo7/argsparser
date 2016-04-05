@@ -23,10 +23,10 @@ public class ArgsParserTest {
 	@Test
 	public void testFlagArgumentFromCLA(){
 		p.addArg("TestArg");
-		p.addOptionalArg("arg1", Arg.DataType.BOOLEAN, "False");
-		assertFalse((boolean) p.getArgValue("arg1"));
+		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "False");
+		assertFalse((boolean) p.getValue("arg1"));
 		p.parse(new String[]{"--arg1"});
-		assertTrue((boolean) p.getArgValue("arg1"));
+		assertTrue((boolean) p.getValue("arg1"));
 		
 		String messageTest = "";
 		String message = "usage: java VolumeCalculator TestArg \n"+
@@ -44,47 +44,47 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testFlagArgumentDefaults(){
-		p.addOptionalArg("arg1", Arg.DataType.BOOLEAN, "false");
-		assertFalse((boolean) p.getArgValue("arg1"));
+		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "false");
+		assertFalse((boolean) p.getValue("arg1"));
 		boolean exception = false;
 		String actualMessage = "initialvalue";
 		try{
-			p.addOptionalArg("arg2", Arg.DataType.BOOLEAN, "true");
+			p.addNamedArg("arg2", Arg.DataType.BOOLEAN, "true");
 		} catch (FlagDefaultNotFalseException f){
 			exception = true;
 			actualMessage = f.getMessage();
-			assertEquals("arg2",f.getArgName());
-			assertEquals("true",f.getArgValue());
+			assertEquals("arg2",f.getName());
+			assertEquals("true",f.getValue());
 			
 			
 		}finally{
 			assertTrue(exception);
 			assertEquals("usage: java VolumeCalculator \n"+
-					"VolumeCalculator.java: error: optional argument arg2: invalid default value: true", actualMessage);
+					"VolumeCalculator.java: error: named argument arg2: invalid default value: true", actualMessage);
 			
 		}
 		
 	}
 	
 	@Test
-	public void testOptionalArgumentDefaultValueAndNumArguments(){
+	public void testNamedArgumentDefaultValueAndNumArguments(){
 		p.addArg("l", Arg.DataType.FLOAT);
 		p.addArg("w", Arg.DataType.FLOAT);
 		p.addArg("h", Arg.DataType.FLOAT);
-		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
-		assertEquals("cube", p.getArgValue("type"));
+		p.addNamedArg("type", Arg.DataType.STRING, "cube");
+		assertEquals("cube", p.getValue("type"));
 		assertEquals(4,p.getNumArguments());	
 	}
 	
 	@Test
-	public void testOptionalArgumentParsesCorrectly(){
+	public void testNamedArgumentParsesCorrectly(){
 		p.addArg("l", Arg.DataType.FLOAT);
 		p.addArg("w", Arg.DataType.FLOAT);
 		p.addArg("h", Arg.DataType.FLOAT);
-		p.addOptionalArg("type", Arg.DataType.STRING, "cube");
+		p.addNamedArg("type", Arg.DataType.STRING, "cube");
 		String[] testCommandLineArgs = {"7","5","2", "--type", "pyramid"};
 		p.parse(testCommandLineArgs);
-		assertEquals("pyramid", p.getArgValue("type"));
+		assertEquals("pyramid", p.getValue("type"));
 		assertEquals(4,p.getNumArguments());
 	}
 	
@@ -97,10 +97,10 @@ public class ArgsParserTest {
 		p.addArg("arg4", Arg.DataType.FLOAT);
 		p.parse(testCommandLineArgs);
 		assertEquals(4, p.getNumArguments());
-		assertEquals(Float.valueOf(7), p.getArgValue("arg1"));
-		assertEquals(Float.valueOf(5), p.getArgValue("arg2"));
-		assertEquals(Float.valueOf(2), p.getArgValue("arg3"));
-		assertEquals(Float.valueOf(4), p.getArgValue("arg4"));
+		assertEquals(Float.valueOf(7), p.getValue("arg1"));
+		assertEquals(Float.valueOf(5), p.getValue("arg2"));
+		assertEquals(Float.valueOf(2), p.getValue("arg3"));
+		assertEquals(Float.valueOf(4), p.getValue("arg4"));
 	}
 	
 	@Test
@@ -108,7 +108,7 @@ public class ArgsParserTest {
 		String[] testCommandLineArgs = {"7"};
 		p.addArg("arg1", Arg.DataType.INTEGER);
 		p.parse(testCommandLineArgs);
-		int argVal = p.getArgValue("arg1");
+		int argVal = p.getValue("arg1");
 		assertEquals(1, p.getNumArguments());
 		assertEquals(7, argVal);
 	}
@@ -119,8 +119,8 @@ public class ArgsParserTest {
 		p.addArg("arg1", Arg.DataType.BOOLEAN);
 		p.addArg("arg2", Arg.DataType.BOOLEAN);
 		p.parse(testCommandLineArgs);
-		boolean argVal = p.getArgValue("arg1");
-		boolean argVal2 = p.getArgValue("arg2");
+		boolean argVal = p.getValue("arg1");
+		boolean argVal2 = p.getValue("arg2");
 		assertEquals(2, p.getNumArguments());
 		assertEquals(true, argVal);
 		assertEquals(false, argVal2);
@@ -131,7 +131,7 @@ public class ArgsParserTest {
 		String[] testCommandLineArgs = {"joe"};
 		p.addArg("arg1", Arg.DataType.STRING);
 		p.parse(testCommandLineArgs);
-		String argVal = p.getArgValue("arg1");
+		String argVal = p.getValue("arg1");
 		assertEquals(1, p.getNumArguments());
 		assertEquals("joe", argVal);
 	}
@@ -250,42 +250,42 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testInvalidOptionalArgName() {
+	public void testInvalidNamedArgName() {
 		p.addArg("one");
-		p.addOptionalArg("digits", Arg.DataType.STRING, "2");
+		p.addNamedArg("digits", Arg.DataType.STRING, "2");
 		String incorrectArgName = "initialvalue";
 		String incorrectArgMessage = "initialvalue";
-		String[] testBadOptionalArg = {"1", "--potato", "2"};
+		String[] testBadNamedArg = {"1", "--potato", "2"};
 		
 		try{
-			p.parse(testBadOptionalArg);
- 		}catch(InvalidOptionalArgumentNameException i) {
- 			incorrectArgName = i.getArgName();
+			p.parse(testBadNamedArg);
+ 		}catch(InvalidNamedArgumentNameException i) {
+ 			incorrectArgName = i.getName();
  			incorrectArgMessage = i.getMessage();
 			
  		}finally{
 			assertEquals("potato", incorrectArgName);
-			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: optional argument name: potato", incorrectArgMessage);
+			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: named argument name: potato", incorrectArgMessage);
 		}
  			
 
 	}
 	
 	@Test
-	public void testInvalidOptionalArgValue() {
+	public void testInvalidNamedArgValue() {
 		p.addArg("one");
-		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2");
+		p.addNamedArg("digits", Arg.DataType.INTEGER, "2");
 		String argName = "initialvalue";
 		String argDataType = "initialvalue";
 		String actualMessage = "intialvalue";
 		String expectedMessage = "usage: java VolumeCalculator one \n" +
-                  "VolumeCalculator.java: error: optional argument digits: invalid integer value: potato";
-		String[] testBadOptionalArg = {"1","--digits", "potato"};
+                  "VolumeCalculator.java: error: named argument digits: invalid integer value: potato";
+		String[] testBadNamedArg = {"1","--digits", "potato"};
 		
 		try{
-			p.parse(testBadOptionalArg);
+			p.parse(testBadNamedArg);
 		}catch(InvalidArgumentException i) {
-			argName = i.getArgument().getArgName();
+			argName = i.getArgument().getName();
 			argDataType = i.getArgument().getDataType();
 			actualMessage = i.getMessage();
 		}finally{
@@ -297,40 +297,40 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testShortNameMapsToLongName(){
-		p.addOptionalArg("digits", Arg.DataType.INTEGER, "2", 'd');
+		p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
 		p.parse(new String[] {"-d", "4"});
-		assertEquals((int) p.getArgValue("digits"), 4);
+		assertEquals((int) p.getValue("digits"), 4);
 	}
 	
 	@Test
 	public void testMultipleShortNameFlags(){
-		p.addOptionalArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
-		p.addOptionalArg("beta", Arg.DataType.BOOLEAN, "false", 'b');
-		p.addOptionalArg("charlie", Arg.DataType.BOOLEAN, "false", 'c');
-		p.addOptionalArg("delta", Arg.DataType.BOOLEAN, "false", 'd');
+		p.addNamedArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
+		p.addNamedArg("beta", Arg.DataType.BOOLEAN, "false", 'b');
+		p.addNamedArg("charlie", Arg.DataType.BOOLEAN, "false", 'c');
+		p.addNamedArg("delta", Arg.DataType.BOOLEAN, "false", 'd');
 		
 		
 		p.parse(new String[] {"-cab"});
-		assertTrue((boolean) p.getArgValue("alpha"));
-		assertTrue((boolean) p.getArgValue("beta"));
-		assertTrue((boolean) p.getArgValue("charlie"));
-		assertFalse((boolean) p.getArgValue("delta"));
+		assertTrue((boolean) p.getValue("alpha"));
+		assertTrue((boolean) p.getValue("beta"));
+		assertTrue((boolean) p.getValue("charlie"));
+		assertFalse((boolean) p.getValue("delta"));
 	}
 	@Test
 	public void testInvalidShortName(){
 		p.addArg("one");
-		p.addOptionalArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
+		p.addNamedArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
 		String incorrectArgName = "";
 		String incorrectArgMessage = "";
 		try{
 			p.parse(new String[] {"-b"});
- 		}catch(InvalidOptionalArgumentNameException i) {
- 			incorrectArgName = i.getArgName();
+ 		}catch(InvalidNamedArgumentNameException i) {
+ 			incorrectArgName = i.getName();
  			incorrectArgMessage = i.getMessage();
 			
  		}finally{
 			assertEquals("b", incorrectArgName);
-			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: optional argument name: b", incorrectArgMessage);
+			assertEquals("usage: java VolumeCalculator one \nVolumeCalculator.java: error: named argument name: b", incorrectArgMessage);
 		}
 	}
 	
@@ -363,13 +363,13 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testRestrictedValuesExceptionWithOptionalArg(){
+	public void testRestrictedValuesExceptionWithNamedArg(){
 		boolean exceptionThrown = false;
 		List<String> values = new ArrayList<String>();
 		values.add("one");
 		values.add("three");
 		p.addArg("testArg");
-		p.addOptionalArg("testArg2", Arg.DataType.STRING, "one", 'a', values);
+		p.addNamedArg("testArg2", Arg.DataType.STRING, "one", 'a', values);
 		Arg arg = new Arg("initialArgName");
 		try{
 			p.parse(new String[] {"one", "-a", "two"});
@@ -378,7 +378,7 @@ public class ArgsParserTest {
 			arg = e.getArgument();
 		} finally{
 			assertTrue(exceptionThrown);
-			assertEquals("testArg2", arg.getArgName());
+			assertEquals("testArg2", arg.getName());
 		}
 	}
 	
@@ -393,12 +393,12 @@ public class ArgsParserTest {
 		values2.add("3");
 		
 		p.addArg("firstArg", Arg.DataType.STRING, "This is a test.", values);
-		p.addOptionalArg("secondArg", Arg.DataType.INTEGER, "1", 's', values2);
+		p.addNamedArg("secondArg", Arg.DataType.INTEGER, "1", 's', values2);
 		
 		p.parse(new String[] {"three", "-s", "3"} );
 		
-		assertEquals("three", (String) p.getArgValue("firstArg"));
-		assertEquals(3, (int) p.getArgValue("secondArg"));
+		assertEquals("three", (String) p.getValue("firstArg"));
+		assertEquals(3, (int) p.getValue("secondArg"));
 	}
 	
 	@Test
@@ -408,13 +408,13 @@ public class ArgsParserTest {
 		values.add("false");
 		String s = "";
 		try{
-			p.addOptionalArg("booleanArg", Arg.DataType.BOOLEAN, "false", 'b', values);
+			p.addNamedArg("booleanArg", Arg.DataType.BOOLEAN, "false", 'b', values);
 		} catch (RuntimeException e){
 			s = e.getMessage();
 		} finally{
 			assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: booleanArg", s);
 			try{
-			p.addOptionalArg("booleanArg2", Arg.DataType.BOOLEAN, "false", values);
+			p.addNamedArg("booleanArg2", Arg.DataType.BOOLEAN, "false", values);
 			} catch (RuntimeException e){
 				s = e.getMessage();
 			} finally{
@@ -426,7 +426,7 @@ public class ArgsParserTest {
 	
 	@Test
 	public void setRestrictedValuesOnBooleanArgCausesException(){
-		p.addOptionalArg("boolean1", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("boolean1", Arg.DataType.BOOLEAN, "false");
 		List<String> values = new ArrayList<String>();
 		values.add("whatever");
 		String s = "";

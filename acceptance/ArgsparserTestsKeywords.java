@@ -10,13 +10,13 @@ public class ArgsparserTestsKeywords {
 		p.addArg("length", Arg.DataType.FLOAT);
 		p.addArg("width", Arg.DataType.FLOAT);
 		p.addArg("height", Arg.DataType.FLOAT);
-		p.addOptionalArg("type", Arg.DataType.STRING, "box", 't');
-		p.addOptionalArg("digits", Arg.DataType.STRING, "4", 'd');
+		p.addNamedArg("type", Arg.DataType.STRING, "box", 't');
+		p.addNamedArg("digits", Arg.DataType.STRING, "4", 'd');
 		try{
 		p.parse(cla);
-		float l = p.getArgValue("length");
-		float w = p.getArgValue("width");
-		float h = p.getArgValue("height");
+		float l = p.getValue("length");
+		float w = p.getValue("width");
+		float h = p.getValue("height");
 		float vol = l*w*h;
 		
 		output = String.format("%.0f", vol);
@@ -26,17 +26,17 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getLength(){
-		float temp = p.getArgValue("length");
+		float temp = p.getValue("length");
 		return String.format("%.0f", temp);
 	}
 	
 	public String getWidth(){
-		float temp = p.getArgValue("width");
+		float temp = p.getValue("width");
 		return String.format("%.0f", temp);
 	}
 	
 	public String getHeight(){
-		float temp = p.getArgValue("height");
+		float temp = p.getValue("height");
 		return String.format("%.0f", temp);
 	}
 	
@@ -45,11 +45,11 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getType(){
-		return p.getArgValue("type");
+		return p.getValue("type");
 	}
 	
 	public String getDigits(){
-		return p.getArgValue("digits");
+		return p.getValue("digits");
 	}
 	
 	public void startAbsurdProgramWithArguments(String[] cla){
@@ -61,21 +61,21 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public String getPet(){
-		return p.getArgValue("pet");
+		return p.getValue("pet");
 	}
 	
 	public String getNumber(){
-		int temp = p.getArgValue("number");
+		int temp = p.getValue("number");
 		return String.valueOf(temp);
 	}
 	
 	public String getRainy(){
-		boolean temp = p.getArgValue("rainy");
+		boolean temp = p.getValue("rainy");
 		return String.valueOf(temp);
 	}
 	
 	public String getBathrooms(){
-		float temp = p.getArgValue("bathrooms");
+		float temp = p.getValue("bathrooms");
 		return String.format("%.1f", temp);
 	}
 	
