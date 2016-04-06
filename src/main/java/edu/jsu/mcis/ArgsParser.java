@@ -23,9 +23,10 @@ public class ArgsParser {
 	private List<String> argNames;
 	private List<String> namedArgNames;
 	private Map<String, Arg> argMap;
+	private Map<Character, String> shortNameMap;
+	private Map<String[], Boolean> mutualExclusionMap;
 	private String programName = "";
 	private String programDescription = "";
-	private Map<Character, String> shortNameMap;
 	
 	/** Default constructor.
 	*	Initializes new HashMaps and ArrayLists for storing Args.
@@ -35,6 +36,26 @@ public class ArgsParser {
 		namedArgNames = new ArrayList<String>();
 		argMap = new HashMap<String, Arg>();
 		shortNameMap = new HashMap<Character, String>();
+		mutualExclusionMap = new HashMap<String[], Boolean>();
+	}
+	
+	public void addMutualExclusion(String[] arguments){
+		for(String s : arguments){
+			if(!namedArgNames.contains(s))
+				throw new RuntimeException("There is no named argument " + s + ".");
+		}
+		mutualExclusionMap.put(arguments, false);
+	}
+	
+	public List getMutualExclusion(){
+		if(mutualExclusionMap.isEmpty())
+			throw new RuntimeException("Mutual exclusion has not been set.");
+		
+		List<String[]> list = new ArrayList<String[]>();
+		for(String[] s : mutualExclusionMap.keySet()){
+			list.add(s);
+		}
+		return list;
 	}
 	
 	/**
@@ -230,7 +251,7 @@ public class ArgsParser {
 		String currentArg = "";
 		int currentPosArg = 0;
 		String extraArgs = "";
-		Queue<String> arguments = new LinkedList<String>();
+		Queue<String> arguments = new LinkedList<String>();		
 		
 		for(int i = 0;i<cla.length;i++){
 			arguments.add(cla[i]);
@@ -277,7 +298,18 @@ public class ArgsParser {
 	private void dashedArgumentHandler(String namedArgName, Queue<String> q){
 		if(!namedArgNames.contains(namedArgName)){
 			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), namedArgName);
-		}else if(argMap.get(namedArgName).getDataType().equals("boolean")){
+		}else if(!mutualExclusionMap.isEmpty()){
+			for(String[] s : mutualExclusionMap.keySet()){
+				if(Arrays.asList(s).contains(namedArgName)){
+					if(mutualExclusionMap.get(s))
+						throw new RuntimeException("Mutual exclusion error on " + Arrays.toString(s));
+					else
+						mutualExclusionMap.put(s,true);
+				}
+			}
+		}
+		
+		if(argMap.get(namedArgName).getDataType().equals("boolean")){
 			argMap.get(namedArgName).setValue("true");
 		} else {		
 				try{

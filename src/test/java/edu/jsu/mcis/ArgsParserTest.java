@@ -425,7 +425,7 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void setRestrictedValuesOnBooleanArgCausesException(){
+	public void testSetRestrictedValuesOnBooleanArgCausesException(){
 		p.addNamedArg("boolean1", Arg.DataType.BOOLEAN, "false");
 		List<String> values = new ArrayList<String>();
 		values.add("whatever");
@@ -440,7 +440,7 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void getRestrictedValuesCausesExceptionWhenNoneAreSet(){
+	public void testGetRestrictedValuesCausesExceptionWhenNoneAreSet(){
 		p.addArg("test");
 		String s = "";
 		try{
@@ -450,5 +450,33 @@ public class ArgsParserTest {
 		} finally {
 			assertEquals("test is not a restricted argument.", s);
 		}
+	}
+	
+	@Test
+	public void testMutualExclusion(){
+		p.addArg("test1");
+		p.addNamedArg("one", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("two", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("three", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("four", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("five", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("six", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("seven", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("eight", Arg.DataType.BOOLEAN, "false");
+		
+		String[] exclusionOne = new String[] {"one", "two", "three"};
+		String[] exclusionTwo = new String[] {"four", "five", "six"};
+		String[] exclusionThree = new String[] {"three", "six"};
+		
+		p.addMutualExclusion(exclusionOne);
+		p.addMutualExclusion(exclusionTwo);
+		p.addMutualExclusion(exclusionThree);
+		
+		assertTrue(p.getMutualExclusion().contains(exclusionOne));
+		assertTrue(p.getMutualExclusion().contains(exclusionTwo));
+		assertTrue(p.getMutualExclusion().contains(exclusionThree));
+		
+		p.parse(new String []{"test1", "--one", "--four"});
+		
 	}
 }
