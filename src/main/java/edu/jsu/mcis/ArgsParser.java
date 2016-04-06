@@ -44,6 +44,7 @@ public class ArgsParser {
 	private Map<String[], Boolean> mutualExclusionMap;
 	private String programName = "";
 	private String programDescription = "";
+	private Map<String, Boolean> requiredMap;
 	
 	/** Default constructor.
 	*	Initializes new HashMaps and ArrayLists for storing Args.
@@ -54,6 +55,7 @@ public class ArgsParser {
 		argMap = new HashMap<String, Arg>();
 		shortNameMap = new HashMap<Character, String>();
 		mutualExclusionMap = new HashMap<String[], Boolean>();
+		requiredMap = new HashMap<String, Boolean>();
 	}
 	
 	/**	Adds a group of named arguments that are mutually exclusive. No more than one of the named arguments in the group should be present in the command line.
@@ -191,6 +193,15 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name, myType, description, restrictedValues));
 	}
 	
+	public void setNamedArgToRequired(String name) {
+		if(namedArgNames.contains(name)) {
+			requiredMap.put(name, false);
+		}
+		else {
+			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), name);
+		}
+	}
+	
 	/**
 	*	Adds a named argument with a name, data type, and default value.
 	* 	@param name String name of the named argument.
@@ -299,7 +310,13 @@ public class ArgsParser {
 				throw new TooManyArgumentsException(createExceptionMessage("TooManyArgumentsException"), extraArgs);
 			}
 		}
-		
+		if(!requiredMap.isEmpty()) {
+			for(String s : requiredMap.keySet()) {
+				if(!requiredMap.get(s)) {
+					throw new RuntimeException("There was a missing required Argument: " + s);
+				}
+			}
+		}
 	}
 	
 	private void dashedArgumentClassifier(String t, Queue<String> q) {
@@ -332,7 +349,11 @@ public class ArgsParser {
 				}
 			}
 		}
-		
+		if(!requiredMap.isEmpty()) {
+			if(requiredMap.containsKey(namedArgName)) {
+				requiredMap.put(namedArgName, true);
+			}
+		}
 		if(argMap.get(namedArgName).getDataType().equals("boolean")){
 			argMap.get(namedArgName).setValue("true");
 		} else {		
