@@ -10,8 +10,24 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-/** Allows XML input/output.	
+/** Allows XML input/output.	User can pass in an XML file for loading arguments, 
+*   or save an existing set of arguments from an existing instance of ArgsParser.
 *	
+*		Example code using ArgsParser:
+*		<pre>
+*		{@code
+*			public static void main(String[] args) {
+*				ArgsParser p = new ArgsParser();
+*				XMLTools x = new XMLTools();
+*				p.setProgramName("VolumeCalculator");
+*				p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
+*				p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
+*				p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
+*				x.save(p, "testing.xml");
+*			}
+*		}
+*		</pre>
+*
 *	@author Tristin Terry
 * 	@author Daniel Hilburn
 * 	@author Thomas Eyler

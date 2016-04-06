@@ -25,8 +25,10 @@ import java.io.File;
 *			}
 *		}
 *		</pre>
+*		<pre>
 *		Example command line arguments:
-*		VolumeCalculator 7.5 2.4 --type cylinder 8.2 --digits 3	
+*		VolumeCalculator 7.5 2.4 --type cylinder 8.2 --digits 3
+*		</pre>	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn
 * 	@author Thomas Eyler
