@@ -476,7 +476,52 @@ public class ArgsParserTest {
 		assertTrue(p.getMutualExclusion().contains(exclusionTwo));
 		assertTrue(p.getMutualExclusion().contains(exclusionThree));
 		
-		p.parse(new String []{"test1", "--one", "--four"});
+		p.parse(new String []{"test1", "--one", "--four", "--seven"});
 		
+	}
+	
+	@Test
+	public void testMutualExclusionException(){
+		p.addArg("test1");
+		p.addNamedArg("one", Arg.DataType.INTEGER, "1", 'o');
+		p.addNamedArg("two", Arg.DataType.INTEGER, "2", 't');
+		String[] exclusionOne = new String[] {"one", "two"};
+		p.addMutualExclusion(exclusionOne);
+		String expected, actual; 
+		expected = "usage: java VolumeCalculator test1 \nVolumeCalculator.java: error: named argument two is in the mutually exclusive set [one, two].";
+		actual = "";
+		
+		try{
+			p.parse(new String[] {"testing", "-o", "2", "-t", "3"});
+		} catch(MutualExclusionException e){
+			actual = e.getMessage();
+		} finally {
+			assertEquals(expected, actual);
+		}
+		
+	}
+	
+	@Test
+	public void testGetMutualExclusionException(){
+		String actual = "";
+		try{
+			p.getMutualExclusion();
+		} catch(RuntimeException e){
+			actual = e.getMessage();
+		} finally{
+			assertEquals("There is currently no mutual exclusion.", actual);
+		}
+	}
+	
+	@Test
+	public void testAddMutualExclusionExceptionOnName(){
+		String actual = "";
+		try{
+			p.addMutualExclusion(new String[]{"nothing", "everything"});
+		} catch(InvalidNamedArgumentNameException e){
+			actual = e.getMessage();
+		} finally{
+			assertEquals("usage: java VolumeCalculator \nVolumeCalculator.java: error: named argument name: nothing", actual);
+		}
 	}
 }

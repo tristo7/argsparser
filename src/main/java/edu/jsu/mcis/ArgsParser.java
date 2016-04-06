@@ -56,17 +56,24 @@ public class ArgsParser {
 		mutualExclusionMap = new HashMap<String[], Boolean>();
 	}
 	
+	/**	Adds a group of named arguments that are mutually exclusive. No more than one of the named arguments in the group should be present in the command line.
+	*	@param arguments a string array with all the names of arguments desired to be mutually exclusive.
+	*/
 	public void addMutualExclusion(String[] arguments){
 		for(String s : arguments){
 			if(!namedArgNames.contains(s))
-				throw new RuntimeException("There is no named argument " + s + ".");
+				throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), s);
 		}
 		mutualExclusionMap.put(arguments, false);
 	}
 	
+	/**	Gives a List of all mutual exclusion (String arrays) that exists for the ArgsParser instance. <p>
+	*		An example List would look like the following: [[1, 2, 3], [4, 5, 6]]
+	*	@return a List of String[] that contains argument names.
+	*/
 	public List getMutualExclusion(){
 		if(mutualExclusionMap.isEmpty())
-			throw new RuntimeException("Mutual exclusion has not been set.");
+			throw new RuntimeException("There is currently no mutual exclusion.");
 		
 		List<String[]> list = new ArrayList<String[]>();
 		for(String[] s : mutualExclusionMap.keySet()){
@@ -319,7 +326,7 @@ public class ArgsParser {
 			for(String[] s : mutualExclusionMap.keySet()){
 				if(Arrays.asList(s).contains(namedArgName)){
 					if(mutualExclusionMap.get(s))
-						throw new RuntimeException("Mutual exclusion error on " + Arrays.toString(s));
+						throw new MutualExclusionException(createExceptionMessage("MutualExclusionException"), namedArgName, s);
 					else
 						mutualExclusionMap.put(s,true);
 				}
@@ -380,6 +387,7 @@ public class ArgsParser {
 				break;
 			case "FlagDefaultNotFalseException":
 			case "InvalidNamedArgumentException":
+			case "MutualExclusionException":
 				msg += "named argument ";
 				break;
 			case "InvalidNamedArgumentNameException":
