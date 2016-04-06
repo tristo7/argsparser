@@ -1,6 +1,6 @@
 package edu.jsu.mcis;
 
-/** Case where too many arguments are given.
+/** Throws an exception in the case that too many arguments are given.
 *	
 *	@author Tristin Terry
 * 	@author Daniel Hilburn
