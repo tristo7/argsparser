@@ -479,4 +479,23 @@ public class ArgsParserTest {
 		p.parse(new String []{"test1", "--one", "--four"});
 		
 	}
+	
+	@Test
+	public void testSettingRequiredArgument() {
+		boolean exceptionThrown = false;
+		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addNamedArg("test3", Arg.DataType.FLOAT, "20.7");
+		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
+		p.setNamedArgToRequired("test1");
+		
+		String[] cla = {"19", "--test1", "sphere"};
+		try {
+			p.parse(cla);
+		}catch(RuntimeException e) {
+			exceptionThrown = true;
+		}finally {
+			assertTrue(exceptionThrown);
+			assertEquals(p.getValue("test1"), "sphere");
+		}
+	}
 }
