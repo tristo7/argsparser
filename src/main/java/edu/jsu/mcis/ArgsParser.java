@@ -73,10 +73,7 @@ public class ArgsParser {
 	*		An example List would look like the following: [[1, 2, 3], [4, 5, 6]]
 	*	@return a List of String[] that contains argument names.
 	*/
-	public List getMutualExclusion(){
-		if(mutualExclusionMap.isEmpty())
-			throw new RuntimeException("There is currently no mutual exclusion.");
-		
+	public List<String[]> getMutualExclusion(){		
 		List<String[]> list = new ArrayList<String[]>();
 		for(String[] s : mutualExclusionMap.keySet()){
 			list.add(s);

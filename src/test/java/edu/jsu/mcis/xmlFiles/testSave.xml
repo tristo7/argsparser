@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><arguments>
     <programname>Test</programname>
     <programdescription>Test Program</programdescription>
-<positional>
+    <mutualexclusion>testArg, testArg2</mutualexclusion><positional>
     <position>1</position>
     <name>one</name>
     <type>string</type>

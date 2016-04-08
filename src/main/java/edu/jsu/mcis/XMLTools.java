@@ -42,10 +42,17 @@ public class XMLTools{
 	*/	
 	public static void save(ArgsParser p, String fileLocation){
 		String xml = "<arguments>\n";
+		List<String[]> mutex = p.getMutualExclusion();
+		
 		if (!p.getProgramName().equals(""))
 			xml += "    <programname>" + p.getProgramName() + "</programname>\n";
 		if (!p.getProgramDescription().equals(""))
 			xml += "    <programdescription>" + p.getProgramDescription() + "</programdescription>\n";
+		if (!p.getMutualExclusion().isEmpty()){
+			for(String[] s: mutex){
+				xml+= "    <mutualexclusion>" + Arrays.toString(s).replace("[","").replace("]","")+"</mutualexclusion>";
+			}
+		}
 		int position = 1;
 		for(String s : p.getPositionalArgumentNames()){
 			String temp = p.getArg(s).toXML();
@@ -117,6 +124,8 @@ public class XMLTools{
 		private Map<Integer, Arg> tempArgs;
 		private String programDescription, programName, name, defaultVal, description;
 		private char shortName;
+		private String[] mutualExclusion;
+		private List<String[]> mutexList;
 		private Arg.DataType myType;
 		private int position;
 		private ArgsParser p;
@@ -124,7 +133,8 @@ public class XMLTools{
 			{"arguments", "programname", "programdescription", 
 			"positional", "named", "name", 
 			"type", "description", "shortname", 
-			"default", "position", "restrictedvalues"}; 
+			"default", "position", "restrictedvalues",
+			"mutualexclusion"}; 
 		private List<String> restrictedValues;
 		
 		public UserHandler(){
@@ -136,6 +146,7 @@ public class XMLTools{
 			defaultVal = "";
 			description = "";
 			restrictedValues = new ArrayList<String>();
+			mutexList = new ArrayList<String[]>();
 			for(String s : XMLTags)
 				flagMap.put(s, false);
 		}
@@ -171,6 +182,17 @@ public class XMLTools{
 					p.addArg(name, myType, description, restrictedValues);
 				}
 			}
+			else if(currentTag.equals("mutualexclusion")){
+				mutexList.add(mutualExclusion);
+				mutualExclusion = null;
+			}
+			 else if(currentTag.equals("arguments")){
+				if(!mutexList.isEmpty()){
+					for(String[] s : mutexList){
+						p.addMutualExclusion(s);
+					}
+				}
+			} 
 			if(currentTag.equals("positional") || currentTag.equals("named")){
 				restrictedValues = new ArrayList<String>();
 				name = "";
@@ -196,6 +218,9 @@ public class XMLTools{
 				else if(flagMap.get("programdescription")) {
 					programDescription = s;
 					p.setProgramDescription(programDescription);
+				}
+				else if(flagMap.get("mutualexclusion")){
+					mutualExclusion = s.split(", ");
 				}
 				else if (flagMap.get("positional")) {
 					if(flagMap.get("name")) {

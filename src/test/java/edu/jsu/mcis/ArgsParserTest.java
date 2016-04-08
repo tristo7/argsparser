@@ -502,18 +502,6 @@ public class ArgsParserTest {
 	}
 	
 	@Test
-	public void testGetMutualExclusionException(){
-		String actual = "";
-		try{
-			p.getMutualExclusion();
-		} catch(RuntimeException e){
-			actual = e.getMessage();
-		} finally{
-			assertEquals("There is currently no mutual exclusion.", actual);
-		}
-	}
-	
-	@Test
 	public void testAddMutualExclusionExceptionOnName(){
 		String actual = "";
 		try{

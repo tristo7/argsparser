@@ -29,6 +29,8 @@ public class XMLToolsTest {
 		values.add("two");
 		values.add("three");
 		
+		String[] mutex = new String[] {"testArg", "testArg2"};
+		
 		p.setProgramName("Test");
 		p.setProgramDescription("Test Program");
 		p.addArg("one");
@@ -39,11 +41,12 @@ public class XMLToolsTest {
 		p.getArg("testArg2").setRestrictedValues(values);
 		p.addNamedArg("testArg3", Arg.DataType.STRING, "one", 'c', values);
 		p.getArg("testArg3").setDescrption("NamedDescrip");
+		p.addMutualExclusion(mutex);
 		
 		x.save(p,"./build/tmp/testSave.xml");
 		//read in xml file as string and test against known string
 		String actualXMLOutput = "";
-		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription><positional>    <position>1</position>    <name>one</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional><named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named><named>    <name>testArg2</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues>    <default>three</default></named><named>    <name>testArg3</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>one</default></named></arguments>";
+		String expectedXLMOutput = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><arguments>    <programname>Test</programname>    <programdescription>Test Program</programdescription>    <mutualexclusion>testArg, testArg2</mutualexclusion><positional>    <position>1</position>    <name>one</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues></positional><positional>    <position>2</position>    <name>two</name>    <type>integer</type>    <description>This is a test.</description></positional><named>    <name>testArg</name>    <type>string</type>    <shortname>t</shortname>    <default>test1</default></named><named>    <name>testArg2</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues>    <default>three</default></named><named>    <name>testArg3</name>    <type>string</type>    <restrictedvalues>one, two, three</restrictedvalues>    <description>NamedDescrip</description>    <shortname>c</shortname>    <default>one</default></named></arguments>";
 		String currentLine = null;
 		try{
 			FileReader r = new FileReader("./build/tmp/testSave.xml");
@@ -112,7 +115,6 @@ public class XMLToolsTest {
 	
 	@Test
 	public void testLoadForAnotherFile() {
-
 		String s = n.getArg("square").getDataType();
 		String m = n.getArg("blue").getName();
 		assertEquals("TestLoad", n.getProgramName());
@@ -121,4 +123,10 @@ public class XMLToolsTest {
 		assertEquals("blue", m);
 	}
 	
+	@Test
+	public void testMutualExclusion(){
+		List<String[]> testList = q.getMutualExclusion();
+
+		assertEquals("[testArg, testArg2]", Arrays.toString(testList.get(0)));
+	}
 }
