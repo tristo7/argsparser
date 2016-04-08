@@ -25,5 +25,3 @@ A Java library to parse command line arguments for easier use.
 - [ ] **Allow named arguments to be specified as required arguments.**
 - [ ] **Allow named arguments to be grouped into mutually exclusive groups.**
 - [ ] **Allow variable numbers of argument values to be specified by a single argument.**
-
-Visit the [Trello Board](https://trello.com/b/1r5ZwVXF/software-engineering-1) for more a more detailed progress map!

@@ -9,8 +9,8 @@ public class PizzaPlace {
 		float total = 0;
 		String size = "";
 		String drink = "";
-		size = p.getArgValue("size");
-		drink = p.getArgValue("drink");
+		size = p.getValue("size");
+		drink = p.getValue("drink");
 		
 		switch(size.toLowerCase()){
 			case "small":
@@ -26,10 +26,10 @@ public class PizzaPlace {
 				System.out.println("Invalid size. Please try again.");
 				System.exit(1);
 		}
-		if((boolean) p.getArgValue("ExtraCheese")){
+		if((boolean) p.getValue("ExtraCheese")){
 			subtotal += 2;
 		}
-		subtotal = subtotal * (int) p.getArgValue("PizzaQuantity");
+		subtotal = subtotal * (int) p.getValue("PizzaQuantity");
 		
 		switch(drink.toLowerCase()){
 			case "coke":

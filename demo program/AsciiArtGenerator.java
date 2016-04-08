@@ -12,12 +12,12 @@ public class AsciiArtGenerator{
 		p.setProgramDescription("Generate ASCII art in shapes based upon arguments passed in.");
 		p.addArg("shape", Arg.DataType.STRING, "the shape to be generated in ASCII.", shapeList);
 		p.addArg("numberOfLines", Arg.DataType.INTEGER, "the number of Lines that the ASCII art will be generated on.");
-		p.addOptionalArg("pchar", Arg.DataType.STRING, "*", 'p');
+		p.addNamedArg("pchar", Arg.DataType.STRING, "*", 'p');
 		p.parse(args);
 		
-		String option1 = p.getArgValue("pchar");
-		String shape = p.getArgValue("shape");
-		int numLines = p.getArgValue("numberOfLines");
+		String option1 = p.getValue("pchar");
+		String shape = p.getValue("shape");
+		int numLines = p.getValue("numberOfLines");
 		
 		String generatedAscii = "";
 		
