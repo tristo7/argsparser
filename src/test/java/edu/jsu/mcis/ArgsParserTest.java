@@ -25,7 +25,7 @@ public class ArgsParserTest {
 		p.addArg("TestArg");
 		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "False");
 		assertFalse((boolean) p.getValue("arg1"));
-		p.parse(new String[]{"--arg1"});
+		p.parse(new String[]{"--arg1", "blah"});
 		assertTrue((boolean) p.getValue("arg1"));
 		
 		String messageTest = "";
@@ -487,6 +487,7 @@ public class ArgsParserTest {
 		p.addNamedArg("test3", Arg.DataType.FLOAT, "20.7");
 		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
 		p.setNamedArgToRequired("test1");
+		p.setNamedArgToRequired("test3");
 		
 		String[] cla = {"19", "--test1", "sphere"};
 		try {
@@ -539,6 +540,54 @@ public class ArgsParserTest {
 			actual = e.getMessage();
 		} finally{
 			assertEquals("usage: java VolumeCalculator \nVolumeCalculator.java: error: named argument name: nothing", actual);
+		}
+	}
+	
+	@Test
+	public void testTooFewArgumentsExceptionTooFewArgsGiven() {
+		boolean exceptionThrown = false;
+		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
+		String[] cla = {"--test1", "sphere"};
+		try {
+			p.parse(cla);
+		}catch(TooFewArgumentsException t) {
+			exceptionThrown = true;
+		} finally {
+			assertTrue(exceptionThrown);
+		}
+	}
+	
+	@Test
+	public void testTooFewArgumentsExceptionRequiredArgsPassedIn() {
+		boolean exceptionThrown = false;
+		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
+		p.setNamedArgToRequired("test1");
+		String[] cla = {"19"};
+		try {
+			p.parse(cla);
+		} catch(TooFewArgumentsException t) {
+			exceptionThrown = true;
+		} finally {
+			assertTrue(exceptionThrown);
+		}
+	}
+	
+	@Test
+	public void testTooFewArgumentsException() {
+		boolean exceptionThrown = false;
+		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
+		p.addArg("test3", Arg.DataType.INTEGER, "This arg does matter");
+		p.setNamedArgToRequired("test1");
+		String[] cla = {"19"};
+		try {
+			p.parse(cla);
+		} catch(TooFewArgumentsException t) {
+			exceptionThrown = true;
+		} finally {
+			assertTrue(exceptionThrown);
 		}
 	}
 }

@@ -286,6 +286,7 @@ public class ArgsParser {
 		String currentArg = "";
 		int currentPosArg = 0;
 		String extraArgs = "";
+		String missingArgs = "";
 		Queue<String> arguments = new LinkedList<String>();		
 		
 		for(int i = 0;i<cla.length;i++){
@@ -310,12 +311,21 @@ public class ArgsParser {
 				throw new TooManyArgumentsException(createExceptionMessage("TooManyArgumentsException"), extraArgs);
 			}
 		}
+		if(currentPosArg < argNames.size()) {
+			while(currentPosArg < argNames.size()) {
+				missingArgs +=" " + argNames.get(currentPosArg);
+				currentPosArg++;
+			}
+		}
 		if(!requiredMap.isEmpty()) {
 			for(String s : requiredMap.keySet()) {
 				if(!requiredMap.get(s)) {
-					throw new RuntimeException("There was a missing required Argument: " + s);
+					missingArgs +=" " + s;
 				}
 			}
+		}
+		if(!missingArgs.equals("")) {
+			throw new TooFewArgumentsException(createExceptionMessage("TooFewArgumentsException"), missingArgs);
 		}
 	}
 	
@@ -416,6 +426,9 @@ public class ArgsParser {
 				break;
 			case "TooManyArgumentsException":
 				msg += "unrecognized arguments: ";
+				break;
+			case "TooFewArgumentsException":
+				msg += "more arguments are necessary: ";
 		}
 		return msg;
 	}
