@@ -31,6 +31,6 @@
     <restrictedvalues>one, two, three</restrictedvalues>
     <description>NamedDescrip</description>
     <shortname>c</shortname>
-    <default>one</default>
+    <required>true</required>    <default>one</default>
 </named>
 </arguments>

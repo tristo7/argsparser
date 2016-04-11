@@ -193,6 +193,7 @@ public class ArgsParser {
 	public void setNamedArgToRequired(String name) {
 		if(namedArgNames.contains(name)) {
 			requiredMap.put(name, false);
+			getArg(name).setToRequired();
 		}
 		else {
 			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), name);

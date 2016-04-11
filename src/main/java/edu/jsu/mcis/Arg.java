@@ -33,6 +33,7 @@ public class Arg {
     private DataType dType = DataType.STRING;
 	private String argumentDescription = "";
 	private boolean isNamedArgument = false;
+	private boolean isNamedRequiredArgument = false;
 	private boolean isRestricted = false;
 	private List<String> restrictedValues;
 	
@@ -103,6 +104,12 @@ public class Arg {
 		isRestricted = true;
 		this.restrictedValues = restrictedValues;
 		setValue(defaultValue);
+	}
+	
+	protected void setToRequired(){
+		if(isNamedArgument){
+			isNamedRequiredArgument = true;
+		}
 	}
 	
 	/** Sets the restricted values of the argument. The argument will be considered<STRONG> restricted </STRONG> after calling this method on it.
@@ -245,7 +252,10 @@ public class Arg {
 			if(argumentShortName != '\u0000'){
 				statement += "    <shortname>" + argumentShortName + "</shortname>\n";
 			}
+			if(isNamedRequiredArgument)
+				statement += "    <required>true</required>";
 			statement += "    <default>" + String.valueOf(val) + "</default>\n</named>\n";
+			
 		} else {
 			statement += "</positional>\n";
 		}

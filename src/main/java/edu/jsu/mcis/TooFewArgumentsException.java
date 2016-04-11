@@ -2,15 +2,8 @@ package edu.jsu.mcis;
 
 import java.util.*;
 
-public class TooFewArgumentsException extends RuntimeException {
-	private String missingArgs;
-	
+public class TooFewArgumentsException extends RuntimeException {	
 	public TooFewArgumentsException(String msg, String args) {
 		super(msg + args);
-		missingArgs = args;
-	}
-	
-	public String getMissingArgs() {
-		return missingArgs;
 	}
 }
