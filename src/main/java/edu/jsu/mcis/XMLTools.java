@@ -148,7 +148,6 @@ public class XMLTools{
 			description = "";
 			restrictedValues = new ArrayList<String>();
 			mutexList = new ArrayList<String[]>();
-			requiredNamed = new ArrayList<String>();
 			isRequired = false;
 			for(String s : XMLTags)
 				flagMap.put(s, false);
@@ -197,11 +196,6 @@ public class XMLTools{
 				if(!mutexList.isEmpty()){
 					for(String[] s : mutexList){
 						p.addMutualExclusion(s);
-					}
-				}
-				else if(!requiredNamed.isEmpty()) {
-					for(String s : requiredNamed) {
-						p.setNamedArgToRequired(s);
 					}
 				}
 			} 
@@ -270,7 +264,7 @@ public class XMLTools{
 					else if(flagMap.get("restrictedvalues")){
 						restrictedValues = new ArrayList<String>(Arrays.asList(s.split(", ")));
 					}
-					else if(flagMap.get("required") {
+					else if(flagMap.get("required")) {
 						isRequired = true;
 					}
 				}

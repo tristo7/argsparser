@@ -202,12 +202,11 @@ public class ArgsParser {
 	
 	public String getRequiredNamedArgs() {
 		String requiredArgs = "";
-		if(requiredMap.get(name)) {
-			for(String s : requiredMap) {
-				requiredArgs += s + ", ";
-			}
-			requiredArgs = requiredArgs.substring(0, requiredArgs.length - 2);
+		for(String s : requiredMap.keySet()) {
+			requiredArgs += s + ", ";
 		}
+		requiredArgs = requiredArgs.substring(0, requiredArgs.length() - 2);
+
 		return requiredArgs;
 	}
 	

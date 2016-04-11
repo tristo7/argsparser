@@ -133,6 +133,6 @@ public class XMLToolsTest {
 	
 	@Test
 	public void testRequiredArgs() {
-		assertEquals("testArg3", q.getRequiredNamedArgs);
+		assertEquals("testArg3", q.getRequiredNamedArgs());
 	}
 }
