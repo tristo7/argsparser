@@ -193,10 +193,21 @@ public class ArgsParser {
 	public void setNamedArgToRequired(String name) {
 		if(namedArgNames.contains(name)) {
 			requiredMap.put(name, false);
+			getArg(name).setToRequired();
 		}
 		else {
 			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), name);
 		}
+	}
+	
+	public String getRequiredNamedArgs() {
+		String requiredArgs = "";
+		for(String s : requiredMap.keySet()) {
+			requiredArgs += s + ", ";
+		}
+		requiredArgs = requiredArgs.substring(0, requiredArgs.length() - 2);
+
+		return requiredArgs;
 	}
 	
 	/**

@@ -490,6 +490,8 @@ public class ArgsParserTest {
 			assertEquals(p.getValue("test1"), "sphere");
 		}
 	}
+	
+	@Test
 	public void testMutualExclusionException(){
 		p.addArg("test1");
 		p.addNamedArg("one", Arg.DataType.INTEGER, "1", 'o');
