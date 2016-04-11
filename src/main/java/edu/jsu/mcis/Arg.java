@@ -129,7 +129,7 @@ public class Arg {
 	/** Sets the description of the argument.
 	*	@param s Description of the argument.
 	*/	
-	public void setDescrption(String s){
+	public void setDescription(String s){
 		argumentDescription = s;
 	}
 	

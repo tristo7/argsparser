@@ -27,19 +27,6 @@ public class ArgsParserTest {
 		assertFalse((boolean) p.getValue("arg1"));
 		p.parse(new String[]{"--arg1", "blah"});
 		assertTrue((boolean) p.getValue("arg1"));
-		
-		String messageTest = "";
-		String message = "usage: java VolumeCalculator TestArg \n"+
-					"VolumeCalculator.java: Calcuate the volume of a box.\n"+
-					"positional arguments:\n"+
-					"TestArg \n";
-		try{
-		p.parse(new String[] {"--help"});
-		} catch(HelpMessageException h){
-			messageTest = h.getMessage();
-		}finally{
-			assertEquals(message,messageTest);
-		}
 	}
 	
 	@Test
@@ -204,6 +191,8 @@ public class ArgsParserTest {
 		p.addArg("length", "the length of the box (float)");
 		p.addArg("width", "the width of the box(float)");
 		p.addArg("height", "the height of the box(float)");
+		p.addNamedArg("shape", Arg.DataType.STRING, "box");
+		p.getArg("shape").setDescription("the shape");
 		
 		String[] testCommandLineArgs = {"-h"};
 		String messageTest = "";
@@ -212,7 +201,9 @@ public class ArgsParserTest {
 					"positional arguments:\n"+
 					"length the length of the box (float)\n"+
 					"width the width of the box(float)\n"+
-					"height the height of the box(float)\n";
+					"height the height of the box(float)\n"+
+					"named arguments:\n"+
+					"shape the shape\n";
 		try{
 		p.parse(testCommandLineArgs);
 		} catch(HelpMessageException h){

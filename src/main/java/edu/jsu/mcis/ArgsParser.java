@@ -409,6 +409,12 @@ public class ArgsParser {
 				for(int i = 0; i < argNames.size(); i++){
 					msg += argNames.get(i) + " " + argMap.get(argNames.get(i)).getDescription() + "\n";
 				}
+				if(!namedArgNames.isEmpty()){
+					msg += "named arguments:\n";
+					for(int i = 0; i < namedArgNames.size(); i++){
+						msg += namedArgNames.get(i) + " " + argMap.get(namedArgNames.get(i)).getDescription() + "\n";
+					}
+				}
 				break;
 			case "InvalidArgumentException":
 				msg += "argument ";

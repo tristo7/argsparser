@@ -40,7 +40,7 @@ public class XMLToolsTest {
 		p.addNamedArg("testArg2", Arg.DataType.STRING, "three");
 		p.getArg("testArg2").setRestrictedValues(values);
 		p.addNamedArg("testArg3", Arg.DataType.STRING, "one", 'c', values);
-		p.getArg("testArg3").setDescrption("NamedDescrip");
+		p.getArg("testArg3").setDescription("NamedDescrip");
 		p.addMutualExclusion(mutex);
 		
 		x.save(p,"./build/tmp/testSave.xml");
