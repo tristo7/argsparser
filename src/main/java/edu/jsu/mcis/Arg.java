@@ -6,11 +6,11 @@ import java.util.*;
  *	An argument can be either <STRONG>positional</STRONG> or <STRONG>named</STRONG>. <br>
  *	There is also an option to make both arguments <STRONG>restricted</STRONG>.<p>
  *		<STRONG>Positional</STRONG> arguments are required. These arguments will be core to the program.<br>
- *			An example of a positional argument would be length width and height in a volume calculating program.<p>
+ *			An example of a positional argument would be length, width and height in a volume calculating program.<p>
  *		<STRONG>Named</STRONG>  arguments are considered named.<br>
- *			An example of a named argument would be numeric precsision in a volume calculating program.<br>
+ *			An example of a named argument would be numeric precision in a volume calculating program.<br>
  *				The default precision could be to two decimal places, but have support for more.<p>
- *		<STRONG>Resctricted</STRONG> arguments are limited to a specified set of values. This can be thought of as an enumeration.<br>
+ *		<STRONG>Restricted</STRONG> arguments are limited to a specified set of values. This can be thought of as an enumeration.<br>
  *			An example of a restricted (named) argument would be the shape of an object in a volume calculating program.<br> 
  *				It could be limited to the following list: box, sphere, or a cylinder.
  *	
