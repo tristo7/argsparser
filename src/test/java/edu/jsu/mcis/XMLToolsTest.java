@@ -129,4 +129,9 @@ public class XMLToolsTest {
 
 		assertEquals("[testArg, testArg2]", Arrays.toString(testList.get(0)));
 	}
+	
+	@Test
+	public void testRequiredArgs() {
+		assertEquals("testArg3", q.getRequiredNamedArgs);
+	}
 }

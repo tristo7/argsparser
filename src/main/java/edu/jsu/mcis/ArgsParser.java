@@ -199,6 +199,17 @@ public class ArgsParser {
 		}
 	}
 	
+	public String getRequiredNamedArgs() {
+		String requiredArgs = "";
+		if(requiredMap.get(name)) {
+			for(String s : requiredMap) {
+				requiredArgs += s + ", ";
+			}
+			requiredArgs = requiredArgs.substring(0, requiredArgs.length - 2);
+		}
+		return requiredArgs;
+	}
+	
 	/**
 	*	Adds a named argument with a name, data type, and default value.
 	* 	@param name String name of the named argument.

@@ -129,12 +129,13 @@ public class XMLTools{
 		private Arg.DataType myType;
 		private int position;
 		private ArgsParser p;
+		private boolean isRequired;
 		private final String[] XMLTags = 
 			{"arguments", "programname", "programdescription", 
 			"positional", "named", "name", 
 			"type", "description", "shortname", 
 			"default", "position", "restrictedvalues",
-			"mutualexclusion"}; 
+			"mutualexclusion", "required"}; 
 		private List<String> restrictedValues;
 		
 		public UserHandler(){
@@ -147,6 +148,8 @@ public class XMLTools{
 			description = "";
 			restrictedValues = new ArrayList<String>();
 			mutexList = new ArrayList<String[]>();
+			requiredNamed = new ArrayList<String>();
+			isRequired = false;
 			for(String s : XMLTags)
 				flagMap.put(s, false);
 		}
@@ -174,6 +177,10 @@ public class XMLTools{
 					else
 						p.addNamedArg(name, myType, defaultVal);
 				}
+				if(isRequired) {
+					p.setNamedArgToRequired(name);
+					isRequired = false;
+				}
 			}
 			else if(currentTag.equals("positional")) {
 				if(restrictedValues.isEmpty()){
@@ -190,6 +197,11 @@ public class XMLTools{
 				if(!mutexList.isEmpty()){
 					for(String[] s : mutexList){
 						p.addMutualExclusion(s);
+					}
+				}
+				else if(!requiredNamed.isEmpty()) {
+					for(String s : requiredNamed) {
+						p.setNamedArgToRequired(s);
 					}
 				}
 			} 
@@ -257,6 +269,9 @@ public class XMLTools{
 					}
 					else if(flagMap.get("restrictedvalues")){
 						restrictedValues = new ArrayList<String>(Arrays.asList(s.split(", ")));
+					}
+					else if(flagMap.get("required") {
+						isRequired = true;
 					}
 				}
 			} 
