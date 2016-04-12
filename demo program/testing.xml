@@ -23,12 +23,14 @@
     <name>type</name>
     <type>string</type>
     <restrictedvalues>box, cylinder, sphere</restrictedvalues>
+    <description>Shape of object: box, cylinder, or sphere.</description>
     <shortname>t</shortname>
     <default>box</default>
 </named>
 <named>
     <name>digits</name>
     <type>integer</type>
+    <description>decimal precision for answer.</description>
     <shortname>d</shortname>
     <default>2</default>
 </named>
