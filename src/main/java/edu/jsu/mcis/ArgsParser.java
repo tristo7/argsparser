@@ -190,25 +190,6 @@ public class ArgsParser {
 		argMap.put(name, new Arg(name, myType, description, restrictedValues));
 	}
 	
-	public void setNamedArgToRequired(String name) {
-		if(namedArgNames.contains(name)) {
-			requiredMap.put(name, false);
-			getArg(name).setToRequired();
-		}
-		else {
-			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), name);
-		}
-	}
-	
-	public String getRequiredNamedArgs() {
-		String requiredArgs = "";
-		for(String s : requiredMap.keySet()) {
-			requiredArgs += s + ", ";
-		}
-		requiredArgs = requiredArgs.substring(0, requiredArgs.length() - 2);
-
-		return requiredArgs;
-	}
 	
 	/**
 	*	Adds a named argument with a name, data type, and default value.
@@ -382,6 +363,34 @@ public class ArgsParser {
 					throw new InvalidArgumentException(createExceptionMessage("InvalidNamedArgumentException"), argMap.get(namedArgName), q.remove());
 				}
 		}
+	}
+	
+	/**
+		Sets the Arg with the name being passed in to be a required Arg.
+		@param name the String name of the Arg to be set to required.
+	*/
+	public void setNamedArgToRequired(String name) {
+		if(namedArgNames.contains(name)) {
+			requiredMap.put(name, false);
+			getArg(name).setToRequired();
+		}
+		else {
+			throw new InvalidNamedArgumentNameException(createExceptionMessage("InvalidNamedArgumentNameException"), name);
+		}
+	}
+	
+	/**
+		Returns a string with the required Named Args separated by a space.
+		@return String with all of the required Named Args separated by a single space.
+	*/
+	public String getRequiredNamedArgs() {
+		String requiredArgs = "";
+		for(String s : requiredMap.keySet()) {
+			requiredArgs += s + ", ";
+		}
+		requiredArgs = requiredArgs.substring(0, requiredArgs.length() - 2);
+
+		return requiredArgs;
 	}
 	
 	/**
