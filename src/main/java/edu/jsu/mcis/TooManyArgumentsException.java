@@ -2,11 +2,6 @@ package edu.jsu.mcis;
 
 /** Throws an exception in the case that too many arguments are given.
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
 */	
 public class TooManyArgumentsException extends RuntimeException {
 	private String extraArgs;

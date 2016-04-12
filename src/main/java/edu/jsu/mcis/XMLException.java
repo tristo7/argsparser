@@ -4,11 +4,7 @@ import java.util.*;
 
 /** Errors related to XML input/output.
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class XMLException extends RuntimeException{
 	

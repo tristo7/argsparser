@@ -2,11 +2,7 @@ package edu.jsu.mcis;
 
 /** Case where named arguments that do not exist are referenced. 
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class InvalidNamedArgumentNameException extends RuntimeException {
 	private String argName;

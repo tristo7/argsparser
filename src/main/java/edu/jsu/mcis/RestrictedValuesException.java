@@ -4,11 +4,7 @@ import java.util.*;
 
 /** Case where a value that is not within a restricted set of allowed values is entered.
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class RestrictedValuesException extends RuntimeException {
     private Arg argument;

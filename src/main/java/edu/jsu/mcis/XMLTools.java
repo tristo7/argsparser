@@ -27,12 +27,51 @@ import javax.xml.transform.stream.StreamResult;
 *			}
 *		}
 *		</pre>
-*
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+		Example XML file that would be used:
+*		<pre>
+*		{@code
+*	<arguments>
+		<programname>Test</programname>
+		<programdescription>Test Program</programdescription>
+		<mutualexclusion>testArg, testArg2</mutualexclusion>
+		<positional>
+			<position>1</position>
+			<name>one</name>
+			<type>string</type>
+			<restrictedvalues>one, two, three</restrictedvalues>
+		</positional>
+		<positional>
+			<position>2</position>
+			<name>two</name>
+			<type>integer</type>
+			<description>This is a test.</description>
+		</positional>
+		<named>
+			<name>testArg</name>
+			<type>string</type>
+			<shortname>t</shortname>
+			<default>test1</default>
+		</named>
+		<named>
+			<name>testArg2</name>
+			<type>string</type>
+			<restrictedvalues>one, two, three</restrictedvalues>
+			<default>three</default>
+		</named>
+		<named>
+			<name>testArg3</name>
+			<type>string</type>
+			<restrictedvalues>one, two, three</restrictedvalues>
+			<description>NamedDescrip</description>
+			<shortname>c</shortname>
+			<required>true</required>    <default>one</default>
+		</named>
+	</arguments>
+*		}
+*		</pre>
+*		
+*		
+
 */	
 public class XMLTools{
 	
