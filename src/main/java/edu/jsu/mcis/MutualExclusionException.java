@@ -4,11 +4,7 @@ import java.util.*;
 
 /** Errors related to mutual exclusion. Possible cause: calling getMutualExclusion() without having set mutual exclusion. 
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class MutualExclusionException extends RuntimeException{
 	

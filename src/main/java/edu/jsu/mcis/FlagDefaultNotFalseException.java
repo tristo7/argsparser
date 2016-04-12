@@ -4,11 +4,7 @@ import java.util.*;
 
 /** Case where a boolean named argument is not assigned "false" by default. Boolean named arguments are considered flags and should all be false by default.
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class FlagDefaultNotFalseException extends RuntimeException {
 	private String argName, argValue;

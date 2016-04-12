@@ -4,11 +4,7 @@ import java.util.*;
 
 /** Case where invalid values are assigned to positional arguments. Also deals with invalid function calls on arguments.
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class InvalidArgumentException extends RuntimeException {
     private Arg argument;

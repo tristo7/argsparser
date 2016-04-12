@@ -17,7 +17,9 @@ public class VolumeCalculator {
 		p.addArg("width", Arg.DataType.FLOAT, "the width of the box (float)");
 		p.addArg("height", Arg.DataType.FLOAT, "the height of the box (float)");
 		p.addNamedArg("type", Arg.DataType.STRING, "box", 't', typeValues);
+		p.getArg("type").setDescription("Shape of object: box, cylinder, or sphere.");
 		p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
+		p.getArg("digits").setDescription("decimal precision for answer.");
 		x.save(p, "testing.xml");
 		p.parse(args);
 		

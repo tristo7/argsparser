@@ -4,11 +4,7 @@ import java.util.*;
 
 /** Usage information for the program.
 *	
-*	@author Tristin Terry
-* 	@author Daniel Hilburn
-* 	@author Thomas Eyler
-* 	@author Jake Hamby
-* 	@author Amari Richardson
+
 */	
 public class HelpMessageException extends RuntimeException{
 	
