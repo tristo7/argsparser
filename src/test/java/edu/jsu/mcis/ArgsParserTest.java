@@ -22,8 +22,8 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testFlagArgumentFromCLA(){
-		p.addArg("TestArg");
-		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "False");
+		p.addArg("TestArg", Arg.DataType.STRING, "Testing");
+		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "", "False");
 		assertFalse((boolean) p.getValue("arg1"));
 		p.parse(new String[]{"--arg1", "blah"});
 		assertTrue((boolean) p.getValue("arg1"));
@@ -31,12 +31,36 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testFlagArgumentDefaults(){
-		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "", "false");
 		assertFalse((boolean) p.getValue("arg1"));
 		boolean exception = false;
 		String actualMessage = "initialvalue";
 		try{
-			p.addNamedArg("arg2", Arg.DataType.BOOLEAN, "true");
+			p.addNamedArg("arg2", Arg.DataType.BOOLEAN, "","true");
+		} catch (FlagDefaultNotFalseException f){
+			exception = true;
+			actualMessage = f.getMessage();
+			assertEquals("arg2",f.getName());
+			assertEquals("true",f.getValue());
+			
+			
+		}finally{
+			assertTrue(exception);
+			assertEquals("usage: java VolumeCalculator \n"+
+					"VolumeCalculator.java: error: named argument arg2: invalid default value: true", actualMessage);
+			
+		}
+		
+	}
+	
+	@Test
+	public void testFlagArgumentDefaultsWithShortName(){
+		p.addNamedArg("arg1", Arg.DataType.BOOLEAN, "", "false");
+		assertFalse((boolean) p.getValue("arg1"));
+		boolean exception = false;
+		String actualMessage = "initialvalue";
+		try{
+			p.addNamedArg("arg2", Arg.DataType.BOOLEAN, "","true", 'a');
 		} catch (FlagDefaultNotFalseException f){
 			exception = true;
 			actualMessage = f.getMessage();
@@ -55,20 +79,20 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testNamedArgumentDefaultValueAndNumArguments(){
-		p.addArg("l", Arg.DataType.FLOAT);
-		p.addArg("w", Arg.DataType.FLOAT);
-		p.addArg("h", Arg.DataType.FLOAT);
-		p.addNamedArg("type", Arg.DataType.STRING, "cube");
+		p.addArg("l", Arg.DataType.FLOAT, "");
+		p.addArg("w", Arg.DataType.FLOAT, "");
+		p.addArg("h", Arg.DataType.FLOAT, "");
+		p.addNamedArg("type", Arg.DataType.STRING, "", "cube");
 		assertEquals("cube", p.getValue("type"));
 		assertEquals(4,p.getNumArguments());	
 	}
 	
 	@Test
 	public void testNamedArgumentParsesCorrectly(){
-		p.addArg("l", Arg.DataType.FLOAT);
-		p.addArg("w", Arg.DataType.FLOAT);
-		p.addArg("h", Arg.DataType.FLOAT);
-		p.addNamedArg("type", Arg.DataType.STRING, "cube");
+		p.addArg("l", Arg.DataType.FLOAT, "");
+		p.addArg("w", Arg.DataType.FLOAT, "");
+		p.addArg("h", Arg.DataType.FLOAT, "");
+		p.addNamedArg("type", Arg.DataType.STRING, "", "cube");
 		String[] testCommandLineArgs = {"7","5","2", "--type", "pyramid"};
 		p.parse(testCommandLineArgs);
 		assertEquals("pyramid", p.getValue("type"));
@@ -78,10 +102,10 @@ public class ArgsParserTest {
 	@Test
 	public void testFloatArgumentsParsedCorrectly() {
 		String[] testCommandLineArgs = {"7","5","2","4"};
-		p.addArg("arg1", Arg.DataType.FLOAT);
-		p.addArg("arg2", Arg.DataType.FLOAT);
-		p.addArg("arg3", Arg.DataType.FLOAT);
-		p.addArg("arg4", Arg.DataType.FLOAT);
+		p.addArg("arg1", Arg.DataType.FLOAT, "");
+		p.addArg("arg2", Arg.DataType.FLOAT, "");
+		p.addArg("arg3", Arg.DataType.FLOAT, "");
+		p.addArg("arg4", Arg.DataType.FLOAT, "");
 		p.parse(testCommandLineArgs);
 		assertEquals(4, p.getNumArguments());
 		assertEquals(Float.valueOf(7), p.getValue("arg1"));
@@ -93,7 +117,7 @@ public class ArgsParserTest {
 	@Test
 	public void testIntArgumentIsParsedCorrectly() {
 		String[] testCommandLineArgs = {"7"};
-		p.addArg("arg1", Arg.DataType.INTEGER);
+		p.addArg("arg1", Arg.DataType.INTEGER, "");
 		p.parse(testCommandLineArgs);
 		int argVal = p.getValue("arg1");
 		assertEquals(1, p.getNumArguments());
@@ -103,8 +127,8 @@ public class ArgsParserTest {
 	@Test
 	public void testBoolArgumentIsParsedCorrectly() {
 		String[] testCommandLineArgs = {"True", "false"};
-		p.addArg("arg1", Arg.DataType.BOOLEAN);
-		p.addArg("arg2", Arg.DataType.BOOLEAN);
+		p.addArg("arg1", Arg.DataType.BOOLEAN, "");
+		p.addArg("arg2", Arg.DataType.BOOLEAN, "");
 		p.parse(testCommandLineArgs);
 		boolean argVal = p.getValue("arg1");
 		boolean argVal2 = p.getValue("arg2");
@@ -116,7 +140,7 @@ public class ArgsParserTest {
 	@Test
 	public void testStringArgumentIsParsedCorrectly() {
 		String[] testCommandLineArgs = {"joe"};
-		p.addArg("arg1", Arg.DataType.STRING);
+		p.addArg("arg1", Arg.DataType.STRING, "");
 		p.parse(testCommandLineArgs);
 		String argVal = p.getValue("arg1");
 		assertEquals(1, p.getNumArguments());
@@ -125,16 +149,16 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testCorrectNumOfArgumentsCalculated(){
-		p.addArg("test1");
-		p.addArg("test2");
+		p.addArg("test1", Arg.DataType.STRING, "");
+		p.addArg("test2", Arg.DataType.STRING, "");
 		assertEquals(2,p.getNumArguments());
 	}
 	
 	@Test
 	public void testInvalidArgumentExceptionWithBoolean(){
 		
-		p.addArg("a", Arg.DataType.BOOLEAN);
-		p.addArg("b", Arg.DataType.BOOLEAN);
+		p.addArg("a", Arg.DataType.BOOLEAN, "");
+		p.addArg("b", Arg.DataType.BOOLEAN, "");
 		String[] testCommandLineArgs = {"true","randomtext"};
 		String message = "usage: java VolumeCalculator a b \n" +
                   "VolumeCalculator.java: error: argument b: invalid boolean value: randomtext";
@@ -151,8 +175,8 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testInvalidArgumentExceptionWithFloat(){
-		p.addArg("a", Arg.DataType.FLOAT);
-		p.addArg("b", Arg.DataType.FLOAT);
+		p.addArg("a", Arg.DataType.FLOAT, "");
+		p.addArg("b", Arg.DataType.FLOAT, "");
 		String[] testCommandLineArgs = {"5.5","randomtext"};
 		String message = "usage: java VolumeCalculator a b \n" +
                   "VolumeCalculator.java: error: argument b: invalid float value: randomtext";
@@ -171,8 +195,8 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testInvalidArgumentExceptionWithInteger(){
-		p.addArg("a", Arg.DataType.INTEGER);
-		p.addArg("b", Arg.DataType.INTEGER);
+		p.addArg("a", Arg.DataType.INTEGER, "");
+		p.addArg("b", Arg.DataType.INTEGER, "");
 		String[] testCommandLineArgs = {"5","randomtext"};
 		String message = "usage: java VolumeCalculator a b \n" +
                   "VolumeCalculator.java: error: argument b: invalid integer value: randomtext";
@@ -188,11 +212,10 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testHelpMessageExceptionFormattedCorrectly(){
-		p.addArg("length", "the length of the box (float)");
-		p.addArg("width", "the width of the box(float)");
-		p.addArg("height", "the height of the box(float)");
-		p.addNamedArg("shape", Arg.DataType.STRING, "box");
-		p.getArg("shape").setDescription("the shape");
+		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
+		p.addArg("width", Arg.DataType.FLOAT, "the width of the box(float)");
+		p.addArg("height", Arg.DataType.FLOAT, "the height of the box(float)");
+		p.addNamedArg("shape", Arg.DataType.STRING,"the shape", "box");
 		
 		String[] testCommandLineArgs = {"-h"};
 		String messageTest = "";
@@ -219,9 +242,9 @@ public class ArgsParserTest {
 		String extraArgs = "initialvalue";
 		String extraArgMessage = "initialvalue";
 		
-		p.addArg("one");
-		p.addArg("two");
-		p.addArg("three");
+		p.addArg("one", Arg.DataType.INTEGER, "");
+		p.addArg("two", Arg.DataType.INTEGER, "");
+		p.addArg("three", Arg.DataType.INTEGER, "");
 		try{
 		p.parse(testCommandLineArgs);
 		}catch(TooManyArgumentsException t){
@@ -242,8 +265,8 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testInvalidNamedArgName() {
-		p.addArg("one");
-		p.addNamedArg("digits", Arg.DataType.STRING, "2");
+		p.addArg("one", Arg.DataType.INTEGER, "");
+		p.addNamedArg("digits", Arg.DataType.STRING, "", "2");
 		String incorrectArgName = "initialvalue";
 		String incorrectArgMessage = "initialvalue";
 		String[] testBadNamedArg = {"1", "--potato", "2"};
@@ -264,8 +287,8 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testInvalidNamedArgValue() {
-		p.addArg("one");
-		p.addNamedArg("digits", Arg.DataType.INTEGER, "2");
+		p.addArg("one", Arg.DataType.STRING, "");
+		p.addNamedArg("digits", Arg.DataType.INTEGER, "", "2");
 		String argName = "initialvalue";
 		String argDataType = "initialvalue";
 		String actualMessage = "intialvalue";
@@ -288,17 +311,17 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testShortNameMapsToLongName(){
-		p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
+		p.addNamedArg("digits", Arg.DataType.INTEGER, "", "2", 'd');
 		p.parse(new String[] {"-d", "4"});
 		assertEquals((int) p.getValue("digits"), 4);
 	}
 	
 	@Test
 	public void testMultipleShortNameFlags(){
-		p.addNamedArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
-		p.addNamedArg("beta", Arg.DataType.BOOLEAN, "false", 'b');
-		p.addNamedArg("charlie", Arg.DataType.BOOLEAN, "false", 'c');
-		p.addNamedArg("delta", Arg.DataType.BOOLEAN, "false", 'd');
+		p.addNamedArg("alpha", Arg.DataType.BOOLEAN, "","false", 'a');
+		p.addNamedArg("beta", Arg.DataType.BOOLEAN, "", "false", 'b');
+		p.addNamedArg("charlie", Arg.DataType.BOOLEAN, "", "false", 'c');
+		p.addNamedArg("delta", Arg.DataType.BOOLEAN, "", "false", 'd');
 		
 		
 		p.parse(new String[] {"-cab"});
@@ -309,8 +332,8 @@ public class ArgsParserTest {
 	}
 	@Test
 	public void testInvalidShortName(){
-		p.addArg("one");
-		p.addNamedArg("alpha", Arg.DataType.BOOLEAN, "false", 'a');
+		p.addArg("one", Arg.DataType.STRING, "");
+		p.addNamedArg("alpha", Arg.DataType.BOOLEAN, "", "false", 'a');
 		String incorrectArgName = "";
 		String incorrectArgMessage = "";
 		try{
@@ -343,7 +366,8 @@ public class ArgsParserTest {
 		List<String> values = new ArrayList<String>();
 		values.add("one");
 		values.add("three");
-		p.addArg("testArg", Arg.DataType.STRING, "This is a test.", values);
+		p.addArg("testArg", Arg.DataType.STRING, "This is a test.");
+		p.setRestrictedValues("testArg", values);
 		try{
 			p.parse(new String[] {"two"});
 		} catch(RestrictedValuesException e){
@@ -359,8 +383,9 @@ public class ArgsParserTest {
 		List<String> values = new ArrayList<String>();
 		values.add("one");
 		values.add("three");
-		p.addArg("testArg");
-		p.addNamedArg("testArg2", Arg.DataType.STRING, "one", 'a', values);
+		p.addArg("testArg", Arg.DataType.STRING, "");
+		p.addNamedArg("testArg2", Arg.DataType.STRING, "", "one", 'a');
+		p.setRestrictedValues("testArg2", values);
 		Arg arg = new Arg("initialArgName");
 		try{
 			p.parse(new String[] {"one", "-a", "two"});
@@ -383,8 +408,11 @@ public class ArgsParserTest {
 		values2.add("1");
 		values2.add("3");
 		
-		p.addArg("firstArg", Arg.DataType.STRING, "This is a test.", values);
-		p.addNamedArg("secondArg", Arg.DataType.INTEGER, "1", 's', values2);
+		p.addArg("firstArg", Arg.DataType.STRING, "This is a test.");
+		p.addNamedArg("secondArg", Arg.DataType.INTEGER, "", "1", 's');
+		
+		p.setRestrictedValues("firstArg", values);
+		p.setRestrictedValues("secondArg", values2);
 		
 		p.parse(new String[] {"three", "-s", "3"} );
 		
@@ -398,26 +426,20 @@ public class ArgsParserTest {
 		values.add("true");
 		values.add("false");
 		String s = "";
+		p.addNamedArg("booleanArg", Arg.DataType.BOOLEAN, "", "false", 'b');
+		
 		try{
-			p.addNamedArg("booleanArg", Arg.DataType.BOOLEAN, "false", 'b', values);
+			p.setRestrictedValues("booleanArg", values);
 		} catch (RuntimeException e){
 			s = e.getMessage();
 		} finally{
 			assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: booleanArg", s);
-			try{
-			p.addNamedArg("booleanArg2", Arg.DataType.BOOLEAN, "false", values);
-			} catch (RuntimeException e){
-				s = e.getMessage();
-			} finally{
-				assertEquals("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: booleanArg2", s);
-			}
-			
 		}
 	}
 	
 	@Test
 	public void testSetRestrictedValuesOnBooleanArgCausesException(){
-		p.addNamedArg("boolean1", Arg.DataType.BOOLEAN, "false");
+		p.addNamedArg("boolean1", Arg.DataType.BOOLEAN, "", "false");
 		List<String> values = new ArrayList<String>();
 		values.add("whatever");
 		String s = "";
@@ -432,7 +454,7 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testGetRestrictedValuesCausesExceptionWhenNoneAreSet(){
-		p.addArg("test");
+		p.addArg("test", Arg.DataType.STRING, "");
 		String s = "";
 		try{
 			p.getArg("test").getRestrictedValues();
@@ -445,15 +467,15 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testMutualExclusion(){
-		p.addArg("test1");
-		p.addNamedArg("one", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("two", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("three", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("four", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("five", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("six", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("seven", Arg.DataType.BOOLEAN, "false");
-		p.addNamedArg("eight", Arg.DataType.BOOLEAN, "false");
+		p.addArg("test1", Arg.DataType.STRING, "");
+		p.addNamedArg("one", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("two", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("three", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("four", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("five", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("six", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("seven", Arg.DataType.BOOLEAN, "", "false");
+		p.addNamedArg("eight", Arg.DataType.BOOLEAN, "", "false");
 		
 		String[] exclusionOne = new String[] {"one", "two", "three"};
 		String[] exclusionTwo = new String[] {"four", "five", "six"};
@@ -474,8 +496,8 @@ public class ArgsParserTest {
 	@Test
 	public void testSettingRequiredArgument() {
 		boolean exceptionThrown = false;
-		p.addNamedArg("test1", Arg.DataType.STRING, "square");
-		p.addNamedArg("test3", Arg.DataType.FLOAT, "20.7");
+		p.addNamedArg("test1", Arg.DataType.STRING, "", "square");
+		p.addNamedArg("test3", Arg.DataType.FLOAT, "", "20.7");
 		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
 		p.setNamedArgToRequired("test1");
 		p.setNamedArgToRequired("test3");
@@ -493,9 +515,9 @@ public class ArgsParserTest {
 	
 	@Test
 	public void testMutualExclusionException(){
-		p.addArg("test1");
-		p.addNamedArg("one", Arg.DataType.INTEGER, "1", 'o');
-		p.addNamedArg("two", Arg.DataType.INTEGER, "2", 't');
+		p.addArg("test1", Arg.DataType.STRING, "");
+		p.addNamedArg("one", Arg.DataType.INTEGER, "", "1", 'o');
+		p.addNamedArg("two", Arg.DataType.INTEGER, "", "2", 't');
 		String[] exclusionOne = new String[] {"one", "two"};
 		p.addMutualExclusion(exclusionOne);
 		String expected, actual; 
@@ -527,7 +549,7 @@ public class ArgsParserTest {
 	@Test
 	public void testTooFewArgumentsExceptionTooFewArgsGiven() {
 		boolean exceptionThrown = false;
-		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addNamedArg("test1", Arg.DataType.STRING, "", "square");
 		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
 		String[] cla = {"--test1", "sphere"};
 		try {
@@ -542,7 +564,7 @@ public class ArgsParserTest {
 	@Test
 	public void testTooFewArgumentsExceptionRequiredArgsPassedIn() {
 		boolean exceptionThrown = false;
-		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addNamedArg("test1", Arg.DataType.STRING, "", "square");
 		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
 		p.setNamedArgToRequired("test1");
 		String[] cla = {"19"};
@@ -558,7 +580,7 @@ public class ArgsParserTest {
 	@Test
 	public void testTooFewArgumentsException() {
 		boolean exceptionThrown = false;
-		p.addNamedArg("test1", Arg.DataType.STRING, "square");
+		p.addNamedArg("test1", Arg.DataType.STRING, "", "square");
 		p.addArg("test2", Arg.DataType.INTEGER, "This arg doesn't matter");
 		p.addArg("test3", Arg.DataType.INTEGER, "This arg does matter");
 		p.setNamedArgToRequired("test1");

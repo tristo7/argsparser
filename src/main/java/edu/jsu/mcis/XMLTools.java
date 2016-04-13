@@ -205,15 +205,13 @@ public class XMLTools{
 			
 			if(currentTag.equals("named")) {
 				if(shortName != '\u0000') {
+					p.addNamedArg(name, myType, description, defaultVal, shortName);
 					if(!restrictedValues.isEmpty())
-						p.addNamedArg(name, myType, defaultVal, shortName, restrictedValues);
-					else
-						p.addNamedArg(name, myType, defaultVal, shortName);
+						p.setRestrictedValues(name, restrictedValues);
 				} else {
+					p.addNamedArg(name, myType, description, defaultVal);
 					if(!restrictedValues.isEmpty())
-						p.addNamedArg(name, myType, defaultVal, restrictedValues);
-					else
-						p.addNamedArg(name, myType, defaultVal);
+						p.setRestrictedValues(name, restrictedValues);
 				}
 				if(isRequired) {
 					p.setNamedArgToRequired(name);
@@ -224,7 +222,8 @@ public class XMLTools{
 				if(restrictedValues.isEmpty()){
 					p.addArg(name, myType, description);
 				} else {
-					p.addArg(name, myType, description, restrictedValues);
+					p.addArg(name, myType, description);
+					p.setRestrictedValues(name, restrictedValues);
 				}
 			}
 			else if(currentTag.equals("mutualexclusion")){

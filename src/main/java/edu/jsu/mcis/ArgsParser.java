@@ -135,35 +135,6 @@ public class ArgsParser {
 	}
 	
 	/**
-	*	Adds an argument with a name.
-	*	@param name the string for the name of the argument to be added.
-	*/
-	public void addArg(String name) {
-		argNames.add(name);
-		argMap.put(name, new Arg(name));
-	}
-	
-	/**
-	*	Adds an argument with a name and description.
-	*	@param name the string for the name of the argument to be added.
-	*	@param description the description of the argument to be added.
-	*/
-	public void addArg(String name, String description) {
-		argNames.add(name);
-		argMap.put(name, new Arg(name, Arg.DataType.STRING, description));
-	}
-	
-	/**
-	*	Adds an argument with a name and data type.
-	*	@param name the string for the name of the argument to be added.
-	*	@param myType the datatype of the argument to be added.
-	*/
-	public void addArg(String name, Arg.DataType myType) {
-		argNames.add(name);
-		argMap.put(name, new Arg(name, myType));
-	}
-	
-	/**
 	*	Adds an argument with a name, data type, and description.
 	*	@param name the string for the name of the argument to be added.
 	*	@param myType the datatype of the argument to be added.
@@ -172,28 +143,16 @@ public class ArgsParser {
 	public void addArg(String name, Arg.DataType myType, String description) {
 		argNames.add(name);
 		argMap.put(name, new Arg(name, myType, description));
-	}
-	
-	/**
-	*	Adds an argument with a name, data type, description, and restricted values.
-	*	@param name the string for the name of the argument to be added.
-	*	@param myType the datatype of the argument to be added.
-	*	@param description the description of the argument to be added.
-	*	@param restrictedValues List of the values the argument should be restricted to take on.
-	*/
-	public void addArg(String name, Arg.DataType myType, String description, List<String> restrictedValues) {
-		argNames.add(name);
-		argMap.put(name, new Arg(name, myType, description, restrictedValues));
-	}
-	
+	}	
 	
 	/**
 	*	Adds a named argument with a name, data type, and default value.
 	* 	@param name String name of the named argument.
 	*	@param type DataType of the argument being added.
 	*	@param defaultValue the default value for the argument being created.
+	*	@param description the description of the argument to be added.
 	*/
-	public void addNamedArg(String name, Arg.DataType type, String defaultValue){
+	public void addNamedArg(String name, Arg.DataType type, String description, String defaultValue){
 		switch(type){
 			case BOOLEAN:
 				if(!defaultValue.toLowerCase().equals("false"))
@@ -202,7 +161,7 @@ public class ArgsParser {
 			case STRING:
 			case FLOAT:
 				namedArgNames.add(name);
-				argMap.put(name, new Arg(name, type, "", defaultValue));
+				argMap.put(name, new Arg(name, type, description, defaultValue));
 				break;
 		}
 	}
@@ -211,58 +170,30 @@ public class ArgsParser {
 	*	Adds a named argument with a name, data type, default value, short name, and restricted values.
 	* 	@param name String name of the named argument.
 	*	@param type DataType of the argument being added.
+	*	@param description the description of the argument to be added.
 	*	@param defaultValue the default value for the argument being created.
 	*	@param shortName the character for the short name of the argument.
-	*	@param restrictedValues List of the values the argument should be restricted to take on.
 	*/
-	public void addNamedArg(String name, Arg.DataType type, String defaultValue, char shortName, List<String> restrictedValues){
+	public void addNamedArg(String name, Arg.DataType type, String description, String defaultValue, char shortName){
 		switch(type){
 			case BOOLEAN:
-				throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + name);
+				if(!defaultValue.toLowerCase().equals("false"))
+					throw new FlagDefaultNotFalseException(createExceptionMessage("FlagDefaultNotFalseException"),name, defaultValue);
 			case INTEGER:
 			case STRING:
 			case FLOAT:
 				namedArgNames.add(name);
-				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
+				argMap.put(name, new Arg(name, type, description, defaultValue));
 				argMap.get(name).setShortName(shortName);
 				shortNameMap.put(shortName, name);
 				break;
 		}
 	}
 	
-	/**
-	*	Adds a named argument with a name, data type, default value, and restricted values.
-	* 	@param name String name of the named argument.
-	*	@param type DataType of the argument being added.
-	*	@param defaultValue the default value for the argument being created.
-	*	@param restrictedValues List of the values the argument should be restricted to take on.
-	*/
-	public void addNamedArg(String name, Arg.DataType type, String defaultValue, List<String> restrictedValues){
-		switch(type){
-			case BOOLEAN:
-				throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + name);
-			case INTEGER:
-			case STRING:
-			case FLOAT:
-				namedArgNames.add(name);
-				argMap.put(name, new Arg(name, type, "", defaultValue, restrictedValues));
-				break;
-		}
+	public void setRestrictedValues(String argName, List<String> restrictedValues){
+		argMap.get(argName).setRestrictedValues(restrictedValues);
 	}
 	
-	/**
-	*	Adds an named argument to the HashMap and name, shortname to the list of names, shortnames
-	* 	@param name String name of the named argument.
-	*	@param type DataType of the argument being added.
-	*	@param defaultValue the default value for the argument being created.
-	*	@param shortName the character for the short name of the argument.
-	*/
-	public void addNamedArg(String name, Arg.DataType type, String defaultValue, char shortName){
-		shortNameMap.put(shortName, name);
-		addNamedArg(name, type, defaultValue);
-		argMap.get(name).setShortName(shortName);
-	}
-
 	/**
 	*	Parses the data passed from the command line and stores arguments.
 	* 	@param cla String array of the command line arguments.
