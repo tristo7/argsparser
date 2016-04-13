@@ -3,19 +3,19 @@
     <programdescription>Calculate the volume of a cube, cylinder, or sphere.</programdescription>
 <positional>
     <position>1</position>
-    <name>length</name>
+    <name>firstNum</name>
     <type>float</type>
     <description>the length of the box (float)</description>
 </positional>
 <positional>
     <position>2</position>
-    <name>width</name>
+    <name>secondNum</name>
     <type>float</type>
     <description>the width of the box (float)</description>
 </positional>
 <positional>
     <position>3</position>
-    <name>height</name>
+    <name>thirdNum</name>
     <type>float</type>
     <description>the height of the box (float)</description>
 </positional>
@@ -25,7 +25,7 @@
     <restrictedvalues>box, cylinder, sphere</restrictedvalues>
     <description>Shape of object: box, cylinder, or sphere.</description>
     <shortname>t</shortname>
-    <default>box</default>
+    <required>true</required>    <default>box</default>
 </named>
 <named>
     <name>digits</name>

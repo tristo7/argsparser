@@ -13,10 +13,11 @@ public class VolumeCalculator {
 		
 		p.setProgramName("VolumeCalculator");
 		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
-		p.addArg("length", Arg.DataType.FLOAT, "the length of the box (float)");
-		p.addArg("width", Arg.DataType.FLOAT, "the width of the box (float)");
-		p.addArg("height", Arg.DataType.FLOAT, "the height of the box (float)");
+		p.addArg("firstNum", Arg.DataType.FLOAT, "the length of the box (float)");
+		p.addArg("secondNum", Arg.DataType.FLOAT, "the width of the box (float)");
+		p.addArg("thirdNum", Arg.DataType.FLOAT, "the height of the box (float)");
 		p.addNamedArg("type", Arg.DataType.STRING, "box", 't', typeValues);
+		p.setNamedArgToRequired("type");
 		p.getArg("type").setDescription("Shape of object: box, cylinder, or sphere.");
 		p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
 		p.getArg("digits").setDescription("decimal precision for answer.");
@@ -31,18 +32,18 @@ public class VolumeCalculator {
 		
 		switch(option1) {
 			case "box":
-				l = p.getValue("length");
-				h = p.getValue("height");
-				w = p.getValue("width");
+				l = p.getValue("firstNum");
+				h = p.getValue("secondNum");
+				w = p.getValue("thirdNum");
 				vol = l*w*h;
 				break;
 			case "cylinder":
-				h = p.getValue("height");
-				r = p.getValue("width");
+				h = p.getValue("firstNum");
+				r = p.getValue("secondNum");
 				vol = Math.PI*Math.pow(r, 2) * h;
 				break;
 			case "sphere":
-				r = p.getValue("width");
+				r = p.getValue("firstNum");
 				vol = (4.0 / 3.0)*Math.PI*Math.pow(r, 3);
 				break;
 		}
