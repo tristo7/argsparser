@@ -33,14 +33,14 @@ public class XMLToolsTest {
 		
 		p.setProgramName("Test");
 		p.setProgramDescription("Test Program");
-		p.addArg("one");
+		p.addArg("one", Arg.DataType.STRING, "");
 		p.getArg("one").setRestrictedValues(values);
 		p.addArg("two", Arg.DataType.INTEGER, "This is a test.");
-		p.addNamedArg("testArg", Arg.DataType.STRING, "test1", 't');
-		p.addNamedArg("testArg2", Arg.DataType.STRING, "three");
+		p.addNamedArg("testArg", Arg.DataType.STRING, "", "test1", 't');
+		p.addNamedArg("testArg2", Arg.DataType.STRING, "", "three");
 		p.getArg("testArg2").setRestrictedValues(values);
-		p.addNamedArg("testArg3", Arg.DataType.STRING, "one", 'c', values);
-		p.getArg("testArg3").setDescription("NamedDescrip");
+		p.addNamedArg("testArg3", Arg.DataType.STRING, "NamedDescrip", "one", 'c');
+		p.getArg("testArg3").setRestrictedValues(values);
 		p.addMutualExclusion(mutex);
 		p.setNamedArgToRequired("testArg3");
 		

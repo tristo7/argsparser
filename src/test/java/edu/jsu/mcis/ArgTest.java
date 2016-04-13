@@ -16,7 +16,7 @@ public class ArgTest {
 	
 	@Test
 	public void testToXML(){
-		p.addArg("one");
+		p.addArg("one", Arg.DataType.STRING, "");
 		assertEquals("<positional>\n    <name>one</name>\n    <type>string</type>\n</positional>\n",
 			p.getArg("one").toXML());
 		
@@ -24,15 +24,15 @@ public class ArgTest {
 		assertEquals("<positional>\n    <name>two</name>\n    <type>integer</type>\n    <description>This is a test.</description>\n</positional>\n",
 			p.getArg("two").toXML());
 		
-		p.addNamedArg("testArg", Arg.DataType.STRING, "test1", 't');
+		p.addNamedArg("testArg", Arg.DataType.STRING, "", "test1", 't');
 		assertEquals("<named>\n    <name>testArg</name>\n    <type>string</type>\n    <shortname>t</shortname>\n    <default>test1</default>\n</named>\n",
 			p.getArg("testArg").toXML());
 		
-		p.addNamedArg("testArg2", Arg.DataType.STRING, "test12");
+		p.addNamedArg("testArg2", Arg.DataType.STRING, "", "test12");
 		assertEquals("<named>\n    <name>testArg2</name>\n    <type>string</type>\n    <default>test12</default>\n</named>\n",
 			p.getArg("testArg2").toXML());
 		
-		p.addNamedArg("testArg3", Arg.DataType.STRING, "test123", 'c');
+		p.addNamedArg("testArg3", Arg.DataType.STRING, "", "test123", 'c');
 		p.getArg("testArg3").setDescription("NamedDescrip");
 		assertEquals("<named>\n    <name>testArg3</name>\n    <type>string</type>\n    <description>NamedDescrip</description>\n    <shortname>c</shortname>\n    <default>test123</default>\n</named>\n",
 			p.getArg("testArg3").toXML());
@@ -43,14 +43,15 @@ public class ArgTest {
 		values.add("5");
 		values.add("7");
 		
-		p.addNamedArg("testArg4", Arg.DataType.INTEGER, "1", 'r', values);
+		p.addNamedArg("testArg4", Arg.DataType.INTEGER, "", "1", 'r');
+		p.setRestrictedValues("testArg4", values);
 		assertEquals("<named>\n    <name>testArg4</name>\n    <type>integer</type>\n    <restrictedvalues>1, 3, 5, 7</restrictedvalues>\n    <shortname>r</shortname>\n    <default>1</default>\n</named>\n",
 			p.getArg("testArg4").toXML());
 	}
 	
 	@Test
 	public void testGetArgShortName(){
-		p.addNamedArg("testArg", Arg.DataType.STRING, "test", 't');
+		p.addNamedArg("testArg", Arg.DataType.STRING, "", "test", 't');
 		assertEquals('t', p.getArg("testArg").getShortName());
 	}
 	
@@ -65,7 +66,7 @@ public class ArgTest {
 	@Test
 	public void testArgValueAndDataTypeIsStoredCorrectly() {
 		String[] testCommandLineArgs = {"7"};
-		p.addArg("arg1", Arg.DataType.INTEGER);
+		p.addArg("arg1", Arg.DataType.INTEGER, "");
 		p.parse(testCommandLineArgs);
 		int argVal = p.getValue("arg1");
 		assertEquals(7, argVal);
@@ -74,7 +75,7 @@ public class ArgTest {
 	@Test
 	public void testArgValueDefaultIsString() {
 		String[] testCommandLineArgs = {"bob"};
-		p.addArg("arg1");
+		p.addArg("arg1", Arg.DataType.STRING, "");
 		p.parse(testCommandLineArgs);
 		String argVal = p.getValue("arg1");
 		assertEquals("bob", argVal);
@@ -83,8 +84,8 @@ public class ArgTest {
 	
 	@Test
 	public void testGetShortNameException(){
-		p.addNamedArg("test", Arg.DataType.STRING, "default");
-		p.addArg("testing");
+		p.addNamedArg("test", Arg.DataType.STRING, "", "default");
+		p.addArg("testing", Arg.DataType.STRING, "");
 		try{
 		p.getArg("test").getShortName();
 		} catch(InvalidArgumentException e){
@@ -100,7 +101,7 @@ public class ArgTest {
 	
 	@Test
 	public void testSetShortNameException(){
-		p.addArg("test");
+		p.addArg("test", Arg.DataType.STRING, "");
 		try{
 		p.getArg("test").setShortName('t');
 		} catch(InvalidArgumentException e){

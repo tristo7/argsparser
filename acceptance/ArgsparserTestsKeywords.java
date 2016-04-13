@@ -7,11 +7,11 @@ public class ArgsparserTestsKeywords {
 	
 	public void startVolumeCalculatorWithArguments(String[] cla){
 		p.setProgramName("VolumeCalculator");
-		p.addArg("length", Arg.DataType.FLOAT);
-		p.addArg("width", Arg.DataType.FLOAT);
-		p.addArg("height", Arg.DataType.FLOAT);
-		p.addNamedArg("type", Arg.DataType.STRING, "box", 't');
-		p.addNamedArg("digits", Arg.DataType.STRING, "4", 'd');
+		p.addArg("length", Arg.DataType.FLOAT, "");
+		p.addArg("width", Arg.DataType.FLOAT, "");
+		p.addArg("height", Arg.DataType.FLOAT, "");
+		p.addNamedArg("type", Arg.DataType.STRING, "", "box", 't');
+		p.addNamedArg("digits", Arg.DataType.STRING, "", "4", 'd');
 		try{
 		p.parse(cla);
 		float l = p.getValue("length");
@@ -53,10 +53,10 @@ public class ArgsparserTestsKeywords {
 	}
 	
 	public void startAbsurdProgramWithArguments(String[] cla){
-		p.addArg("pet");
-		p.addArg("number", Arg.DataType.INTEGER);
-		p.addArg("rainy", Arg.DataType.BOOLEAN);
-		p.addArg("bathrooms", Arg.DataType.FLOAT);
+		p.addArg("pet", Arg.DataType.STRING, "");
+		p.addArg("number", Arg.DataType.INTEGER, "");
+		p.addArg("rainy", Arg.DataType.BOOLEAN, "");
+		p.addArg("bathrooms", Arg.DataType.FLOAT, "");
 		p.parse(cla);
 	}
 	

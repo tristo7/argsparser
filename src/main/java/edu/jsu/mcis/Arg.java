@@ -73,35 +73,6 @@ public class Arg {
 		setValue(defaultValue);
 	}
 	
-	/** Sets the name, data type, description, and restricted values of the<STRONG> resctricted </STRONG>argument.
-	*	@param name The name of the argument. 
-	* 	@param type The data type of the argument.
-	* 	@param desc Description of the argument.
-			For example, an argument named "length" may have a description "The length of the box."
-		@param restrictedValues List of the values the argument should be restricted to take on.
-	*/	
-	public Arg(String name, DataType type, String desc, List<String> restrictedValues) {
-		this(name, type, desc);
-		isRestricted = true;
-		this.restrictedValues = restrictedValues;
-    }
-	
-	/** Sets the name, data type, description, default value, and restricted values of the<STRONG> restricted named </STRONG>argument.
-	*	@param name The name of the argument. 
-	* 	@param type The data type of the argument.
-	* 	@param desc Description of the argument.
-			For example, an argument named "length" may have a description "The length of the box."
-	*	@param defaultValue The argument's default value entered as a string.
-	*	@param restrictedValues List of the values the argument should be restricted to take on.
-	*/	
-	public Arg(String name, DataType type, String desc, String defaultValue, List<String> restrictedValues){
-		this(name, type, desc);
-		isNamedArgument = true;
-		isRestricted = true;
-		this.restrictedValues = restrictedValues;
-		setValue(defaultValue);
-	}
-	
 	protected void setToRequired(){
 		if(isNamedArgument){
 			isNamedRequiredArgument = true;
@@ -111,7 +82,7 @@ public class Arg {
 	/** Sets the restricted values of the argument. The argument will be considered<STRONG> restricted </STRONG> after calling this method on it.
 	*	@param values List of the values the argument should be restricted to take on.
 	*/	
-	public void setRestrictedValues(List<String> values){
+	protected void setRestrictedValues(List<String> values){
 		if(dType == DataType.BOOLEAN)
 			throw new RuntimeException("Boolean arguments do not need restricted values. They are either true of false.\n Argument name: " + argumentName);
 		restrictedValues = values;
