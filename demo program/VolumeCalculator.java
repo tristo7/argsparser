@@ -16,10 +16,11 @@ public class VolumeCalculator {
 		p.addArg("firstNum", Arg.DataType.FLOAT, "the length of the box (float)");
 		p.addArg("secondNum", Arg.DataType.FLOAT, "the width of the box (float)");
 		p.addArg("thirdNum", Arg.DataType.FLOAT, "the height of the box (float)");
-		p.addNamedArg("type", Arg.DataType.STRING, "box", 't', typeValues);
+		p.addNamedArg("type", Arg.DataType.STRING, "Shape of object: box, cylinder, or sphere.", "box", 't');
 		p.setNamedArgToRequired("type");
+		p.setRestrictedValues("type", typeValues);
 		p.getArg("type").setDescription("Shape of object: box, cylinder, or sphere.");
-		p.addNamedArg("digits", Arg.DataType.INTEGER, "2", 'd');
+		p.addNamedArg("digits", Arg.DataType.INTEGER, "decimal precision for answer.", "2", 'd');
 		p.getArg("digits").setDescription("decimal precision for answer.");
 		x.save(p, "testing.xml");
 		p.parse(args);
