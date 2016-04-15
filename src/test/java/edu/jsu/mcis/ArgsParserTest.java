@@ -593,4 +593,17 @@ public class ArgsParserTest {
 			assertTrue(exceptionThrown);
 		}
 	}
+	
+	@Test
+	public void testSetInvalidArgRequiredThrowsException() {
+		boolean exceptionThrown = false;
+		p.addNamedArg("type", Arg.DataType.STRING, "", "square");
+		try {
+			p.setNamedArgToRequired("digits");
+		} catch(InvalidNamedArgumentNameException e) {
+			exceptionThrown = true;
+		} finally {
+			assertTrue(exceptionThrown);
+		}
+	}
 }
