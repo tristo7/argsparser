@@ -22,6 +22,6 @@ A Java library to parse command line arguments for easier use.
 - [x] **Allow argument information to be saved to an XML file.**
 - [x] **Provide comprehensive documentation on library features, including examples of use.**
 - [x] **Allow arguments to have a restricted set of possible choices for their values.**
-- [ ] **Allow named arguments to be specified as required arguments.**
-- [ ] **Allow named arguments to be grouped into mutually exclusive groups.**
+- [x] **Allow named arguments to be specified as required arguments.**
+- [x] **Allow named arguments to be grouped into mutually exclusive groups.**
 - [ ] **Allow variable numbers of argument values to be specified by a single argument.**
