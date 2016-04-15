@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><arguments>
     <programname>VolumeCalculator</programname>
-    <programdescription>Calculate the volume of a cube, cylinder, or sphere.</programdescription>
+    <programdescription>Calculate the volume of a cube, cylinder, or sphere.
+Order: 
+  Box: Length, Width, Height
+  Cylinder: Height Radius (IGNORED)
+  Sphere: Radius (IGNORED) (IGNORED)</programdescription>
 <positional>
     <position>1</position>
     <name>firstNum</name>
     <type>float</type>
-    <description>the length of the box (float)</description>
+    <description>the length of the object (float)</description>
 </positional>
 <positional>
     <position>2</position>
     <name>secondNum</name>
     <type>float</type>
-    <description>the width of the box (float)</description>
+    <description>the width of the object (float)</description>
 </positional>
 <positional>
     <position>3</position>
     <name>thirdNum</name>
     <type>float</type>
-    <description>the height of the box (float)</description>
+    <description>the height of the object (float)</description>
 </positional>
 <named>
     <name>type</name>

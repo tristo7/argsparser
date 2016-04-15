@@ -13,9 +13,9 @@ import java.util.*;
  *				The default precision could be to two decimal places, but have support for more.<p>
  *		<STRONG>Restricted</STRONG> arguments are limited to a specified set of values. This can be thought of as an enumeration.<br>
  *			An example of a restricted (named) argument would be the shape of an object in a volume calculating program.<br> 
- *				It could be limited to the following list: box, sphere, or a cylinder.
- *		<STRONG>Required</STRONG> arguments are named arguments that have been declared necessary for the program to function. 
- *			If a required named argument is not used then an error will be thrown. An example would be the shape of an object in a volume calculating program.
+ *				It could be limited to the following list: box, sphere, or a cylinder.<p>
+ *		<STRONG>Required</STRONG> arguments are named arguments that have been declared necessary for the program to function. <br> 
+ *			If a required named argument is not used then an error will be thrown. An example would be the shape of an object in a volume calculating program.<br> 
  */	
 public class Arg {
 	/** 

@@ -12,10 +12,13 @@ public class VolumeCalculator {
 		typeValues.add("sphere");
 		
 		p.setProgramName("VolumeCalculator");
-		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.");
-		p.addArg("firstNum", Arg.DataType.FLOAT, "the length of the box (float)");
-		p.addArg("secondNum", Arg.DataType.FLOAT, "the width of the box (float)");
-		p.addArg("thirdNum", Arg.DataType.FLOAT, "the height of the box (float)");
+		p.setProgramDescription("Calculate the volume of a cube, cylinder, or sphere.\n" +
+			"Order: \n  Box: Length, Width, Height\n"
+			+ "Cylinder: Height Radius (IGNORED)\n"
+			+ "Sphere: Radius (IGNORED) (IGNORED)");
+		p.addArg("firstNum", Arg.DataType.FLOAT, "the length of the object (float)");
+		p.addArg("secondNum", Arg.DataType.FLOAT, "the width of the object (float)");
+		p.addArg("thirdNum", Arg.DataType.FLOAT, "the height of the object (float)");
 		p.addNamedArg("type", Arg.DataType.STRING, "Shape of object: box, cylinder, or sphere.", "box", 't');
 		p.setNamedArgToRequired("type");
 		p.setRestrictedValues("type", typeValues);
