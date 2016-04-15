@@ -207,7 +207,6 @@ public class Arg {
 			statement += "<positional>\n";
 		}
 		
-		
 		statement += "    <name>" + argumentName + "</name>\n" +
 					 "    <type>" + dType.toString().toLowerCase() + "</type>\n";
 		if(isRestricted){
@@ -222,7 +221,6 @@ public class Arg {
 			if(isNamedRequiredArgument)
 				statement += "    <required>true</required>";
 			statement += "    <default>" + String.valueOf(val) + "</default>\n</named>\n";
-			
 		} else {
 			statement += "</positional>\n";
 		}

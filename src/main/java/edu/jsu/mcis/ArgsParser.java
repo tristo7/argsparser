@@ -199,15 +199,14 @@ public class ArgsParser {
 	* 	@param cla String array of the command line arguments.
 	*/
 	public void parse(String[] cla) {
-		String currentArg = "";
+		Queue<String> arguments = new LinkedList<String>();	
+		String currentArg, extraArgs, missingArgs;
+		currentArg = extraArgs = missingArgs = "";
 		int currentPosArg = 0;
-		String extraArgs = "";
-		String missingArgs = "";
-		Queue<String> arguments = new LinkedList<String>();		
-		
 		for(int i = 0;i<cla.length;i++){
 			arguments.add(cla[i]);
 		}
+		
 		while(!arguments.isEmpty()){
 			currentArg = arguments.remove();
 			if(currentArg.contains("-")){
@@ -235,14 +234,12 @@ public class ArgsParser {
 		}
 		if(!requiredMap.isEmpty()) {
 			for(String s : requiredMap.keySet()) {
-				if(!requiredMap.get(s)) {
+				if(!requiredMap.get(s))
 					missingArgs +=" " + s;
-				}
 			}
 		}
-		if(!missingArgs.equals("")) {
+		if(!missingArgs.equals(""))
 			throw new TooFewArgumentsException(createExceptionMessage("TooFewArgumentsException"), missingArgs);
-		}
 	}
 	
 	private void dashedArgumentClassifier(String t, Queue<String> q) {

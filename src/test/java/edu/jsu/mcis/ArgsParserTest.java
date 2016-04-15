@@ -199,7 +199,7 @@ public class ArgsParserTest {
 		p.addArg("b", Arg.DataType.INTEGER, "");
 		String[] testCommandLineArgs = {"5","randomtext"};
 		String message = "usage: java VolumeCalculator a b \n" +
-                  "VolumeCalculator.java: error: argument b: ""
+                  "VolumeCalculator.java: error: argument b: "
 				  + "invalid integer value: randomtext";
 		String messageTest = "initialvalue";
 		try{
@@ -522,8 +522,8 @@ public class ArgsParserTest {
 		String[] exclusionOne = new String[] {"one", "two"};
 		p.addMutualExclusion(exclusionOne);
 		String expected, actual; 
-		expected = "usage: java VolumeCalculator test1 \nVolumeCalculator.java: \n"
-		+ "error: named argument two is in the mutually exclusive set [one, two].";
+		expected = "usage: java VolumeCalculator test1 \n"+
+			"VolumeCalculator.java: error: named argument two is in the mutually exclusive set [one, two].";
 		actual = "";
 		
 		try{

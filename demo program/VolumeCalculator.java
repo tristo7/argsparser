@@ -16,9 +16,9 @@ public class VolumeCalculator {
 			"Order: \n  Box: Length, Width, Height\n"
 			+ "Cylinder: Height Radius (IGNORED)\n"
 			+ "Sphere: Radius (IGNORED) (IGNORED)");
-		p.addArg("firstNum", Arg.DataType.FLOAT, "the length of the object (float)");
-		p.addArg("secondNum", Arg.DataType.FLOAT, "the width of the object (float)");
-		p.addArg("thirdNum", Arg.DataType.FLOAT, "the height of the object (float)");
+		p.addArg("firstNum", Arg.DataType.FLOAT, "(float)");
+		p.addArg("secondNum", Arg.DataType.FLOAT, "(float)");
+		p.addArg("thirdNum", Arg.DataType.FLOAT, "(float)");
 		p.addNamedArg("type", Arg.DataType.STRING, "Shape of object: box, cylinder, or sphere.", "box", 't');
 		p.setNamedArgToRequired("type");
 		p.setRestrictedValues("type", typeValues);

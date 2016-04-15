@@ -10,10 +10,10 @@ public class AsciiArtGenerator{
 		ArgsParser p = new ArgsParser();
 		p.setProgramName("AsciiArtGenerator");
 		p.setProgramDescription("Generate ASCII art in shapes based upon arguments passed in.");
-		p.addArg("shape", Arg.DataType.STRING, "the shape to be generated in ASCII.");
+		p.addArg("shape", Arg.DataType.STRING, "The shape to be generated. (triangle, square, or diamond)");
 		p.setRestrictedValues("shape", shapeList);
-		p.addArg("numberOfLines", Arg.DataType.INTEGER, "the number of Lines that the ASCII art will be generated on.");
-		p.addNamedArg("pchar", Arg.DataType.STRING, "The placeholder character for the shape to be generated.", "*", 'p');
+		p.addArg("numberOfLines", Arg.DataType.INTEGER, "the number of Lines that the art will be generated on.");
+		p.addNamedArg("pchar", Arg.DataType.STRING, "The character used to generate the shape.", "*", 'p');
 		p.parse(args);
 		
 		String option1 = p.getValue("pchar");
