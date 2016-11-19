@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ArgsParser.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argsparser</a> &gt; <a href="index.source.html" class="el_package">edu.jsu.mcis</a> &gt; <span class="el_source">ArgsParser.java</span></div><h1>ArgsParser.java</h1><pre class="source lang-java linenums">package edu.jsu.mcis;
+
+import java.util.*;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+
+/** Creates arguments, parses the command line, and returns their values. &lt;p&gt;
+*		The major functions of this class are to properly add arguments and parse the command line 
+*			(or any other String array). Other functions exist to return information about the argument(s) or the program.
+*		
+*		Example code using ArgsParser:
+*		&lt;pre&gt;
+*		{@code
+*			public static void main(String[] args) {
+*				ArgsParser p = new ArgsParser();
+*				p.setProgramName(&quot;VolumeCalculator&quot;);
+*				p.setProgramDescription(&quot;Calculate the volume of a cube, cylinder, or sphere.&quot;);
+*				p.addArg(&quot;length&quot;, Arg.DataType.FLOAT, &quot;the length of the box (float)&quot;);
+*				p.addNamedArg(&quot;digits&quot;, Arg.DataType.INTEGER, &quot;2&quot;, 'd');
+*				p.parse(args);
+*			}
+*		}
+*		&lt;/pre&gt;
+*		&lt;pre&gt;
+*		Example command line arguments:
+*		VolumeCalculator 7.5 2.4 --type cylinder 8.2 --digits 3
+*		&lt;/pre&gt;	
+
+*/
+public class ArgsParser {
+
+	private List&lt;String&gt; argNames;
+	private List&lt;String&gt; namedArgNames;
+	private Map&lt;String, Arg&gt; argMap;
+	private Map&lt;Character, String&gt; shortNameMap;
+	private Map&lt;String[], Boolean&gt; mutualExclusionMap;
+<span class="fc" id="L41">	private String programName = &quot;&quot;;</span>
+<span class="fc" id="L42">	private String programDescription = &quot;&quot;;</span>
+	private Map&lt;String, Boolean&gt; requiredMap;
+	
+	/** Default constructor.
+	*	Initializes new HashMaps and ArrayLists for storing Args.
+	*/
+<span class="fc" id="L48">	public ArgsParser() {</span>
+<span class="fc" id="L49">		argNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L50">		namedArgNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L51">		argMap = new HashMap&lt;String, Arg&gt;();</span>
+<span class="fc" id="L52">		shortNameMap = new HashMap&lt;Character, String&gt;();</span>
+<span class="fc" id="L53">		mutualExclusionMap = new HashMap&lt;String[], Boolean&gt;();</span>
+<span class="fc" id="L54">		requiredMap = new HashMap&lt;String, Boolean&gt;();</span>
+<span class="fc" id="L55">	}</span>
+	
+	/**	Adds a group of named arguments that are mutually exclusive. No more than one of the named arguments in the group should be present in the command line.
+	*	@param arguments a string array with all the names of arguments desired to be mutually exclusive.
+	*/
+	public void addMutualExclusion(String[] arguments){
+<span class="fc bfc" id="L61" title="All 2 branches covered.">		for(String s : arguments){</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">			if(!namedArgNames.contains(s))</span>
+<span class="fc" id="L63">				throw new InvalidNamedArgumentNameException(createExceptionMessage(&quot;InvalidNamedArgumentNameException&quot;), s);</span>
+		}
+<span class="fc" id="L65">		mutualExclusionMap.put(arguments, false);</span>
+<span class="fc" id="L66">	}</span>
+	
+	/**	Gives a List of all mutual exclusion (String arrays) that exists for the ArgsParser instance. &lt;p&gt;
+	*		An example List would look like the following: [[1, 2, 3], [4, 5, 6]]
+	*	@return a List of String[] that contains argument names.
+	*/
+	public List&lt;String[]&gt; getMutualExclusion(){		
+<span class="fc" id="L73">		List&lt;String[]&gt; list = new ArrayList&lt;String[]&gt;();</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">		for(String[] s : mutualExclusionMap.keySet()){</span>
+<span class="fc" id="L75">			list.add(s);</span>
+<span class="fc" id="L76">		}</span>
+<span class="fc" id="L77">		return list;</span>
+	}
+	
+	/**
+	*	Gives the List of names of positional Args that ArgsParser has stored.
+	*	@return the List of names of positional Args currently being stored by ArgsParser.
+	*/
+	public List&lt;String&gt; getPositionalArgumentNames(){
+<span class="fc" id="L85">		return argNames;</span>
+	}
+	
+	/**
+	*	Gives the List of names of named Args that ArgsParser has stored.
+	*	@return the List of names of named Args currently being stored by ArgsParser.
+	*/
+	public List&lt;String&gt; getNamedArgumentNames(){
+<span class="fc" id="L93">		return namedArgNames;</span>
+	}
+	
+	/**
+	*	Gives the number of Args that ArgsParser has stored.
+	*	@return the number of Args currently being stored by ArgsParser.
+	*/
+	public int getNumArguments() {
+<span class="fc" id="L101">		return argNames.size()+namedArgNames.size();</span>
+	}
+	
+	/**
+	*	Sets the program name based upon a string from the user.
+	*	@param name the name for the program
+	*/	
+	public void setProgramName(String name) {
+<span class="fc" id="L109">		programName = name;</span>
+<span class="fc" id="L110">	}</span>
+	
+	/**
+	*	Gives the program name specified by the user.
+	*	@return string containing the name of the program using ArgsParser
+	*/
+	public String getProgramName() {
+<span class="fc" id="L117">		return programName;</span>
+	}
+	
+	/**
+	*	Sets the program description based upon a string from the user.
+	*	@param s the string for the description of the program using ArgsParser.
+	*/	
+	public void setProgramDescription(String s) {
+<span class="fc" id="L125">		programDescription = s;</span>
+<span class="fc" id="L126">	}</span>
+	
+	
+	/**
+	*	Gives the program description specified by the user.
+	*	@return string containing the description of the program using ArgsParser
+	*/	
+	public String getProgramDescription() {
+<span class="fc" id="L134">		return programDescription;</span>
+	}
+	
+	/**
+	*	Adds an argument with a name, data type, and description.
+	*	@param name the string for the name of the argument to be added.
+	*	@param myType the datatype of the argument to be added.
+	*	@param description the description of the argument to be added.
+	*/
+	public void addArg(String name, Arg.DataType myType, String description) {
+<span class="fc" id="L144">		argNames.add(name);</span>
+<span class="fc" id="L145">		argMap.put(name, new Arg(name, myType, description));</span>
+<span class="fc" id="L146">	}	</span>
+	
+	/**
+	*	Adds a named argument with a name, data type, and default value.
+	* 	@param name String name of the named argument.
+	*	@param type DataType of the argument being added.
+	*	@param defaultValue the default value for the argument being created.
+	*	@param description the description of the argument to be added.
+	*/
+	public void addNamedArg(String name, Arg.DataType type, String description, String defaultValue){
+<span class="pc bpc" id="L156" title="1 of 3 branches missed.">		switch(type){</span>
+			case BOOLEAN:
+<span class="fc bfc" id="L158" title="All 2 branches covered.">				if(!defaultValue.toLowerCase().equals(&quot;false&quot;))</span>
+<span class="fc" id="L159">					throw new FlagDefaultNotFalseException(createExceptionMessage(&quot;FlagDefaultNotFalseException&quot;),name, defaultValue);</span>
+			case INTEGER:
+			case STRING:
+			case FLOAT:
+<span class="fc" id="L163">				namedArgNames.add(name);</span>
+<span class="fc" id="L164">				argMap.put(name, new Arg(name, type, description, defaultValue));</span>
+				break;
+		}
+<span class="fc" id="L167">	}</span>
+	
+	/**
+	*	Adds a named argument with a name, data type, default value, short name, and restricted values.
+	* 	@param name String name of the named argument.
+	*	@param type DataType of the argument being added.
+	*	@param description the description of the argument to be added.
+	*	@param defaultValue the default value for the argument being created.
+	*	@param shortName the character for the short name of the argument.
+	*/
+	public void addNamedArg(String name, Arg.DataType type, String description, String defaultValue, char shortName){
+<span class="pc bpc" id="L178" title="1 of 3 branches missed.">		switch(type){</span>
+			case BOOLEAN:
+<span class="fc bfc" id="L180" title="All 2 branches covered.">				if(!defaultValue.toLowerCase().equals(&quot;false&quot;))</span>
+<span class="fc" id="L181">					throw new FlagDefaultNotFalseException(createExceptionMessage(&quot;FlagDefaultNotFalseException&quot;),name, defaultValue);</span>
+			case INTEGER:
+			case STRING:
+			case FLOAT:
+<span class="fc" id="L185">				namedArgNames.add(name);</span>
+<span class="fc" id="L186">				argMap.put(name, new Arg(name, type, description, defaultValue));</span>
+<span class="fc" id="L187">				argMap.get(name).setShortName(shortName);</span>
+<span class="fc" id="L188">				shortNameMap.put(shortName, name);</span>
+				break;
+		}
+<span class="fc" id="L191">	}</span>
+	
+	public void setRestrictedValues(String argName, List&lt;String&gt; restrictedValues){
+<span class="fc" id="L194">		argMap.get(argName).setRestrictedValues(restrictedValues);</span>
+<span class="fc" id="L195">	}</span>
+	
+	/**
+	*	Parses the data passed from the command line and stores arguments.
+	* 	@param cla String array of the command line arguments.
+	*/
+	public void parse(String[] cla) {
+<span class="fc" id="L202">		Queue&lt;String&gt; arguments = new LinkedList&lt;String&gt;();	</span>
+		String currentArg, extraArgs, missingArgs;
+<span class="fc" id="L204">		currentArg = extraArgs = missingArgs = &quot;&quot;;</span>
+<span class="fc" id="L205">		int currentPosArg = 0;</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">		for(int i = 0;i&lt;cla.length;i++){</span>
+<span class="fc" id="L207">			arguments.add(cla[i]);</span>
+		}
+		
+<span class="fc bfc" id="L210" title="All 2 branches covered.">		while(!arguments.isEmpty()){</span>
+<span class="fc" id="L211">			currentArg = arguments.remove();</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">			if(currentArg.contains(&quot;-&quot;)){</span>
+<span class="fc" id="L213">				dashedArgumentClassifier(currentArg, arguments);					</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">			}else if(currentPosArg &lt; argNames.size()){</span>
+				try{
+<span class="fc" id="L216">					argMap.get(argNames.get(currentPosArg)).setValue(currentArg);</span>
+<span class="fc" id="L217">				}catch(NumberFormatException n){</span>
+<span class="fc" id="L218">					throw new InvalidArgumentException(createExceptionMessage(&quot;InvalidArgumentException&quot;), argMap.get(argNames.get(currentPosArg)), currentArg);</span>
+<span class="fc" id="L219">				}</span>
+<span class="fc" id="L220">				currentPosArg++;</span>
+			}else{
+<span class="fc" id="L222">				extraArgs = currentArg;</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">				while(!arguments.isEmpty()){</span>
+<span class="fc" id="L224">					extraArgs+=&quot; &quot;+arguments.remove();</span>
+				}
+<span class="fc" id="L226">				throw new TooManyArgumentsException(createExceptionMessage(&quot;TooManyArgumentsException&quot;), extraArgs);</span>
+			}
+		}
+<span class="fc bfc" id="L229" title="All 2 branches covered.">		if(currentPosArg &lt; argNames.size()) {</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">			while(currentPosArg &lt; argNames.size()) {</span>
+<span class="fc" id="L231">				missingArgs +=&quot; &quot; + argNames.get(currentPosArg);</span>
+<span class="fc" id="L232">				currentPosArg++;</span>
+			}
+		}
+<span class="fc bfc" id="L235" title="All 2 branches covered.">		if(!requiredMap.isEmpty()) {</span>
+<span class="fc bfc" id="L236" title="All 2 branches covered.">			for(String s : requiredMap.keySet()) {</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">				if(!requiredMap.get(s))</span>
+<span class="fc" id="L238">					missingArgs +=&quot; &quot; + s;</span>
+<span class="fc" id="L239">			}</span>
+		}
+<span class="fc bfc" id="L241" title="All 2 branches covered.">		if(!missingArgs.equals(&quot;&quot;))</span>
+<span class="fc" id="L242">			throw new TooFewArgumentsException(createExceptionMessage(&quot;TooFewArgumentsException&quot;), missingArgs);</span>
+<span class="fc" id="L243">	}</span>
+	
+	private void dashedArgumentClassifier(String t, Queue&lt;String&gt; q) {
+<span class="pc bpc" id="L246" title="1 of 4 branches missed.">		if(t.equals(&quot;-h&quot;) || t.equals(&quot;--help&quot;)){</span>
+<span class="fc" id="L247">				throw new HelpMessageException(createExceptionMessage(&quot;HelpMessageException&quot;));</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">		}else if(t.contains(&quot;--&quot;)){</span>
+<span class="fc" id="L249">			dashedArgumentHandler(t.substring(2), q);</span>
+		} else {
+<span class="fc bfc" id="L251" title="All 2 branches covered.">			for(int i = 1;i&lt;t.length();i++){</span>
+<span class="fc" id="L252">				char currentShortArg = t.charAt(i);</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">				if(shortNameMap.containsKey(currentShortArg)){</span>
+<span class="fc" id="L254">					dashedArgumentHandler(shortNameMap.get(t.charAt(i)), q);</span>
+				}else{
+<span class="fc" id="L256">					throw new InvalidNamedArgumentNameException(createExceptionMessage(&quot;InvalidNamedArgumentNameException&quot;), String.valueOf(currentShortArg));</span>
+				}
+			}
+		}
+<span class="fc" id="L260">	}</span>
+	
+	private void dashedArgumentHandler(String namedArgName, Queue&lt;String&gt; q){
+<span class="fc bfc" id="L263" title="All 2 branches covered.">		if(!namedArgNames.contains(namedArgName)){</span>
+<span class="fc" id="L264">			throw new InvalidNamedArgumentNameException(createExceptionMessage(&quot;InvalidNamedArgumentNameException&quot;), namedArgName);</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">		}else if(!mutualExclusionMap.isEmpty()){</span>
+<span class="fc bfc" id="L266" title="All 2 branches covered.">			for(String[] s : mutualExclusionMap.keySet()){</span>
+<span class="fc bfc" id="L267" title="All 2 branches covered.">				if(Arrays.asList(s).contains(namedArgName)){</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">					if(mutualExclusionMap.get(s))</span>
+<span class="fc" id="L269">						throw new MutualExclusionException(createExceptionMessage(&quot;MutualExclusionException&quot;), namedArgName, s);</span>
+					else
+<span class="fc" id="L271">						mutualExclusionMap.put(s,true);</span>
+				}
+<span class="fc" id="L273">			}</span>
+		}
+<span class="fc bfc" id="L275" title="All 2 branches covered.">		if(!requiredMap.isEmpty()) {</span>
+<span class="pc bpc" id="L276" title="1 of 2 branches missed.">			if(requiredMap.containsKey(namedArgName)) {</span>
+<span class="fc" id="L277">				requiredMap.put(namedArgName, true);</span>
+			}
+		}
+<span class="fc bfc" id="L280" title="All 2 branches covered.">		if(argMap.get(namedArgName).getDataType().equals(&quot;boolean&quot;)){</span>
+<span class="fc" id="L281">			argMap.get(namedArgName).setValue(&quot;true&quot;);</span>
+		} else {		
+				try{
+<span class="fc" id="L284">					argMap.get(namedArgName).setValue(q.element());</span>
+<span class="fc" id="L285">					q.remove();</span>
+<span class="fc" id="L286">				}catch(NumberFormatException n){</span>
+<span class="fc" id="L287">					throw new InvalidArgumentException(createExceptionMessage(&quot;InvalidNamedArgumentException&quot;), argMap.get(namedArgName), q.remove());</span>
+<span class="fc" id="L288">				}</span>
+		}
+<span class="fc" id="L290">	}</span>
+	
+	/**
+		Sets the Arg with the name being passed in to be a required Arg.
+		@param name the String name of the Arg to be set to required.
+	*/
+	public void setNamedArgToRequired(String name) {
+<span class="fc bfc" id="L297" title="All 2 branches covered.">		if(namedArgNames.contains(name)) {</span>
+<span class="fc" id="L298">			requiredMap.put(name, false);</span>
+<span class="fc" id="L299">			getArg(name).setToRequired();</span>
+		}
+		else {
+<span class="fc" id="L302">			throw new InvalidNamedArgumentNameException(createExceptionMessage(&quot;InvalidNamedArgumentNameException&quot;), name);</span>
+		}
+<span class="fc" id="L304">	}</span>
+	
+	/**
+		Returns a string with the required Named Args separated by a space.
+		@return String with all of the required Named Args separated by a single space.
+	*/
+	public String getRequiredNamedArgs() {
+<span class="fc" id="L311">		String requiredArgs = &quot;&quot;;</span>
+<span class="fc bfc" id="L312" title="All 2 branches covered.">		for(String s : requiredMap.keySet()) {</span>
+<span class="fc" id="L313">			requiredArgs += s + &quot;, &quot;;</span>
+<span class="fc" id="L314">		}</span>
+<span class="fc" id="L315">		requiredArgs = requiredArgs.substring(0, requiredArgs.length() - 2);</span>
+
+<span class="fc" id="L317">		return requiredArgs;</span>
+	}
+	
+	/**
+	*	Gives an Arg based upon the given String name.
+	* 	@param name Name of the argument.
+	*	@return Arg object from the argMap given the name of the Arg.
+	*/	
+	public Arg getArg(String name) {
+<span class="fc bfc" id="L326" title="All 2 branches covered.">		if(argMap.containsKey(name))</span>
+<span class="fc" id="L327">			return argMap.get(name);</span>
+		else
+<span class="fc" id="L329">			throw new RuntimeException(&quot;Argument &quot; + name + &quot; does not exist.&quot;);</span>
+	}
+	
+	/**
+	*	Gives the value of an argument cast as type T.
+	*	@param &lt;T&gt; Generic type.
+	*	@param name Name of the argument.
+	*	@return type T representation of the argument's associated value given the name.
+	*/	
+	public &lt;T&gt; T getValue(String name) {
+<span class="fc" id="L339">		return (T) getArg(name).getValue();</span>
+	}
+	
+	private String createExceptionMessage(String messageType){
+<span class="fc" id="L343">		String msg = &quot;usage: java &quot;+programName+&quot; &quot;;</span>
+<span class="fc bfc" id="L344" title="All 2 branches covered.">		for(int i = 0; i&lt;argNames.size();i++){</span>
+<span class="fc" id="L345">			msg += argNames.get(i) + &quot; &quot;;</span>
+		}
+<span class="fc" id="L347">		msg +=&quot;\n&quot;+programName+&quot;.java: error: &quot;;</span>
+		
+<span class="pc bpc" id="L349" title="10 of 32 branches missed.">		switch(messageType){</span>
+			case &quot;HelpMessageException&quot;:
+<span class="fc" id="L351">				msg = msg.substring(0, msg.length()-7);</span>
+<span class="fc" id="L352">				msg += programDescription + &quot;\npositional arguments:\n&quot;;</span>
+<span class="fc bfc" id="L353" title="All 2 branches covered.">				for(int i = 0; i &lt; argNames.size(); i++){</span>
+<span class="fc" id="L354">					msg += argNames.get(i) + &quot; &quot; + argMap.get(argNames.get(i)).getDescription() + &quot;\n&quot;;</span>
+				}
+<span class="pc bpc" id="L356" title="1 of 2 branches missed.">				if(!namedArgNames.isEmpty()){</span>
+<span class="fc" id="L357">					msg += &quot;named arguments:\n&quot;;</span>
+<span class="fc bfc" id="L358" title="All 2 branches covered.">					for(int i = 0; i &lt; namedArgNames.size(); i++){</span>
+<span class="fc" id="L359">						msg += namedArgNames.get(i) + &quot; &quot; + argMap.get(namedArgNames.get(i)).getDescription() + &quot;\n&quot;;</span>
+					}
+				}
+				break;
+			case &quot;InvalidArgumentException&quot;:
+<span class="fc" id="L364">				msg += &quot;argument &quot;;</span>
+<span class="fc" id="L365">				break;</span>
+			case &quot;FlagDefaultNotFalseException&quot;:
+			case &quot;InvalidNamedArgumentException&quot;:
+			case &quot;MutualExclusionException&quot;:
+<span class="fc" id="L369">				msg += &quot;named argument &quot;;</span>
+<span class="fc" id="L370">				break;</span>
+			case &quot;InvalidNamedArgumentNameException&quot;:
+<span class="fc" id="L372">				msg += &quot;named argument name: &quot;;</span>
+<span class="fc" id="L373">				break;</span>
+			case &quot;TooManyArgumentsException&quot;:
+<span class="fc" id="L375">				msg += &quot;unrecognized arguments: &quot;;</span>
+<span class="fc" id="L376">				break;</span>
+			case &quot;TooFewArgumentsException&quot;:
+<span class="fc" id="L378">				msg += &quot;more arguments are necessary: &quot;;</span>
+		}
+<span class="fc" id="L380">		return msg;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

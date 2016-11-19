@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RestrictedValuesException.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argsparser</a> &gt; <a href="index.source.html" class="el_package">edu.jsu.mcis</a> &gt; <span class="el_source">RestrictedValuesException.java</span></div><h1>RestrictedValuesException.java</h1><pre class="source lang-java linenums">package edu.jsu.mcis;
+
+import java.util.*;
+
+/** Case where a value that is not within a restricted set of allowed values is entered.
+*	
+
+*/	
+public class RestrictedValuesException extends RuntimeException {
+    private Arg argument;
+	
+	/** Basic constructor
+	*	@param msg The message to be assigned to the exception.
+	*	@param arg The argument that has an error.
+	*	@param value The incorrect value that was assigned to the argument.
+	*	@param restrictedValues List of the values the argument should be restricted to take on.
+	*/
+    public RestrictedValuesException(String msg, Arg arg, String value, List&lt;String&gt; restrictedValues) {
+<span class="fc" id="L19">		super(msg + restrictedValues + &quot;. &quot; + value +&quot; is not an accepted value.&quot;);</span>
+<span class="fc" id="L20">		argument = arg;</span>
+<span class="fc" id="L21">    }</span>
+	
+	/** Gives the argument that caused the exception.
+	*	@return The argument that had the exception. 
+	*/
+    public Arg getArgument(){
+<span class="fc" id="L27">		return argument;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Arg.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argsparser</a> &gt; <a href="index.source.html" class="el_package">edu.jsu.mcis</a> &gt; <span class="el_source">Arg.java</span></div><h1>Arg.java</h1><pre class="source lang-java linenums">package edu.jsu.mcis;
+
+import java.util.*;
+
+/** Holds information about the argument. &lt;br&gt;
+ *	An argument can be either &lt;STRONG&gt;positional&lt;/STRONG&gt; or &lt;STRONG&gt;named&lt;/STRONG&gt;. &lt;br&gt;
+ *	There is an option to make both types of arguments &lt;STRONG&gt;restricted&lt;/STRONG&gt;.&lt;br&gt;
+ *	Named arguments can be &lt;STRONG&gt;required&lt;/STRONG&gt;.&lt;p&gt;
+ *		&lt;STRONG&gt;Positional&lt;/STRONG&gt; arguments are required. These arguments will be core to the program.&lt;br&gt;
+ *			An example of a positional argument would be length, width and height in a volume calculating program.&lt;p&gt;
+ *		&lt;STRONG&gt;Named&lt;/STRONG&gt;  arguments are considered named.&lt;br&gt;
+ *			An example of a named argument would be numeric precision in a volume calculating program.&lt;br&gt;
+ *				The default precision could be to two decimal places, but have support for more.&lt;p&gt;
+ *		&lt;STRONG&gt;Restricted&lt;/STRONG&gt; arguments are limited to a specified set of values. This can be thought of as an enumeration.&lt;br&gt;
+ *			An example of a restricted (named) argument would be the shape of an object in a volume calculating program.&lt;br&gt; 
+ *				It could be limited to the following list: box, sphere, or a cylinder.&lt;p&gt;
+ *		&lt;STRONG&gt;Required&lt;/STRONG&gt; arguments are named arguments that have been declared necessary for the program to function. &lt;br&gt; 
+ *			If a required named argument is not used then an error will be thrown. An example would be the shape of an object in a volume calculating program.&lt;br&gt; 
+ */	
+public class Arg {
+	/** 
+	*	Supported data types.
+	*/
+<span class="pc" id="L24">    public enum DataType {INTEGER, FLOAT, BOOLEAN, STRING};</span>
+    
+	private String argumentName;
+	private char argumentShortName;
+    private Object val;
+<span class="fc" id="L29">    private DataType dType = DataType.STRING;</span>
+<span class="fc" id="L30">	private String argumentDescription = &quot;&quot;;</span>
+<span class="fc" id="L31">	private boolean isNamedArgument = false;</span>
+<span class="fc" id="L32">	private boolean isNamedRequiredArgument = false;</span>
+<span class="fc" id="L33">	private boolean isRestricted = false;</span>
+	private List&lt;String&gt; restrictedValues;
+	
+	/** Sets the name of the argument.
+	*	@param name The name of the argument. 
+	*/	
+<span class="fc" id="L39">    public Arg(String name) {</span>
+<span class="fc" id="L40">        argumentName = name;</span>
+<span class="fc" id="L41">    }</span>
+	
+	/** Sets the name and data type of the argument.
+	*	@param name The name of the argument. 
+	* 	@param type The data type of the argument.
+	*/	
+    public Arg(String name, DataType type) {
+<span class="fc" id="L48">		this(name);</span>
+<span class="fc" id="L49">		dType = type;</span>
+<span class="fc" id="L50">    }</span>
+	
+	/** Sets the name, data type, and description of the argument.
+	*	@param name The name of the argument. 
+	* 	@param type The data type of the argument.
+	* 	@param desc Description of the argument.
+			For example, an argument named &quot;length&quot; may have a description &quot;The length of the box.&quot;
+	*/	
+	public Arg(String name, DataType type, String desc) {
+<span class="fc" id="L59">        this(name, type);</span>
+<span class="fc" id="L60">		argumentDescription = desc;</span>
+<span class="fc" id="L61">    }</span>
+	
+	/** Sets the name, data type, description, and default value of the&lt;STRONG&gt; named &lt;/STRONG&gt;argument.
+	*	@param name The name of the argument. 
+	* 	@param type The data type of the argument.
+	* 	@param desc Description of the argument.
+			For example, an argument named &quot;length&quot; may have a description &quot;The length of the box.&quot;
+	*	@param defaultValue The argument's default value entered as a string.
+	*/	
+	public Arg(String name, DataType type, String desc, String defaultValue){
+<span class="fc" id="L71">		this(name, type, desc);</span>
+<span class="fc" id="L72">		isNamedArgument = true;</span>
+<span class="fc" id="L73">		setValue(defaultValue);</span>
+<span class="fc" id="L74">	}</span>
+	
+	protected void setToRequired(){
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">		if(isNamedArgument){</span>
+<span class="fc" id="L78">			isNamedRequiredArgument = true;</span>
+		}
+<span class="fc" id="L80">	}</span>
+	
+	/** Sets the restricted values of the argument. The argument will be considered&lt;STRONG&gt; restricted &lt;/STRONG&gt; after calling this method on it.
+	*	@param values List of the values the argument should be restricted to take on.
+	*/	
+	protected void setRestrictedValues(List&lt;String&gt; values){
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		if(dType == DataType.BOOLEAN)</span>
+<span class="fc" id="L87">			throw new RuntimeException(&quot;Boolean arguments do not need restricted values. They are either true of false.\n Argument name: &quot; + argumentName);</span>
+<span class="fc" id="L88">		restrictedValues = values;</span>
+<span class="fc" id="L89">		isRestricted = true;</span>
+<span class="fc" id="L90">	}</span>
+	
+	/** Gets the restricted values of the argument formatted in a string.&lt;p&gt;
+	*		Example output: &quot;[1, 2, 3]&quot;
+	*	@return restricted values of the argument.
+	*/	
+	public String getRestrictedValues(){
+<span class="fc bfc" id="L97" title="All 2 branches covered.">		if(isRestricted)</span>
+<span class="fc" id="L98">			return restrictedValues.toString();</span>
+		else
+<span class="fc" id="L100">			throw new RuntimeException(argumentName + &quot; is not a restricted argument.&quot;);</span>
+	}
+	
+	/** Sets the description of the argument.
+	*	@param s Description of the argument.
+	*/	
+	public void setDescription(String s){
+<span class="fc" id="L107">		argumentDescription = s;</span>
+<span class="fc" id="L108">	}</span>
+	
+	/** Sets the short form name of a&lt;STRONG&gt; named &lt;/STRONG&gt;argument.
+	*	@param c Character used to identify the named argument.
+	*/	
+	public void setShortName(char c){
+<span class="fc bfc" id="L114" title="All 2 branches covered.">		if(isNamedArgument)</span>
+<span class="fc" id="L115">			argumentShortName = c;</span>
+		else
+<span class="fc" id="L117">			throw new InvalidArgumentException(argumentName + &quot; is a positional argument.&quot;, this);</span>
+<span class="fc" id="L118">	}</span>
+	
+	/**
+	*	Gives the argument's description.
+	*	@return String value of the argument's description.
+	*/	
+	public String getDescription(){
+<span class="fc" id="L125">		return argumentDescription;</span>
+	}
+	
+	/**
+	*	Gives the argument's name.
+	*	@return String value of the argument's name.
+	*/	
+	public String getName(){
+<span class="fc" id="L133">		return argumentName;</span>
+	}
+	
+	/**
+	*	Gives character that represents the&lt;STRONG&gt; named &lt;/STRONG&gt;argument's short name.
+	*	@return character value of the named argument's short form name.
+	*/	
+	public char getShortName(){
+<span class="fc bfc" id="L141" title="All 2 branches covered.">		if(isNamedArgument)</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">			if(argumentShortName != '\u0000')</span>
+<span class="fc" id="L143">				return argumentShortName;</span>
+			else
+<span class="fc" id="L145">				throw new InvalidArgumentException(argumentName + &quot; does not have a shortname.&quot;, this);</span>
+		else
+<span class="fc" id="L147">			throw new InvalidArgumentException(argumentName + &quot; is not a named argument.&quot;, this);</span>
+	}
+	
+	/**
+	*	Returns the argument's data type as a string in lowercase. Values may be the following: string, integer, boolean, or float.
+	* 	@return String value of the argument's data type.
+	*/	
+	public String getDataType(){
+<span class="fc" id="L155">		return dType.toString().toLowerCase();</span>
+	}
+	
+	/**	Sets and stores the value of the argument.
+	*	@param value Value to be stored in the argument. It will be parsed and cast to its proper data type.
+	*/	
+    protected void setValue(String value) {
+<span class="fc bfc" id="L162" title="All 4 branches covered.">		if(isRestricted &amp;&amp; !restrictedValues.contains(value)){</span>
+<span class="fc" id="L163">			throw new RestrictedValuesException(argumentName + &quot; has a restricted set of values: &quot;, this, value, restrictedValues);</span>
+		}
+			
+<span class="pc bfc" id="L166" title="All 4 branches covered.">		switch(dType){</span>
+			case INTEGER:
+<span class="fc" id="L168">				val = Integer.valueOf(value);</span>
+<span class="fc" id="L169">				break;</span>
+			case FLOAT:
+<span class="fc" id="L171">				val = Float.valueOf(value);</span>
+<span class="fc" id="L172">				break;</span>
+			case BOOLEAN:
+<span class="pc bpc" id="L174" title="2 of 9 branches missed.">				switch(value.toLowerCase()){</span>
+					case &quot;true&quot;:
+					case &quot;false&quot;:
+<span class="fc" id="L177">						val = Boolean.valueOf(value);</span>
+<span class="fc" id="L178">						break;</span>
+					default:
+<span class="fc" id="L180">						throw new NumberFormatException();</span>
+				}
+<span class="fc" id="L182">				break;</span>
+			default:
+<span class="fc" id="L184">				val = value;</span>
+        }
+<span class="fc" id="L186">    }</span>
+	
+	/** Returns the value of the argument as a generic type. Result must be cast to the proper data type. &lt;p&gt;
+	*		Example cases: int i = p.getValue(&quot;myarg&quot;) or (int) p.getValue(&quot;myarg&quot;); &lt;br&gt;
+	*			Where p is an instance of ArgsParser.
+	*	@param &lt;T&gt; Generic type for the argument. 
+	*	@return The argument's value as a generic T type. This should then be cast to the proper data type.
+	*/
+    public &lt;T&gt; T getValue() {
+<span class="fc" id="L195">        return (T) val;</span>
+    }
+	
+	/** 
+	*	Returns all data stored about the argument in an XML format.
+	*	@return XML data formatted as a string.
+	*/
+	public String toXML(){
+<span class="fc" id="L203">		String statement = &quot;&quot;;</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">		if(isNamedArgument){</span>
+<span class="fc" id="L205">			statement += &quot;&lt;named&gt;\n&quot;;</span>
+		} else {
+<span class="fc" id="L207">			statement += &quot;&lt;positional&gt;\n&quot;;</span>
+		}
+		
+<span class="fc" id="L210">		statement += &quot;    &lt;name&gt;&quot; + argumentName + &quot;&lt;/name&gt;\n&quot; +</span>
+<span class="fc" id="L211">					 &quot;    &lt;type&gt;&quot; + dType.toString().toLowerCase() + &quot;&lt;/type&gt;\n&quot;;</span>
+<span class="fc bfc" id="L212" title="All 2 branches covered.">		if(isRestricted){</span>
+<span class="fc" id="L213">			statement += &quot;    &lt;restrictedvalues&gt;&quot; + restrictedValues.toString().replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;) + &quot;&lt;/restrictedvalues&gt;\n&quot;;</span>
+		}
+<span class="fc bfc" id="L215" title="All 2 branches covered.">		if(!argumentDescription.equals(&quot;&quot;))</span>
+<span class="fc" id="L216">			statement += &quot;    &lt;description&gt;&quot; + argumentDescription + &quot;&lt;/description&gt;\n&quot;;</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">		if(isNamedArgument){</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">			if(argumentShortName != '\u0000'){</span>
+<span class="fc" id="L219">				statement += &quot;    &lt;shortname&gt;&quot; + argumentShortName + &quot;&lt;/shortname&gt;\n&quot;;</span>
+			}
+<span class="fc bfc" id="L221" title="All 2 branches covered.">			if(isNamedRequiredArgument)</span>
+<span class="fc" id="L222">				statement += &quot;    &lt;required&gt;true&lt;/required&gt;&quot;;</span>
+<span class="fc" id="L223">			statement += &quot;    &lt;default&gt;&quot; + String.valueOf(val) + &quot;&lt;/default&gt;\n&lt;/named&gt;\n&quot;;</span>
+		} else {
+<span class="fc" id="L225">			statement += &quot;&lt;/positional&gt;\n&quot;;</span>
+		}
+<span class="fc" id="L227">		return statement;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

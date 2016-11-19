@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>XMLTools.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argsparser</a> &gt; <a href="index.source.html" class="el_package">edu.jsu.mcis</a> &gt; <span class="el_source">XMLTools.java</span></div><h1>XMLTools.java</h1><pre class="source lang-java linenums">package edu.jsu.mcis;
+
+import java.util.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
+import java.io.*;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+/** Allows XML input/output.	User can pass in an XML file for loading arguments, 
+*   or save an existing set of arguments from an existing instance of ArgsParser.
+*	
+*		Example code using ArgsParser:
+*		&lt;pre&gt;
+*		{@code
+*			public static void main(String[] args) {
+*				ArgsParser p = new ArgsParser();
+*				XMLTools x = new XMLTools();
+*				p.setProgramName(&quot;VolumeCalculator&quot;);
+*				p.setProgramDescription(&quot;Calculate the volume of a cube, cylinder, or sphere.&quot;);
+*				p.addArg(&quot;length&quot;, Arg.DataType.FLOAT, &quot;the length of the box (float)&quot;);
+*				p.addNamedArg(&quot;digits&quot;, Arg.DataType.INTEGER, &quot;2&quot;, 'd');
+*				x.save(p, &quot;testing.xml&quot;);
+*			}
+*		}
+*		&lt;/pre&gt;
+		Example XML file that would be used:
+*		&lt;pre&gt;
+*		{@code
+*	&lt;arguments&gt;
+		&lt;programname&gt;Test&lt;/programname&gt;
+		&lt;programdescription&gt;Test Program&lt;/programdescription&gt;
+		&lt;mutualexclusion&gt;testArg, testArg2&lt;/mutualexclusion&gt;
+		&lt;positional&gt;
+			&lt;position&gt;1&lt;/position&gt;
+			&lt;name&gt;one&lt;/name&gt;
+			&lt;type&gt;string&lt;/type&gt;
+			&lt;restrictedvalues&gt;one, two, three&lt;/restrictedvalues&gt;
+		&lt;/positional&gt;
+		&lt;positional&gt;
+			&lt;position&gt;2&lt;/position&gt;
+			&lt;name&gt;two&lt;/name&gt;
+			&lt;type&gt;integer&lt;/type&gt;
+			&lt;description&gt;This is a test.&lt;/description&gt;
+		&lt;/positional&gt;
+		&lt;named&gt;
+			&lt;name&gt;testArg&lt;/name&gt;
+			&lt;type&gt;string&lt;/type&gt;
+			&lt;shortname&gt;t&lt;/shortname&gt;
+			&lt;default&gt;test1&lt;/default&gt;
+		&lt;/named&gt;
+		&lt;named&gt;
+			&lt;name&gt;testArg2&lt;/name&gt;
+			&lt;type&gt;string&lt;/type&gt;
+			&lt;restrictedvalues&gt;one, two, three&lt;/restrictedvalues&gt;
+			&lt;default&gt;three&lt;/default&gt;
+		&lt;/named&gt;
+		&lt;named&gt;
+			&lt;name&gt;testArg3&lt;/name&gt;
+			&lt;type&gt;string&lt;/type&gt;
+			&lt;restrictedvalues&gt;one, two, three&lt;/restrictedvalues&gt;
+			&lt;description&gt;NamedDescrip&lt;/description&gt;
+			&lt;shortname&gt;c&lt;/shortname&gt;
+			&lt;required&gt;true&lt;/required&gt;    &lt;default&gt;one&lt;/default&gt;
+		&lt;/named&gt;
+	&lt;/arguments&gt;
+*		}
+*		&lt;/pre&gt;
+*		
+*		
+
+*/	
+<span class="fc" id="L76">public class XMLTools{</span>
+	
+	/** XML save method. This method extracts all known information from Argsparser and formats it in XML.
+	*	@param p ArgsParser instance to save from.
+	*	@param fileLocation filepath to save the XML file to. Entire path with file extension should be used.
+	*/	
+	public static void save(ArgsParser p, String fileLocation){
+<span class="fc" id="L83">		String xml = &quot;&lt;arguments&gt;\n&quot;;</span>
+<span class="fc" id="L84">		List&lt;String[]&gt; mutex = p.getMutualExclusion();</span>
+		
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">		if (!p.getProgramName().equals(&quot;&quot;))</span>
+<span class="fc" id="L87">			xml += &quot;    &lt;programname&gt;&quot; + p.getProgramName() + &quot;&lt;/programname&gt;\n&quot;;</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">		if (!p.getProgramDescription().equals(&quot;&quot;))</span>
+<span class="fc" id="L89">			xml += &quot;    &lt;programdescription&gt;&quot; + p.getProgramDescription() + &quot;&lt;/programdescription&gt;\n&quot;;</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		if (!p.getMutualExclusion().isEmpty()){</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">			for(String[] s: mutex){</span>
+<span class="fc" id="L92">				xml+= &quot;    &lt;mutualexclusion&gt;&quot; + Arrays.toString(s).replace(&quot;[&quot;,&quot;&quot;).replace(&quot;]&quot;,&quot;&quot;)+&quot;&lt;/mutualexclusion&gt;&quot;;</span>
+<span class="fc" id="L93">			}</span>
+		}
+<span class="fc" id="L95">		int position = 1;</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">		for(String s : p.getPositionalArgumentNames()){</span>
+<span class="fc" id="L97">			String temp = p.getArg(s).toXML();</span>
+<span class="fc" id="L98">			temp = temp.substring(13);</span>
+<span class="fc" id="L99">			temp = &quot;&lt;position&gt;&quot; + String.valueOf(position) + &quot;&lt;/position&gt;\n&quot; + temp;</span>
+<span class="fc" id="L100">			xml += &quot;&lt;positional&gt;\n&quot; + &quot;    &quot; + temp;</span>
+<span class="fc" id="L101">			position++;</span>
+<span class="fc" id="L102">		}</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">		for(String s : p.getNamedArgumentNames()){</span>
+<span class="fc" id="L104">			xml += p.getArg(s).toXML();</span>
+<span class="fc" id="L105">		}</span>
+<span class="fc" id="L106">		xml += &quot;&lt;/arguments&gt;&quot;;</span>
+		
+		try{
+<span class="fc" id="L109">			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L110">			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();</span>
+<span class="fc" id="L111">			InputSource input = new InputSource();</span>
+<span class="fc" id="L112">			input.setCharacterStream(new StringReader(xml));</span>
+<span class="fc" id="L113">			Document doc = docBuilder.parse(input);</span>
+<span class="fc" id="L114">			TransformerFactory transformerFactory = TransformerFactory.newInstance();</span>
+<span class="fc" id="L115">			Transformer transformer = transformerFactory.newTransformer();</span>
+<span class="fc" id="L116">			DOMSource source = new DOMSource(doc);</span>
+<span class="fc" id="L117">			StreamResult result = new StreamResult(new File(fileLocation));</span>
+<span class="fc" id="L118">			transformer.transform(source, result);</span>
+<span class="nc" id="L119">		}catch(Exception e){</span>
+<span class="nc" id="L120">			throw new XMLException(e.getMessage());</span>
+<span class="fc" id="L121">		}</span>
+<span class="fc" id="L122">	}</span>
+	
+	/** XML load method. This method extracts information from an XML file and loads it into an ArgsParser.
+	*	@param fileLocation Path of the XML file. Entire path with file extension should be used.
+	*	@return ArgsParser with data from XML loaded into it. 
+	*/	
+	public ArgsParser load(String fileLocation){
+<span class="fc" id="L129">		ArgsParser a = new ArgsParser();</span>
+<span class="fc" id="L130">		UserHandler userH = new UserHandler();</span>
+		try {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">			if(fileLocation.contains(&quot;.xml&quot;)) {</span>
+<span class="fc" id="L133">				File xmlFile = new File(fileLocation);</span>
+<span class="fc" id="L134">				SAXParserFactory spFactory = SAXParserFactory.newInstance();</span>
+<span class="fc" id="L135">				SAXParser saxParse = spFactory.newSAXParser();</span>
+<span class="fc" id="L136">				saxParse.parse(xmlFile, userH);</span>
+<span class="fc" id="L137">				a = userH.getArgsParser();</span>
+<span class="fc" id="L138">				return a;</span>
+			} else {
+<span class="fc" id="L140">				throw new XMLException(&quot;The file must have an xml extension.&quot;);</span>
+			}
+		}
+<span class="fc" id="L143">		catch(Exception e){</span>
+<span class="fc" id="L144">			throw new XMLException(e.getMessage());</span>
+		}
+	}
+	
+	private static Arg.DataType typeConversion(String t) {
+<span class="pc bpc" id="L149" title="3 of 14 branches missed.">		switch(t) {</span>
+			case &quot;integer&quot;:
+<span class="fc" id="L151">				return Arg.DataType.INTEGER;</span>
+			case &quot;float&quot;:
+<span class="fc" id="L153">				return Arg.DataType.FLOAT;</span>
+			case &quot;boolean&quot;:
+<span class="fc" id="L155">				return Arg.DataType.BOOLEAN;</span>
+			default:
+<span class="fc" id="L157">				return Arg.DataType.STRING;</span>
+		}
+	}
+	
+	private class UserHandler extends DefaultHandler{
+		Map&lt;String, Boolean&gt; flagMap;
+		private Map&lt;Integer, Arg&gt; tempArgs;
+		private String programDescription, programName, name, defaultVal, description;
+		private char shortName;
+		private String[] mutualExclusion;
+		private List&lt;String[]&gt; mutexList;
+		private Arg.DataType myType;
+		private int position;
+		private ArgsParser p;
+		private boolean isRequired;
+<span class="fc" id="L172">		private final String[] XMLTags = </span>
+			{&quot;arguments&quot;, &quot;programname&quot;, &quot;programdescription&quot;, 
+			&quot;positional&quot;, &quot;named&quot;, &quot;name&quot;, 
+			&quot;type&quot;, &quot;description&quot;, &quot;shortname&quot;, 
+			&quot;default&quot;, &quot;position&quot;, &quot;restrictedvalues&quot;,
+			&quot;mutualexclusion&quot;, &quot;required&quot;}; 
+		private List&lt;String&gt; restrictedValues;
+		
+<span class="fc" id="L180">		public UserHandler(){</span>
+<span class="fc" id="L181">			p = new ArgsParser();</span>
+<span class="fc" id="L182">			flagMap = new HashMap&lt;String, Boolean&gt;();</span>
+<span class="fc" id="L183">			programDescription = &quot;&quot;;</span>
+<span class="fc" id="L184">			programName = &quot;&quot;;</span>
+<span class="fc" id="L185">			name = &quot;&quot;;</span>
+<span class="fc" id="L186">			defaultVal = &quot;&quot;;</span>
+<span class="fc" id="L187">			description = &quot;&quot;;</span>
+<span class="fc" id="L188">			restrictedValues = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L189">			mutexList = new ArrayList&lt;String[]&gt;();</span>
+<span class="fc" id="L190">			isRequired = false;</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">			for(String s : XMLTags)</span>
+<span class="fc" id="L192">				flagMap.put(s, false);</span>
+<span class="fc" id="L193">		}</span>
+		
+		@Override
+		public void startElement(String uri, String localName, String qName, Attributes attributes)throws SAXException {
+<span class="fc" id="L197">			String currentTag = qName.toLowerCase();</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">			if(flagMap.containsKey(currentTag))</span>
+<span class="fc" id="L199">				flagMap.put(currentTag, true);</span>
+<span class="fc" id="L200">		}</span>
+		
+		@Override
+		public void endElement(String uri, String localName, String qName) throws SAXException {
+<span class="fc" id="L204">			String currentTag = qName.toLowerCase();</span>
+			
+<span class="fc bfc" id="L206" title="All 2 branches covered.">			if(currentTag.equals(&quot;named&quot;)) {</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">				if(shortName != '\u0000') {</span>
+<span class="fc" id="L208">					p.addNamedArg(name, myType, description, defaultVal, shortName);</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">					if(!restrictedValues.isEmpty())</span>
+<span class="fc" id="L210">						p.setRestrictedValues(name, restrictedValues);</span>
+				} else {
+<span class="fc" id="L212">					p.addNamedArg(name, myType, description, defaultVal);</span>
+<span class="fc bfc" id="L213" title="All 2 branches covered.">					if(!restrictedValues.isEmpty())</span>
+<span class="fc" id="L214">						p.setRestrictedValues(name, restrictedValues);</span>
+				}
+<span class="fc bfc" id="L216" title="All 2 branches covered.">				if(isRequired) {</span>
+<span class="fc" id="L217">					p.setNamedArgToRequired(name);</span>
+<span class="fc" id="L218">					isRequired = false;</span>
+				}
+			}
+<span class="fc bfc" id="L221" title="All 2 branches covered.">			else if(currentTag.equals(&quot;positional&quot;)) {</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">				if(restrictedValues.isEmpty()){</span>
+<span class="fc" id="L223">					p.addArg(name, myType, description);</span>
+				} else {
+<span class="fc" id="L225">					p.addArg(name, myType, description);</span>
+<span class="fc" id="L226">					p.setRestrictedValues(name, restrictedValues);</span>
+				}
+			}
+<span class="fc bfc" id="L229" title="All 2 branches covered.">			else if(currentTag.equals(&quot;mutualexclusion&quot;)){</span>
+<span class="fc" id="L230">				mutexList.add(mutualExclusion);</span>
+<span class="fc" id="L231">				mutualExclusion = null;</span>
+			}
+<span class="fc bfc" id="L233" title="All 2 branches covered.">			 else if(currentTag.equals(&quot;arguments&quot;)){</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">				if(!mutexList.isEmpty()){</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">					for(String[] s : mutexList){</span>
+<span class="fc" id="L236">						p.addMutualExclusion(s);</span>
+<span class="fc" id="L237">					}</span>
+				}
+			} 
+<span class="fc bfc" id="L240" title="All 4 branches covered.">			if(currentTag.equals(&quot;positional&quot;) || currentTag.equals(&quot;named&quot;)){</span>
+<span class="fc" id="L241">				restrictedValues = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L242">				name = &quot;&quot;;</span>
+<span class="fc" id="L243">				defaultVal = &quot;&quot;;</span>
+<span class="fc" id="L244">				description = &quot;&quot;;</span>
+<span class="fc" id="L245">				shortName = '\u0000';</span>
+			}
+<span class="fc" id="L247">			flagMap.put(currentTag, false);</span>
+<span class="fc" id="L248">		}</span>
+
+		@Override
+		public void characters(char ch[], int start, int length) throws SAXException {
+<span class="fc" id="L252">			String s = &quot;&quot;;</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">			for(int i = start; i &lt; start + length; i++) {</span>
+<span class="fc" id="L254">				s += String.valueOf(ch[i]);</span>
+			}
+			
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">			if (flagMap.get(&quot;arguments&quot;)) {</span>
+<span class="fc bfc" id="L258" title="All 2 branches covered.">				if(flagMap.get(&quot;programname&quot;)) {</span>
+<span class="fc" id="L259">					programName = s;</span>
+<span class="fc" id="L260">					p.setProgramName(programName);</span>
+				}
+<span class="fc bfc" id="L262" title="All 2 branches covered.">				else if(flagMap.get(&quot;programdescription&quot;)) {</span>
+<span class="fc" id="L263">					programDescription = s;</span>
+<span class="fc" id="L264">					p.setProgramDescription(programDescription);</span>
+				}
+<span class="fc bfc" id="L266" title="All 2 branches covered.">				else if(flagMap.get(&quot;mutualexclusion&quot;)){</span>
+<span class="fc" id="L267">					mutualExclusion = s.split(&quot;, &quot;);</span>
+				}
+<span class="fc bfc" id="L269" title="All 2 branches covered.">				else if (flagMap.get(&quot;positional&quot;)) {</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">					if(flagMap.get(&quot;name&quot;)) {</span>
+<span class="fc" id="L271">						name = s;</span>
+					}
+<span class="fc bfc" id="L273" title="All 2 branches covered.">					else if(flagMap.get(&quot;type&quot;)) {</span>
+<span class="fc" id="L274">						myType = typeConversion(s);</span>
+					}
+<span class="fc bfc" id="L276" title="All 2 branches covered.">					else if(flagMap.get(&quot;description&quot;)) {</span>
+<span class="fc" id="L277">						description = s;</span>
+					}
+<span class="fc bfc" id="L279" title="All 2 branches covered.">					else if(flagMap.get(&quot;position&quot;)) {</span>
+<span class="fc" id="L280">						position = Integer.parseInt(s);</span>
+					}
+<span class="fc bfc" id="L282" title="All 2 branches covered.">					else if(flagMap.get(&quot;restrictedvalues&quot;)){</span>
+<span class="fc" id="L283">						restrictedValues = new ArrayList&lt;String&gt;(Arrays.asList(s.split(&quot;, &quot;)));</span>
+					}
+				}
+<span class="fc bfc" id="L286" title="All 2 branches covered.">				else if(flagMap.get(&quot;named&quot;)) {</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">					if(flagMap.get(&quot;name&quot;)) {</span>
+<span class="fc" id="L288">						name = s;</span>
+					}
+<span class="fc bfc" id="L290" title="All 2 branches covered.">					else if(flagMap.get(&quot;shortname&quot;)) {</span>
+<span class="fc" id="L291">						shortName = ch[start];</span>
+					}
+<span class="fc bfc" id="L293" title="All 2 branches covered.">					else if(flagMap.get(&quot;type&quot;)) {</span>
+<span class="fc" id="L294">						myType = typeConversion(s);</span>
+					}
+<span class="fc bfc" id="L296" title="All 2 branches covered.">					else if(flagMap.get(&quot;description&quot;)) {</span>
+<span class="fc" id="L297">						description = s;</span>
+					}
+<span class="fc bfc" id="L299" title="All 2 branches covered.">					else if(flagMap.get(&quot;default&quot;)) {</span>
+<span class="fc" id="L300">						defaultVal = s;</span>
+					}
+<span class="fc bfc" id="L302" title="All 2 branches covered.">					else if(flagMap.get(&quot;restrictedvalues&quot;)){</span>
+<span class="fc" id="L303">						restrictedValues = new ArrayList&lt;String&gt;(Arrays.asList(s.split(&quot;, &quot;)));</span>
+					}
+<span class="fc bfc" id="L305" title="All 2 branches covered.">					else if(flagMap.get(&quot;required&quot;)) {</span>
+<span class="fc" id="L306">						isRequired = true;</span>
+					}
+				}
+			} 
+<span class="fc" id="L310">		}</span>
+		
+		public ArgsParser getArgsParser() {
+<span class="fc" id="L313">			return p;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
