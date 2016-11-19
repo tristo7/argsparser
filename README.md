@@ -1,6 +1,9 @@
 # argsparser
 A Java library to parse command line arguments for easier use.
 
+# JavaDoc
+[Read the JavaDoc here!](http://tristo7.github.io/argsparser/)
+
 ##Collaborators
 - [Tristin Terry](https://github.com/tristo7)
 - [Trey Hilburn](https://github.com/Trey50Daniel)
