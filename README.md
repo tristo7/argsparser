@@ -10,7 +10,7 @@ A Java library to parse command line arguments for easier use.
 
 [See the JUnit test report here!](http://tristo7.github.io/argsparser/unit/)
 
-##Collaborators
+# Collaborators
 - [Tristin Terry](https://github.com/tristo7)
 - [Trey Hilburn](https://github.com/Trey50Daniel)
 - [Thomas Eyler](https://github.com/teylerjsu)
@@ -18,7 +18,7 @@ A Java library to parse command line arguments for easier use.
 - [Amari Richardson](https://github.com/amariamari23)
 
 
-##Features
+# Features
 - [x] **Allow only string-valued positional arguments and retrieve them from the command-line.**
 - [x] **Allow the inclusion of additional descriptive information on the program and each argument and provide named "-h" argument that shows usage and help information by default.**
 - [x] **Allow datatype information to be added to arguments so that non-string arguments can be used.**
