@@ -4,6 +4,8 @@ A Java library to parse command line arguments for easier use.
 # JavaDoc
 [Read the JavaDoc here!](http://tristo7.github.io/argsparser/)
 
+
+# Reports
 [See the JaCoCo code coverage report here!](http://tristo7.github.io/argsparser/jacoco/)
 
 [See the JUnit test report here!](http://tristo7.github.io/argsparser/unit/)
